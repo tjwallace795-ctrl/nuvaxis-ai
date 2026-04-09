@@ -5,10 +5,11 @@ import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "Services", href: "#services" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/#services" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Pricing", href: "/#pricing" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -34,11 +35,40 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">N</span>
-          </div>
-          <span className="text-white font-semibold text-xl tracking-tight">
+        <a href="/" className="flex items-center gap-3">
+          {/* Abstract AI Mark */}
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Outer ring arc */}
+            <circle cx="18" cy="18" r="16" stroke="url(#ringGrad)" strokeWidth="1.5" strokeDasharray="60 40" strokeLinecap="round" />
+            {/* Inner core */}
+            <circle cx="18" cy="18" r="5" fill="url(#coreGrad)" />
+            {/* Node top-right */}
+            <circle cx="28" cy="8" r="2.5" fill="#3b82f6" opacity="0.9" />
+            {/* Node bottom-left */}
+            <circle cx="8" cy="28" r="2.5" fill="#6366f1" opacity="0.9" />
+            {/* Node top-left */}
+            <circle cx="7" cy="10" r="1.8" fill="#60a5fa" opacity="0.6" />
+            {/* Node bottom-right */}
+            <circle cx="29" cy="27" r="1.8" fill="#818cf8" opacity="0.6" />
+            {/* Connector lines */}
+            <line x1="18" y1="13" x2="26.5" y2="9.5" stroke="#3b82f6" strokeWidth="1" opacity="0.5" strokeLinecap="round" />
+            <line x1="18" y1="23" x2="9.5" y2="26.5" stroke="#6366f1" strokeWidth="1" opacity="0.5" strokeLinecap="round" />
+            <line x1="13" y1="16" x2="8" y2="11" stroke="#60a5fa" strokeWidth="0.8" opacity="0.4" strokeLinecap="round" />
+            <line x1="23" y1="20" x2="28.5" y2="26" stroke="#818cf8" strokeWidth="0.8" opacity="0.4" strokeLinecap="round" />
+            {/* Center cross-dot */}
+            <circle cx="18" cy="18" r="2" fill="white" opacity="0.95" />
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#3b82f6" />
+                <stop offset="100%" stopColor="#6366f1" />
+              </linearGradient>
+              <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#60a5fa" />
+                <stop offset="100%" stopColor="#3b82f6" />
+              </radialGradient>
+            </defs>
+          </svg>
+          <span className="text-white font-semibold text-xl" style={{ fontFamily: "var(--font-space-grotesk)", letterSpacing: "-0.03em" }}>
             Nuvaxis <span className="text-blue-500">AI</span>
           </span>
         </a>

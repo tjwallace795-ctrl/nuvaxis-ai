@@ -6,7 +6,6 @@ import {
   Bot,
   ShoppingCart,
   TrendingUp,
-  Users,
   Megaphone,
 } from "lucide-react";
 
@@ -19,6 +18,7 @@ const services = [
     color: "from-blue-500/20 to-blue-600/5",
     border: "border-blue-500/20",
     iconColor: "text-blue-400",
+    href: "/services/ai-website-design",
   },
   {
     icon: Bot,
@@ -28,6 +28,7 @@ const services = [
     color: "from-purple-500/20 to-purple-600/5",
     border: "border-purple-500/20",
     iconColor: "text-purple-400",
+    href: "/services/nova-ai-chat",
   },
   {
     icon: ShoppingCart,
@@ -37,6 +38,7 @@ const services = [
     color: "from-green-500/20 to-green-600/5",
     border: "border-green-500/20",
     iconColor: "text-green-400",
+    href: "/services/online-ordering",
   },
   {
     icon: TrendingUp,
@@ -46,15 +48,7 @@ const services = [
     color: "from-pink-500/20 to-pink-600/5",
     border: "border-pink-500/20",
     iconColor: "text-pink-400",
-  },
-  {
-    icon: Users,
-    title: "Lead Generation",
-    description:
-      "AI working in the background 24/7 to find and surface your next customers — locally and beyond.",
-    color: "from-yellow-500/20 to-yellow-600/5",
-    border: "border-yellow-500/20",
-    iconColor: "text-yellow-400",
+    href: "/services/social-media-content",
   },
   {
     icon: Megaphone,
@@ -64,6 +58,7 @@ const services = [
     color: "from-orange-500/20 to-orange-600/5",
     border: "border-orange-500/20",
     iconColor: "text-orange-400",
+    href: "/services/ad-campaigns",
   },
 ];
 
@@ -81,13 +76,13 @@ const cardVariants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" },
+    transition: { duration: 0.5 },
   },
 };
 
 export default function ServicesSection() {
   return (
-    <section id="services" className="bg-black py-28 px-6">
+    <section id="services" className="py-16 md:py-28 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -95,19 +90,18 @@ export default function ServicesSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
           <span className="text-blue-500 text-sm font-semibold uppercase tracking-widest">
             What We Do
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-4">
-            Everything your business needs
-            <br />
+          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
+            Everything your business needs{" "}
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               to dominate online
             </span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
             From your first website to full AI automation — Nuvaxis AI delivers
             the complete digital stack for modern businesses.
           </p>
@@ -124,23 +118,27 @@ export default function ServicesSection() {
           {services.map((service) => {
             const Icon = service.icon;
             return (
-              <motion.div
+              <motion.a
                 key={service.title}
+                href={service.href}
                 variants={cardVariants}
-                className={`group relative bg-gradient-to-b ${service.color} border ${service.border} rounded-2xl p-6 hover:scale-[1.02] transition-transform duration-300 cursor-default`}
+                className={`group relative bg-gradient-to-b ${service.color} border ${service.border} rounded-2xl p-4 md:p-6 hover:scale-[1.02] transition-transform duration-300 cursor-pointer block`}
               >
                 <div
                   className={`w-11 h-11 rounded-xl bg-neutral-900 border ${service.border} flex items-center justify-center mb-4`}
                 >
                   <Icon size={20} className={service.iconColor} />
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">
+                <h3 className="text-white font-semibold text-base md:text-lg mb-1 md:mb-2">
                   {service.title}
                 </h3>
                 <p className="text-gray-400 text-sm leading-relaxed">
                   {service.description}
                 </p>
-              </motion.div>
+                <span className={`mt-3 inline-block text-xs font-medium ${service.iconColor} opacity-0 group-hover:opacity-100 transition-opacity`}>
+                  Learn more →
+                </span>
+              </motion.a>
             );
           })}
         </motion.div>

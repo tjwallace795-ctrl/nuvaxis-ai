@@ -144,14 +144,14 @@ export default function PricingSection4() {
 
   return (
     <div
-      className="min-h-screen mx-auto relative bg-black overflow-x-hidden"
+      className="mx-auto relative overflow-hidden"
       ref={pricingRef}
     >
       <TimelineContent
         animationNum={4}
         timelineRef={pricingRef}
         customVariants={revealVariants}
-        className="absolute top-0 h-96 w-screen overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)]"
+        className="absolute top-0 h-96 w-full overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)]"
       >
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#ffffff2c_1px,transparent_1px),linear-gradient(to_bottom,#3a3a3a01_1px,transparent_1px)] bg-[size:70px_80px]"></div>
         <SparklesComp
@@ -181,8 +181,8 @@ export default function PricingSection4() {
         </div>
       </TimelineContent>
 
-      <article className="text-center mb-6 pt-32 max-w-3xl mx-auto space-y-2 relative z-50">
-        <h2 className="text-4xl font-medium text-white">
+      <article className="text-center mb-6 pt-20 md:pt-32 max-w-3xl mx-auto space-y-2 relative z-50 px-4 sm:px-6">
+        <h2 className="text-2xl md:text-4xl font-medium text-white">
           <VerticalCutReveal
             splitBy="words"
             staggerDuration={0.15}
@@ -230,7 +230,7 @@ export default function PricingSection4() {
         }}
       />
 
-      <div className="grid md:grid-cols-3 max-w-5xl gap-4 py-6 mx-auto px-4">
+      <div className="grid md:grid-cols-3 max-w-5xl gap-4 py-6 mx-auto px-4 sm:px-6">
         {plans.map((plan, index) => (
           <TimelineContent
             key={plan.name}
@@ -248,7 +248,7 @@ export default function PricingSection4() {
             >
               <CardHeader className="text-left">
                 <div className="flex justify-between">
-                  <h3 className="text-3xl mb-2">{plan.name}</h3>
+                  <h3 className="text-2xl md:text-3xl mb-2">{plan.name}</h3>
                   {plan.popular && (
                     <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full h-fit">
                       Popular
@@ -256,12 +256,12 @@ export default function PricingSection4() {
                   )}
                 </div>
                 <div className="flex items-baseline">
-                  <span className="text-4xl font-semibold">
+                  <span className="text-3xl md:text-4xl font-semibold">
                     $
                     <NumberFlow
                       format={{ currency: "USD" }}
                       value={isYearly ? plan.yearlyPrice : plan.price}
-                      className="text-4xl font-semibold"
+                      className="text-3xl md:text-4xl font-semibold"
                     />
                   </span>
                   <span className="text-gray-300 ml-1">
@@ -273,7 +273,7 @@ export default function PricingSection4() {
 
               <CardContent className="pt-0">
                 <button
-                  className={`w-full mb-6 p-4 text-xl rounded-xl ${
+                  className={`w-full mb-4 md:mb-6 p-3 md:p-4 text-base md:text-xl rounded-xl ${
                     plan.popular
                       ? "bg-gradient-to-t from-blue-500 to-blue-600 shadow-lg shadow-blue-800 border border-blue-500 text-white"
                       : "bg-gradient-to-t from-neutral-950 to-neutral-600 shadow-lg shadow-neutral-900 border border-neutral-800 text-white"

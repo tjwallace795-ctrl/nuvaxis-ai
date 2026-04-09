@@ -38,7 +38,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="bg-black py-28 px-6 relative">
+    <section id="how-it-works" className="py-16 md:py-28 px-4 sm:px-6 relative">
       {/* Subtle divider glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent via-blue-500/40 to-transparent" />
 
@@ -49,15 +49,15 @@ export default function HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-20"
+          className="text-center mb-12 md:mb-20"
         >
           <span className="text-blue-500 text-sm font-semibold uppercase tracking-widest">
             The Process
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
             Simple. Fast. Powerful.
           </h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          <p className="text-gray-400 text-sm md:text-lg max-w-xl mx-auto">
             Getting started with Nuvaxis AI is easier than you think. Three
             steps to transform your business.
           </p>
@@ -68,7 +68,7 @@ export default function HowItWorks() {
           {/* Connecting line */}
           <div className="hidden md:block absolute top-16 left-[16.66%] right-[16.66%] h-px bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-green-500/30" />
 
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="grid md:grid-cols-3 gap-10 md:gap-10 gap-y-12">
             {steps.map((step, index) => {
               const Icon = step.icon;
               return (
@@ -92,7 +92,7 @@ export default function HowItWorks() {
                     </span>
                   </div>
 
-                  <h3 className="text-white font-semibold text-xl mb-3">
+                  <h3 className="text-white font-semibold text-base md:text-xl mb-2 md:mb-3">
                     {step.title}
                   </h3>
                   <p className="text-gray-400 text-sm leading-relaxed">

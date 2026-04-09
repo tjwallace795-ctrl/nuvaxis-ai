@@ -19,7 +19,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="bg-black py-28 px-6 relative">
+    <section id="contact" className="py-16 md:py-28 px-4 sm:px-6 relative">
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-24 bg-gradient-to-b from-transparent via-blue-500/40 to-transparent" />
 
       <div className="max-w-5xl mx-auto">
@@ -29,25 +29,25 @@ export default function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
           <span className="text-blue-500 text-sm font-semibold uppercase tracking-widest">
             Get Started
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
             Ready to grow your business
             <br />
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               with AI?
             </span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          <p className="text-gray-400 text-sm md:text-lg max-w-xl mx-auto">
             Fill out the form below and we will reach out within 24 hours to
             schedule your free demo.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-12 items-start">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -117,7 +117,7 @@ export default function ContactSection() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-gray-400 text-sm mb-1.5 block">Your Name</label>
                     <input

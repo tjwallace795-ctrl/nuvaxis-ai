@@ -35,7 +35,7 @@ const testimonials = [
 
 export default function TestimonialsSection() {
   return (
-    <section className="bg-black py-28 px-6 relative overflow-hidden">
+    <section className="py-16 md:py-28 px-4 sm:px-6 relative overflow-hidden">
       {/* Background glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
@@ -52,12 +52,12 @@ export default function TestimonialsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 md:mb-16"
         >
           <span className="text-blue-500 text-sm font-semibold uppercase tracking-widest">
             Real Results
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mt-3 mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
             Businesses that leveled up
             <br />
             <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
@@ -75,7 +75,7 @@ export default function TestimonialsSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.12 }}
-              className="bg-neutral-900/60 border border-white/8 rounded-2xl p-6 flex flex-col gap-4"
+              className="bg-neutral-900/60 border border-white/8 rounded-2xl p-4 md:p-6 flex flex-col gap-3 md:gap-4"
             >
               {/* Stars */}
               <div className="flex gap-1">
@@ -89,7 +89,7 @@ export default function TestimonialsSection() {
               </div>
 
               {/* Quote */}
-              <p className="text-gray-300 text-sm leading-relaxed flex-1">
+              <p className="text-gray-300 text-xs md:text-sm leading-relaxed flex-1">
                 &ldquo;{t.quote}&rdquo;
               </p>
 

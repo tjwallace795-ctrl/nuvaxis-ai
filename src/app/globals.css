@@ -125,11 +125,356 @@
 :root {
   --gradient-color: #8350e8;
   --sparkles-color: #8350e8;
+  --animation-iteration: infinite;
+}
+
+/* ============================================
+   COSMIC PARALLAX BACKGROUND
+   ============================================ */
+.cosmic-parallax-container {
+  position: absolute;
+  inset: 0;
+  /* Deep blue throughout — horizon glow at bottom, ambient blue across entire sky */
+  background:
+    radial-gradient(ellipse 180% 90% at 50% 110%, #1a4db5 0%, #0d2e72 18%, #071540 40%, #030d28 70%, #010818 100%),
+    radial-gradient(ellipse 120% 60% at 50% 0%, #05163a 0%, transparent 80%),
+    radial-gradient(ellipse 80% 50% at 20% 50%, #06183d18 0%, transparent 70%),
+    radial-gradient(ellipse 80% 50% at 80% 40%, #06183d18 0%, transparent 70%),
+    #010818;
+  overflow: hidden;
+}
+
+/* ---- Stars ---- */
+.cosmic-stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  animation: animStar 50s linear var(--animation-iteration);
+}
+.cosmic-stars::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: inherit;
+}
+
+.cosmic-stars-medium {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  animation: animStar 100s linear var(--animation-iteration);
+}
+.cosmic-stars-medium::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: inherit;
+}
+
+.cosmic-stars-large {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  animation: animStar 150s linear var(--animation-iteration);
+  border-radius: 50%;
+}
+.cosmic-stars-large::after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: inherit;
+  border-radius: 50%;
+}
+
+/* ---- Nebula wisps ---- */
+.nebula-wisp {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.nebula-wisp-1 {
+  width: 800px;
+  height: 300px;
+  top: 5%;
+  left: -10%;
+  background: radial-gradient(ellipse at center, #1e3a8a35 0%, transparent 70%);
+  filter: blur(50px);
+  transform: rotate(-15deg);
+}
+.nebula-wisp-2 {
+  width: 700px;
+  height: 250px;
+  top: 15%;
+  right: -10%;
+  background: radial-gradient(ellipse at center, #1d4ed830 0%, transparent 70%);
+  filter: blur(55px);
+  transform: rotate(12deg);
+}
+.nebula-wisp-3 {
+  width: 900px;
+  height: 200px;
+  top: 35%;
+  left: 5%;
+  background: radial-gradient(ellipse at center, #1e40af22 0%, transparent 70%);
+  filter: blur(65px);
+  transform: rotate(-5deg);
+}
+
+/* ---- Aurora bands ---- */
+.aurora {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: auroraShift 12s ease-in-out infinite alternate;
+}
+.aurora-1 {
+  bottom: 18%;
+  height: 90px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #0d9488 18% 0%,
+    #0d948822 40%,
+    transparent 100%
+  );
+  filter: blur(28px);
+  opacity: 0.22;
+  animation-duration: 14s;
+}
+.aurora-2 {
+  bottom: 22%;
+  height: 60px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #6366f130 30%,
+    transparent 100%
+  );
+  filter: blur(22px);
+  opacity: 0.18;
+  animation-duration: 18s;
+  animation-direction: alternate-reverse;
+}
+
+/* ---- Earth body ---- */
+#earth {
+  position: absolute;
+  bottom: -820px;
+  left: -60%;
+  right: -60%;
+  height: 960px;
+  background:
+    radial-gradient(ellipse at 30% 20%, #1a3a6e44 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 30%, #1e3a6e33 0%, transparent 45%),
+    radial-gradient(ellipse at top, #0d1e4a 0%, #060f2a 40%, #020810 70%, #000308 100%);
+  border-radius: 50%;
+  z-index: 2;
+  /* subtle continental texture via box-shadow rings */
+  box-shadow:
+    inset 0 30px 60px rgba(14, 165, 233, 0.07),
+    inset 0 -20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- City lights on earth ---- */
+#city-lights {
+  position: absolute;
+  bottom: -790px;
+  left: -60%;
+  right: -60%;
+  height: 120px;
+  background:
+    radial-gradient(ellipse 20% 4% at 25% 10%, #f59e0b55 0%, transparent 100%),
+    radial-gradient(ellipse 12% 3% at 50% 15%, #fbbf2444 0%, transparent 100%),
+    radial-gradient(ellipse 16% 3% at 72% 8%, #f59e0b44 0%, transparent 100%),
+    radial-gradient(ellipse 8%  2% at 40% 20%, #fb923c33 0%, transparent 100%),
+    radial-gradient(ellipse 10% 2% at 62% 22%, #fbbf2433 0%, transparent 100%),
+    radial-gradient(ellipse 6%  2% at 15% 18%, #f59e0b2a 0%, transparent 100%),
+    radial-gradient(ellipse 7%  2% at 85% 12%, #fbbf242a 0%, transparent 100%);
+  border-radius: 50%;
+  z-index: 3;
+  mix-blend-mode: screen;
+}
+
+/* ---- Atmospheric ring (thin glowing edge) ---- */
+#atmosphere-ring {
+  position: absolute;
+  bottom: -830px;
+  left: -62%;
+  right: -62%;
+  height: 980px;
+  border-radius: 50%;
+  z-index: 4;
+  box-shadow:
+    0 0 0 2px rgba(56, 189, 248, 0.18),
+    0 0 0 6px rgba(56, 189, 248, 0.08),
+    0 0 0 18px rgba(56, 189, 248, 0.04);
+  pointer-events: none;
+}
+
+/* ---- Horizon layers ---- */
+#horizon {
+  position: absolute;
+  bottom: -40px;
+  left: -55%;
+  right: -55%;
+  height: 160px;
+  background: radial-gradient(
+    ellipse at center,
+    #1d60c8 0%,
+    #1040a0 20%,
+    #0a2060 50%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  z-index: 5;
+  filter: blur(6px);
+}
+
+/* Inner warm/bright horizon core */
+.horizon-inner-glow {
+  position: absolute;
+  bottom: 30px;
+  left: 15%;
+  right: 15%;
+  height: 30px;
+  background: radial-gradient(
+    ellipse at center,
+    #60a5fa88 0%,
+    #3b82f655 30%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  filter: blur(8px);
+}
+
+/* Mid atmosphere soft band */
+.horizon-mid-glow {
+  position: absolute;
+  bottom: 10px;
+  left: 5%;
+  right: 5%;
+  height: 50px;
+  background: radial-gradient(
+    ellipse at center,
+    #1d4ed840 0%,
+    #1e3a8a28 50%,
+    transparent 80%
+  );
+  border-radius: 50%;
+  filter: blur(12px);
+}
+
+/* Bright thin white-blue edge line */
+.horizon-edge-line {
+  position: absolute;
+  bottom: 54px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    #93c5fd99 15%,
+    #bfdbfecc 40%,
+    #ffffffbb 50%,
+    #bfdbfecc 60%,
+    #93c5fd99 85%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  filter: blur(1.5px);
+}
+
+/* ---- Terrain silhouette ---- */
+#terrain-silhouette {
+  position: absolute;
+  bottom: 44px;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background:
+    /* mountain peaks via clip-path simulation with radial gradients */
+    radial-gradient(ellipse 8%  100% at 12%  100%, #000918 0%, transparent 100%),
+    radial-gradient(ellipse 6%  80%  at 22%  100%, #000918 0%, transparent 100%),
+    radial-gradient(ellipse 10% 120% at 35%  100%, #000918 0%, transparent 100%),
+    radial-gradient(ellipse 7%  90%  at 50%  100%, #000918 0%, transparent 100%),
+    radial-gradient(ellipse 9%  110% at 64%  100%, #000918 0%, transparent 100%),
+    radial-gradient(ellipse 5%  70%  at 76%  100%, #000918 0%, transparent 100%),
+    radial-gradient(ellipse 11% 130% at 88%  100%, #000918 0%, transparent 100%);
+  z-index: 6;
+  pointer-events: none;
+}
+
+#title, #subtitle { display: none; }
+
+.lab-bg::before {
+  overflow: hidden;
+  max-width: 100vw;
+  max-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ---- Aurora shift animation ---- */
+@keyframes auroraShift {
+  0%   { transform: scaleX(1)   translateY(0px); opacity: 0.18; }
+  50%  { transform: scaleX(1.05) translateY(-6px); opacity: 0.28; }
+  100% { transform: scaleX(0.96) translateY(4px);  opacity: 0.15; }
+}
+
+@keyframes animStar {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-2000px); }
+}
+
+@keyframes animGravity {
+  0% { transform: translateY(-26px); opacity: 0; }
+  30%, 80% { letter-spacing: 40px; padding-left: 40px; transform: translateY(0px); opacity: 1; }
+  92%, 100% { letter-spacing: 35px; padding-left: 35px; transform: translateY(-4px); opacity: 0; }
+}
+
+@keyframes animDont {
+  0%, 15% { transform: translateY(-26px); opacity: 0; }
+  35%, 80% { transform: translateY(0px); opacity: 1; }
+  92%, 100% { transform: translateY(-4px); opacity: 0; }
+}
+
+@keyframes animLet {
+  0%, 25% { transform: translateY(-26px); opacity: 0; }
+  45%, 80% { transform: translateY(0px); opacity: 1; }
+  92%, 100% { transform: translateY(-4px); opacity: 0; }
+}
+
+@keyframes animGo {
+  0%, 35% { transform: translateY(-26px); opacity: 0; }
+  55%, 80% { transform: translateY(0px); opacity: 1; }
+  92%, 100% { transform: translateY(-4px); opacity: 0; }
 }
 
 .dark {
   --gradient-color: #8350e8;
   --sparkles-color: #ffffff;
+}
+
+/* Safe-area utility used by the mobile bottom nav and content area */
+@layer utilities {
+  .pb-nav-safe {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 @layer base {
@@ -141,5 +486,9 @@
   }
   html {
     @apply font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-space-grotesk), sans-serif;
+    letter-spacing: -0.02em;
   }
 }

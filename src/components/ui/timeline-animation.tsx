@@ -1,18 +1,15 @@
 "use client"
 
-import { useInView } from "framer-motion"
+import { useInView, Variants } from "framer-motion"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { ElementType, ReactNode, RefObject } from "react"
+import { ComponentType, ElementType, ReactNode, RefObject } from "react"
 
 interface TimelineContentProps {
   children: ReactNode
   animationNum: number
   timelineRef: RefObject<HTMLElement | null>
-  customVariants?: {
-    visible: (i: number) => object
-    hidden: object
-  }
+  customVariants?: Variants
   className?: string
   as?: ElementType
 }
@@ -49,7 +46,7 @@ export function TimelineContent({
 
   const variants = customVariants || defaultVariants
   const Tag = as || "div"
-  const MotionTag = motion.create(Tag as string)
+  const MotionTag = motion.create(Tag as string) as ComponentType<Record<string, unknown>>
 
   return (
     <MotionTag

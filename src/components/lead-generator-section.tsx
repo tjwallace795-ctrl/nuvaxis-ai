@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Target,
@@ -18,13 +18,11 @@ import {
   Users,
   Phone,
   Mail,
-  Globe,
   ExternalLink,
   ChevronDown,
   User,
   Building,
   Clock,
-  Radio,
 } from "lucide-react";
 import {
   leadStore,
@@ -147,49 +145,6 @@ function ScoreBar({ label, value, color }: { label: string; value: number; color
         />
       </div>
       <span className="text-[10px] text-white/30 font-mono w-6 text-right">{value}</span>
-    </div>
-  );
-}
-
-// ── Social link row ────────────────────────────────────────────────────────────
-
-const SOCIAL_PLATFORMS = [
-  { key: "instagram", label: "IG",  emoji: "📸", color: "text-pink-400/80   border-pink-400/20   bg-pink-400/5",   urlPrefix: "https://instagram.com/" },
-  { key: "twitter",   label: "𝕏",   emoji: "🐦", color: "text-sky-400/80    border-sky-400/20    bg-sky-400/5",    urlPrefix: "https://twitter.com/" },
-  { key: "tiktok",    label: "TT",  emoji: "🎵", color: "text-violet-400/80 border-violet-400/20 bg-violet-400/5", urlPrefix: "https://tiktok.com/@" },
-  { key: "facebook",  label: "FB",  emoji: "👥", color: "text-indigo-400/80 border-indigo-400/20 bg-indigo-400/5", urlPrefix: "https://facebook.com/" },
-  { key: "linkedin",  label: "LI",  emoji: "💼", color: "text-blue-400/80   border-blue-400/20   bg-blue-400/5",   urlPrefix: "https://linkedin.com/in/" },
-] as const;
-
-function socialUrl(handle: string, prefix: string): string {
-  if (handle.startsWith("http")) return handle;
-  const clean = handle.replace(/^@/, "");
-  return `${prefix}${clean}`;
-}
-
-function SocialLinks({ lead }: { lead: IndividualLead }) {
-  const links = SOCIAL_PLATFORMS
-    .map(p => ({ ...p, value: lead[p.key as keyof IndividualLead] as string | null }))
-    .filter(p => p.value);
-
-  if (links.length === 0) return null;
-
-  return (
-    <div className="flex flex-wrap gap-1.5 mb-3">
-      {links.map(p => (
-        <a
-          key={p.key}
-          href={socialUrl(p.value!, p.urlPrefix)}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={`${p.key}: ${p.value}`}
-          className={`flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border transition-all hover:opacity-100 opacity-80 ${p.color}`}
-        >
-          <span>{p.emoji}</span>
-          <span>{p.value!.replace(/^@/, "").split("/").pop()?.slice(0, 16)}</span>
-          <ExternalLink className="w-2.5 h-2.5 opacity-60" />
-        </a>
-      ))}
     </div>
   );
 }
@@ -408,37 +363,91 @@ function PersonCard({
           <p className="text-[11px] text-white/55 leading-snug italic">{lead.intentSignal}</p>
         </div>
 
-        {/* Contact info row */}
-        <div className="space-y-1.5 mb-2">
-          {lead.phone && (
-            <a href={`tel:${lead.phone}`} className="flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors group">
-              <Phone className="w-3 h-3 text-emerald-400/70 flex-shrink-0" />
-              <span className="font-mono group-hover:text-emerald-300">{lead.phone}</span>
-            </a>
-          )}
-          {lead.email && (
-            <a href={`mailto:${lead.email}`} className="flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors group">
-              <Mail className="w-3 h-3 text-blue-400/70 flex-shrink-0" />
-              <span className="truncate group-hover:text-blue-300">{lead.email}</span>
-            </a>
-          )}
-          {lead.profileUrl && (
-            <a href={lead.profileUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs text-white/40 hover:text-white/70 transition-colors group">
-              <ExternalLink className="w-3 h-3 text-violet-400/70 flex-shrink-0" />
-              <span className="truncate group-hover:text-violet-300">{lead.profileUrl.replace(/^https?:\/\//, "")}</span>
-            </a>
-          )}
+        {/* ── Reach Them Here ────────────────────────────────────── */}
+        <div className="mb-3">
+          <p className="text-[9px] text-white/25 uppercase tracking-widest font-semibold mb-2">Reach them here</p>
+          <div className="flex flex-wrap gap-1.5">
+
+            {/* Phone */}
+            {lead.phone && (
+              <a href={`tel:${lead.phone}`}
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-emerald-300 bg-emerald-500/10 border-emerald-500/25 hover:bg-emerald-500/20 transition-all">
+                <Phone className="w-3 h-3" />{lead.phone}
+              </a>
+            )}
+
+            {/* Email */}
+            {lead.email && (
+              <a href={`mailto:${lead.email}`}
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-blue-300 bg-blue-500/10 border-blue-500/25 hover:bg-blue-500/20 transition-all">
+                <Mail className="w-3 h-3" />{lead.email}
+              </a>
+            )}
+
+            {/* Twitter/X */}
+            {lead.twitter && (
+              <a href={lead.twitter.startsWith("http") ? lead.twitter : `https://x.com/${lead.twitter.replace(/^@/, "")}`}
+                target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-sky-300 bg-sky-500/10 border-sky-500/25 hover:bg-sky-500/20 transition-all">
+                <span className="font-bold text-[10px]">𝕏</span>
+                {lead.twitter.startsWith("http") ? "View Post & Reply" : lead.twitter}
+              </a>
+            )}
+
+            {/* Instagram DM */}
+            {lead.instagram && (
+              <a href={`https://ig.me/m/${lead.instagram.replace(/^@/, "")}`}
+                target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-pink-300 bg-pink-500/10 border-pink-500/25 hover:bg-pink-500/20 transition-all">
+                <span className="text-[10px]">📸</span>DM on Instagram
+              </a>
+            )}
+
+            {/* Facebook */}
+            {lead.facebook && (
+              <a href={lead.facebook.startsWith("http") ? lead.facebook : `https://facebook.com/${lead.facebook}`}
+                target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-indigo-300 bg-indigo-500/10 border-indigo-500/25 hover:bg-indigo-500/20 transition-all">
+                <span className="text-[10px]">👥</span>
+                {lead.facebook.startsWith("http") ? "View Post & Message" : "Message on Facebook"}
+              </a>
+            )}
+
+            {/* LinkedIn */}
+            {lead.linkedin && (
+              <a href={lead.linkedin} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-blue-300 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/15 transition-all">
+                <span className="text-[10px]">💼</span>Connect on LinkedIn
+              </a>
+            )}
+
+            {/* Reddit */}
+            {lead.reddit && (
+              <a href={lead.reddit} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-orange-300 bg-orange-500/10 border-orange-500/25 hover:bg-orange-500/20 transition-all">
+                <span className="text-[10px]">🤝</span>View Post & Reply
+              </a>
+            )}
+
+            {/* Direct post link — show when profileUrl exists and isn't already covered above */}
+            {lead.profileUrl &&
+              lead.profileUrl !== lead.twitter &&
+              lead.profileUrl !== lead.facebook &&
+              lead.profileUrl !== lead.reddit && (
+              <a href={lead.profileUrl} target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded-lg border text-violet-300 bg-violet-500/10 border-violet-500/25 hover:bg-violet-500/20 transition-all">
+                <ExternalLink className="w-3 h-3" />View Post & Reply
+              </a>
+            )}
+
+            {/* Nothing available — show a hint */}
+            {!lead.phone && !lead.email && !lead.twitter && !lead.instagram && !lead.facebook && !lead.linkedin && !lead.reddit && !lead.profileUrl && (
+              <span className="text-[10px] text-white/20 italic">Contact info being enriched…</span>
+            )}
+          </div>
         </div>
 
-        {/* Social profile links */}
-        <SocialLinks lead={lead} />
-
-        {/* Outreach channel */}
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <Radio className="w-3 h-3 text-violet-400/60 flex-shrink-0" />
-          <span className="text-[10px] text-violet-300/70">Best outreach: </span>
-          <span className="text-[10px] text-violet-300 font-semibold">{lead.outreachChannel}</span>
-        </div>
+        {/* Why they need you */}
         <p className="text-[11px] text-white/35 leading-snug mb-3">{lead.whyTheyNeedYou}</p>
 
         {/* Scores */}
@@ -453,27 +462,64 @@ function PersonCard({
             onClick={() => { setShowQuick(!showQuick); setShowDraft(false); }}
             className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-2 rounded-lg border transition-all ${showQuick ? "text-blue-300 bg-blue-500/15 border-blue-500/30" : "text-white/40 hover:text-white/70 bg-white/[0.03] border-white/[0.08] hover:border-white/[0.15]"}`}
           >
-            <Sparkles className="w-3.5 h-3.5" />Quick Message
+            <Sparkles className="w-3.5 h-3.5" />Message Script
           </button>
           <button
             onClick={() => { setShowDraft(!showDraft); setShowQuick(false); }}
             className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-2 rounded-lg border transition-all ${showDraft ? "text-emerald-300 bg-emerald-500/15 border-emerald-500/30" : "text-white/40 hover:text-white/70 bg-white/[0.03] border-white/[0.08] hover:border-white/[0.15]"}`}
           >
-            <Mail className="w-3.5 h-3.5" />Draft Outreach
+            <Mail className="w-3.5 h-3.5" />Full Outreach Draft
           </button>
         </div>
       </div>
 
-      {/* Quick message panel */}
+      {/* Message script panel */}
       <AnimatePresence>
         {showQuick && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.18 }} className="overflow-hidden">
-            <div className="px-4 pb-4 border-t border-white/[0.05] pt-3">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold">Quick Message via {lead.outreachChannel}</p>
+            <div className="px-4 pb-4 border-t border-white/[0.05] pt-3 space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] text-white/25 uppercase tracking-widest font-semibold">Send via {lead.outreachChannel}</p>
                 <CopyButton text={lead.suggestedFirstMessage} />
               </div>
               <p className="text-xs text-white/60 leading-relaxed bg-white/[0.03] border border-white/[0.05] rounded-lg p-3">{lead.suggestedFirstMessage}</p>
+
+              {/* Quick-open platform links */}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {lead.twitter && (
+                  <a href={lead.twitter.startsWith("http") ? lead.twitter : `https://x.com/${lead.twitter.replace(/^@/, "")}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg border text-sky-300 bg-sky-500/10 border-sky-500/20 hover:bg-sky-500/15 transition-all">
+                    <span className="font-bold">𝕏</span>Open on X →
+                  </a>
+                )}
+                {lead.instagram && (
+                  <a href={`https://ig.me/m/${lead.instagram.replace(/^@/, "")}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg border text-pink-300 bg-pink-500/10 border-pink-500/20 hover:bg-pink-500/15 transition-all">
+                    📸 Open on Instagram →
+                  </a>
+                )}
+                {lead.facebook && (
+                  <a href={lead.facebook.startsWith("http") ? lead.facebook : `https://facebook.com/${lead.facebook}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg border text-indigo-300 bg-indigo-500/10 border-indigo-500/20 hover:bg-indigo-500/15 transition-all">
+                    👥 Open on Facebook →
+                  </a>
+                )}
+                {lead.profileUrl && !lead.twitter && !lead.facebook && (
+                  <a href={lead.profileUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg border text-violet-300 bg-violet-500/10 border-violet-500/20 hover:bg-violet-500/15 transition-all">
+                    <ExternalLink className="w-2.5 h-2.5" />Open Post →
+                  </a>
+                )}
+                {lead.email && (
+                  <a href={`mailto:${lead.email}?subject=Quick question&body=${encodeURIComponent(lead.suggestedFirstMessage)}`}
+                    className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-lg border text-blue-300 bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/15 transition-all">
+                    <Mail className="w-2.5 h-2.5" />Open Email →
+                  </a>
+                )}
+              </div>
             </div>
           </motion.div>
         )}
@@ -590,7 +636,7 @@ function LeadTypeToggle({ value, onChange }: { value: "B2C" | "B2B" | "Both"; on
   );
 }
 
-// ── Loading messages ───────────────────────────────────────────────────────────
+// ── Loading messages (per agent) ──────────────────────────────────────────────
 
 const LOADING_MSGS = [
   "Scanning Twitter/X for buyers posting right now...",
@@ -622,6 +668,7 @@ export default function LeadGeneratorSection({
   const [occupationSignals, setOccupationSignals] = useState<string[]>([]);
 
   const [loadingStep, setLoadingStep] = useState(0);
+
   useEffect(() => {
     if (!store.loading) return;
     const id = setInterval(() => setLoadingStep(s => (s + 1) % LOADING_MSGS.length), 2200);
@@ -637,7 +684,6 @@ export default function LeadGeneratorSection({
     if (!offer) setOffer(p.offer);
     setIntentSignals(p.intentSignals);
     setOccupationSignals(p.intentSignals);
-    // Auto-fill buyer keywords so the search phrases are accurate from the start
     if (!keywords && KEYWORD_PRESETS[occ]) setKeywords(KEYWORD_PRESETS[occ]);
   };
 
@@ -645,8 +691,9 @@ export default function LeadGeneratorSection({
 
   const canSearch = businessType.trim() && market.trim();
 
-  const search = () => {
+  const search = useCallback(() => {
     if (!canSearch || store.loading) return;
+    setLoadingStep(0);
     const q: LeadQuery = {
       businessType,
       targetCustomer: targetCustomer || `Clients who need ${businessType} services`,
@@ -657,7 +704,8 @@ export default function LeadGeneratorSection({
       keywords,
     };
     leadStore.search(q, onLeadsFound);
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canSearch, store.loading, businessType, targetCustomer, offer, market, intentSignals, leadType, keywords, onLeadsFound]);
 
   const leads   = store.leads;
   const loading = store.loading;

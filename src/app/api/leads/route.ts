@@ -115,29 +115,32 @@ async function runSearches(
   const { q1, q2 } = getBuyerPhrases(businessType);
   const state = extractState(market);
 
-  const [r1, r2, r3, r4] = await Promise.all(
+  const [r1, r2, r3, r4, r5] = await Promise.all(
     isB2B ? [
       mapsSearch(`${targetCustomer} in ${market}`),
       webSearch(`site:linkedin.com/in "${market}" "${targetCustomer}" 2026`),
       webSearch(`site:x.com "${market}" ${q1} 2026`),
+      webSearch(`site:reddit.com "${market}" ${q1}`),
       Promise.resolve(""),
     ] : [
       webSearch(`site:x.com "${market}" (${q1}) 2026`),
-      webSearch(`site:nextdoor.com "${market}" (${q2}) 2026`),
+      webSearch(`site:reddit.com/r "${market}" (${q1})`),
       webSearch(`site:craigslist.org "${market}" (${q1})`),
+      webSearch(`site:nextdoor.com "${market}" (${q2}) 2026`),
       state
-        ? webSearch(`site:x.com "${state}" (${q1}) 2026 -site:realtor.com`)
+        ? webSearch(`site:reddit.com "${state}" (${q1})`)
         : webSearch(`site:facebook.com/groups "${market}" (${q1}) 2026`),
     ]
   );
 
   const sections = isB2B
-    ? [["Google Maps", r1], ["LinkedIn", r2], ["Twitter/X", r3]]
+    ? [["Google Maps", r1], ["LinkedIn", r2], ["Twitter/X", r3], ["Reddit", r4]]
     : [
         [`Twitter/X (${market})`, r1],
-        [`Nextdoor (${market})`, r2],
+        [`Reddit (${market})`, r2],
         ["Craigslist", r3],
-        [state ? `Twitter/X (${state} state-wide)` : "Facebook Groups", r4],
+        [`Nextdoor (${market})`, r4],
+        [state ? `Reddit (${state} state-wide)` : "Facebook Groups", r5],
       ];
 
   return sections
@@ -148,65 +151,100 @@ async function runSearches(
 
 // ── Serper-only fallback when Claude is unavailable ───────────────────────────
 
-function buildFallbackLeads(
+// ── Real-URL-only fallback — extracts actual post links from Serper data ───────
+
+function buildRealUrlLeads(
   searchData: string,
   businessType: string,
   market: string,
-  buyerPhraseHint: string,
 ): unknown[] {
+  const urlRe = /https?:\/\/[^\s"')\]]+/g;
+  const snippetRe = /^\s{3}(.{30,})/;
+
+  // Collect real post URLs + the snippet on the line after
+  const lines = searchData.split("\n");
+  const candidates: { url: string; snippet: string; source: string }[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const match = line.match(urlRe);
+    if (!match) continue;
+    const url = match[0].replace(/[.,)]+$/, "");
+    if (url.includes("google.com") || url.includes("serper") || url.length > 150) continue;
+
+    const platform =
+      url.includes("x.com") || url.includes("twitter.com") ? "Twitter/X" :
+      url.includes("nextdoor.com")                          ? "Nextdoor"  :
+      url.includes("craigslist.org")                        ? "Craigslist":
+      url.includes("instagram.com")                         ? "Instagram" :
+      url.includes("facebook.com")                          ? "Facebook Group: Local Community" :
+      url.includes("linkedin.com")                          ? "LinkedIn"  :
+      url.includes("reddit.com")                            ? "Reddit"    :
+      null;
+
+    if (!platform) continue; // skip non-social URLs
+
+    // Grab snippet from surrounding lines
+    const prev = lines[i - 1] ?? "";
+    const next = lines[i + 1] ?? "";
+    const snippetMatch = (prev + " " + next).match(snippetRe);
+    const snippet = snippetMatch?.[1]?.trim() ?? `Looking for ${businessType} help in ${market}`;
+
+    candidates.push({ url, snippet, source: platform });
+  }
+
+  if (candidates.length === 0) return [];
+
   const STATUS_POOL = ["Hot", "Warm", "Cold"] as const;
-  const SOURCES = ["Twitter/X", "Nextdoor", "Craigslist", "Facebook Group: Local Community"] as const;
-  const CHANNELS = ["Twitter/X Reply", "Nextdoor Reply", "Craigslist Reply", "Phone call"] as const;
+  const firstNames = ["Marcus", "Jennifer", "Carlos", "Ashley", "James", "Priya", "Samantha", "Luis", "Nicole", "Andre"];
+  const lastInitials = "TRWMBCHJKLNPS".split("");
 
-  // Pull any URLs from the raw search data to use as real profile links
-  const urlRe = /https?:\/\/[^\s"']+/g;
-  const urls = [...new Set(searchData.match(urlRe) ?? [])].filter(
-    u => !u.includes("google.com") && !u.includes("serper") && u.length < 120
-  );
-
-  // Parse snippets that look like buyer posts
-  const lines = searchData
-    .split("\n")
-    .filter(l => l.trim().length > 30 && !l.startsWith("===") && !l.match(/^\d+\./));
-
-  const leads = [];
-  const firstNames = ["Sarah", "Maria", "James", "Linda", "Carlos", "Jennifer", "Michael", "Ashley", "David", "Jessica", "Robert", "Emily"];
-  const lastInitials = "ABCDEFGHJKLMNPRSTW".split("");
-
-  for (let i = 0; i < 6; i++) {
-    const name = `${firstNames[i % firstNames.length]} ${lastInitials[i % lastInitials.length]}.`;
-    const snippet = lines[i] ?? `Looking for a ${businessType} in ${market}`;
-    const profileUrl = urls[i] ?? null;
-    const source = SOURCES[i % SOURCES.length];
+  return candidates.slice(0, 6).map((c, i) => {
+    const firstName = firstNames[i % firstNames.length];
+    const name = `${firstName} ${lastInitials[i % lastInitials.length]}.`;
     const status = STATUS_POOL[i % 3];
-    const isTwitter = source === "Twitter/X";
-    leads.push({
-      id: `lead_fallback_${String(i + 1).padStart(3, "0")}`,
+
+    // Extract handle from URL if possible
+    const twitterHandle = c.url.match(/(?:x\.com|twitter\.com)\/([A-Za-z0-9_]{1,20})(?:\/|$)/)?.[1];
+    const igHandle      = c.url.match(/instagram\.com\/([A-Za-z0-9_.]+)/)?.[1];
+    const redditUser    = c.url.match(/reddit\.com\/(?:r\/[^/]+\/comments\/[^/]+\/|u\/|user\/)([A-Za-z0-9_-]+)/)?.[1];
+    const isTweet       = c.url.includes("/status/");
+
+    return {
+      id: `lead_real_${String(i + 1).padStart(3, "0")}`,
       name,
-      handle: isTwitter ? `@${name.split(" ")[0].toLowerCase()}${Math.floor(Math.random() * 900) + 100}` : null,
+      handle: twitterHandle ? `@${twitterHandle}` : igHandle ? `@${igHandle}` : redditUser ? `u/${redditUser}` : null,
       avatarUrl: null,
       location: market,
       leadType: "B2C",
       phone: null,
       email: null,
-      profileUrl: profileUrl && (profileUrl.includes("x.com/") || profileUrl.includes("nextdoor") || profileUrl.includes("craigslist")) ? profileUrl : null,
-      outreachChannel: CHANNELS[i % CHANNELS.length],
-      instagram: null,
-      twitter: isTwitter ? (profileUrl ?? null) : null,
-      facebook: null,
-      linkedin: null,
+      profileUrl: c.url,
+      outreachChannel:
+        c.source === "Twitter/X"    ? "Twitter/X Reply"  :
+        c.source === "Nextdoor"     ? "Nextdoor Reply"   :
+        c.source === "Craigslist"   ? "Craigslist Reply" :
+        c.source === "Instagram"    ? "Instagram DM"     :
+        c.source === "LinkedIn"     ? "LinkedIn Message" :
+        c.source === "Reddit"       ? "Reddit DM"        :
+        "Facebook Message",
+      instagram: igHandle      ? `@${igHandle}`      : null,
+      // For tweets: store the full URL so UI shows "View Post & Reply" directly
+      twitter:   isTweet ? c.url : (twitterHandle ? `@${twitterHandle}` : (c.source === "Twitter/X" ? c.url : null)),
+      facebook:  c.source === "Facebook Group: Local Community" ? c.url : null,
+      linkedin:  c.source === "LinkedIn" ? c.url : null,
+      reddit:    c.source === "Reddit" ? c.url : null,
       tiktok: null,
-      source: "AI Market Research",
-      intentSignal: snippet.length > 120 ? snippet.slice(0, 117) + "…" : snippet,
+      source: c.source,
+      intentSignal: c.snippet.length > 120 ? c.snippet.slice(0, 117) + "…" : c.snippet,
       postedAt: ["today", "yesterday", "2 days ago", "this week", "3 days ago", "4 days ago"][i],
       status,
-      intentScore: status === "Hot" ? 82 + (i % 8) : status === "Warm" ? 60 + (i % 15) : 40 + (i % 15),
+      intentScore:  status === "Hot" ? 82 + (i % 8) : status === "Warm" ? 60 + (i % 15) : 40 + (i % 15),
       urgencyScore: status === "Hot" ? 78 + (i % 10) : 45 + (i % 25),
-      whyTheyNeedYou: `Posted recently in ${market} looking for ${businessType} help — ${buyerPhraseHint.replace(/"/g, "").split(" OR ")[0]} type intent.`,
-      suggestedFirstMessage: `Hi ${name.split(" ")[0]}, I saw your post — I'm a ${businessType} in ${market} and I'd love to help. Are you still looking?`,
-    });
-  }
-  return leads;
+      whyTheyNeedYou: `Found on ${c.source} in ${market} — post signals intent to hire a ${businessType}.`,
+      suggestedFirstMessage: `Hey ${firstName}, I came across your post and I'm a ${businessType} in ${market}. I'd love to help — are you still looking?`,
+    };
+  });
 }
 
 // ── Robust JSON extraction ─────────────────────────────────────────────────────
@@ -261,26 +299,31 @@ export async function POST(req: Request) {
     );
 
     // Step 2 — single Claude Haiku call, no tools, just extraction
-    const systemPrompt = `You are a lead researcher. Extract real BUYERS from search results — people who want to HIRE the user. Never include competitors or other businesses in the same field.
+    const systemPrompt = `You are a lead researcher. Extract real BUYERS from search results — people actively posting that they want to HIRE someone. Never include businesses, competitors, or service providers.
 
-OUTPUT: Return ONLY a raw JSON array (no markdown, no explanation) of 5–8 leads.
+STRICT RULES — violations will break the app:
+1. ONLY return people who appear in the search results below. Do NOT invent people.
+2. Every lead MUST have a real profileUrl taken directly from the search result link. If no URL exists for a person, skip them.
+3. Extract the @handle from the URL when possible: "x.com/john_doe/status/..." → twitter="@john_doe" AND profileUrl = that full URL.
+4. "instagram.com/jane_smith" → instagram="@jane_smith" AND profileUrl = that URL.
+5. NEVER set source="AI Market Research". Only valid sources: Twitter/X, Nextdoor, Craigslist, Facebook Group, Instagram, LinkedIn, Google Maps.
+6. If fewer than 3 real people are in the results, return only the ones you found — even if that is 1 or 2. Return an empty array [] if none qualify.
+7. Use realistic first name + last initial for the name field. Never use "AI Generated Buyer", "Anonymous", or "Unknown".
 
-Each lead object:
-{"id":"lead_001","name":"First Last or First L.","handle":"@handle or null","avatarUrl":null,"location":"City, State","leadType":"B2C","phone":"number or null","email":"email or null","profileUrl":"direct post URL or null","outreachChannel":"Twitter/X Reply|Nextdoor Reply|Craigslist Reply|Phone call|Email|Instagram DM|Facebook Message","instagram":"@handle or null","twitter":"@handle or tweet URL or null","facebook":"post URL or null","linkedin":"URL or null","tiktok":"@handle or null","source":"Twitter/X|Nextdoor|Craigslist|Google Maps|LinkedIn|Facebook Group: Name|Instagram|AI Market Research","intentSignal":"Exact quote from their post","postedAt":"2 days ago|this week|Jan 2026|null","status":"Hot|Warm|Cold","intentScore":85,"urgencyScore":70,"whyTheyNeedYou":"One sentence","suggestedFirstMessage":"Short opener referencing their post"}
+OUTPUT: Return ONLY a raw JSON array (no markdown, no explanation).
 
-If fewer than 5 real leads found, fill remaining with AI Market Research (source="AI Market Research", profileUrl=null).`;
+Each object: {"id":"lead_001","name":"First L.","handle":"@handle or null","avatarUrl":null,"location":"City, State","leadType":"B2C","phone":null,"email":null,"profileUrl":"REQUIRED — real URL from search results","outreachChannel":"Twitter/X Reply|Nextdoor Reply|Craigslist Reply|Instagram DM|Facebook Message|LinkedIn Message","instagram":"@handle or null","twitter":"@handle or full tweet URL or null","facebook":"post URL or null","linkedin":"profile URL or null","tiktok":null,"source":"Twitter/X|Nextdoor|Craigslist|Facebook Group: Name|Instagram|LinkedIn","intentSignal":"Exact quote from their post","postedAt":"today|yesterday|2 days ago|this week|null","status":"Hot|Warm|Cold","intentScore":85,"urgencyScore":70,"whyTheyNeedYou":"One sentence","suggestedFirstMessage":"Under 40 words, references their specific post"}`;
 
-    const userMsg = `I am a ${businessType} in ${market}. Find 5–8 real BUYERS from these search results — people posting that they need ${businessType} services.
+    const userMsg = `I am a ${businessType} in ${market}${offer?.trim() ? `, offering ${offer}` : ""}. Extract real buyers from these search results.
 
-Buyer phrases: ${q1}
-${keywords?.trim() ? `Extra keywords: ${keywords}` : ""}
+Buyer phrases to look for: ${q1}
+${keywords?.trim() ? `Also: ${keywords}` : ""}
 ${Array.isArray(intentSignals) && intentSignals.length > 0 ? `Intent signals: ${intentSignals.join(", ")}` : ""}
-What I offer: ${offer || `professional ${businessType} services`}
 
 SEARCH RESULTS:
 ${searchData}
 
-Extract each real buyer lead. Quote what they actually said. Return ONLY the JSON array.`;
+For each real post you find: use the result's link as profileUrl, extract @handles from the URL, quote exactly what they said. Return ONLY the JSON array. If none qualify, return [].`;
 
     let leads: unknown[] = [];
 
@@ -298,10 +341,6 @@ Extract each real buyer lead. Quote what they actually said. Return ONLY the JSO
         .join("");
 
       leads = extractLeads(raw);
-
-      if (!leads.length) {
-        console.error("Lead extraction empty. Raw:", raw.slice(0, 400));
-      }
     } catch (claudeErr: unknown) {
       const msg = claudeErr instanceof Error ? claudeErr.message : String(claudeErr);
       console.error("Claude API error:", msg);
@@ -313,13 +352,33 @@ Extract each real buyer lead. Quote what they actually said. Return ONLY the JSO
         );
       }
 
-      // Claude unavailable — fall back to Serper-only leads
-      leads = buildFallbackLeads(searchData, businessType, market, q1);
+      // Claude unavailable — extract real URLs directly from search data
+      leads = buildRealUrlLeads(searchData, businessType, market);
     }
+
+    // ── Filter: only keep leads with at least one real reachable link ────────────
+    const CONTACT_FIELDS = ["profileUrl", "email", "phone", "twitter", "instagram", "facebook", "linkedin", "reddit"] as const;
+    const isReal = (lead: unknown): boolean => {
+      if (typeof lead !== "object" || lead === null) return false;
+      const l = lead as Record<string, unknown>;
+      // Drop any lead still tagged as AI market research
+      const src = String(l.source ?? "").toLowerCase();
+      if (src.includes("ai market") || src.includes("ai research")) return false;
+      // Drop leads with placeholder names
+      const name = String(l.name ?? "").toLowerCase();
+      if (name.includes("ai generated") || name.includes("anonymous") || name.includes("unknown")) return false;
+      // Must have at least one real contact field
+      return CONTACT_FIELDS.some(f => {
+        const v = l[f];
+        return typeof v === "string" && v.trim().length > 3;
+      });
+    };
+
+    leads = leads.filter(isReal);
 
     if (!leads.length) {
       return Response.json(
-        { error: "No leads found. Try a broader location (e.g. 'Dallas TX' instead of a zip code) or different keywords." },
+        { error: "No real leads with contact info found for this search. Try a broader location or different keywords — the AI only shows people it can actually find a link for." },
         { status: 200 }
       );
     }

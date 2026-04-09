@@ -26,6 +26,7 @@ export interface IndividualLead {
   twitter: string | null;
   facebook: string | null;
   linkedin: string | null;
+  reddit: string | null;
   tiktok: string | null;
   // Where & what
   source: string;

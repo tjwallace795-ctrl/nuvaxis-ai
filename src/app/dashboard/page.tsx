@@ -7,7 +7,6 @@ import { AnimatedAIChat } from "@/components/ui/animated-ai-chat";
 import { CosmicParallaxBg } from "@/components/ui/parallax-cosmic-background";
 import { ContentIdeaModal } from "@/components/ui/content-idea-modal";
 import LeadGeneratorSection from "@/components/lead-generator-section";
-import { ExplorePage } from "@/components/explore-page";
 import { leadStore, useLeadStore } from "@/lib/lead-store";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -43,7 +42,6 @@ import {
   Globe,
   Crown,
   AlertCircle,
-  Compass,
   VolumeX,
   ExternalLink,
   Search,
@@ -51,9 +49,11 @@ import {
   Loader2,
   Link2,
   Link2Off,
+  Megaphone,
 } from "lucide-react";
+import { AdCampaignSection } from "@/components/ad-campaign-section";
 
-type ActiveView = "dashboard" | "ai" | "leads" | "explore" | "settings";
+type ActiveView = "dashboard" | "ai" | "leads" | "ads" | "settings";
 
 interface Notification {
   id: string;
@@ -1878,13 +1878,17 @@ export default function DashboardPage() {
 
     // 2. Fetch from Supabase (authoritative, per-user)
     fetch("/api/profile")
-      .then((r) => r.json())
+      .then((r) => {
+        if (r.status === 401) { router.push("/login"); return null; }
+        return r.json();
+      })
       .then((data) => {
+        if (!data) return;
         if (data.profile) {
           const p = data.profile;
 
-          // Redirect to setup if not completed
-          if (!p.setup_complete) {
+          // Redirect to setup only if explicitly not complete
+          if (p.setup_complete === false) {
             router.push("/setup");
             return;
           }
@@ -1923,6 +1927,13 @@ export default function DashboardPage() {
   }, []);
 
   const handleSignOut = useCallback(async () => {
+    // Clear per-user localStorage cache so the next login starts clean
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(PROFILE_KEY);
+        localStorage.removeItem("nuvaxis_leads");
+      }
+    } catch { /* non-critical */ }
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");
@@ -2025,11 +2036,11 @@ export default function DashboardPage() {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
 
   const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard",      view: "dashboard" as ActiveView, badge: null  },
-    { icon: Sparkles,        label: "AI Assistant",   view: "ai" as ActiveView,        badge: null  },
-    { icon: Target,          label: "Lead Generator", view: "leads" as ActiveView,     badge: null  },
-    { icon: Compass,         label: "Explore",        view: "explore" as ActiveView,   badge: "New" },
-    { icon: Settings,        label: "Settings",       view: "settings" as ActiveView,  badge: null  },
+    { icon: LayoutDashboard, label: "Dashboard",      view: "dashboard" as ActiveView, badge: null      },
+    { icon: Sparkles,        label: "AI Assistant",   view: "ai" as ActiveView,        badge: null      },
+    { icon: Target,          label: "Lead Generator", view: "leads" as ActiveView,     badge: null      },
+    { icon: Megaphone,       label: "Ad Campaigns",   view: "ads" as ActiveView,       badge: "Ron"     },
+    { icon: Settings,        label: "Settings",       view: "settings" as ActiveView,  badge: null      },
   ];
 
   return (
@@ -2120,10 +2131,10 @@ export default function DashboardPage() {
         >
           <div>
             <h1 className="text-white text-sm font-semibold" style={{ fontFamily: "var(--font-space-grotesk)" }}>
-              {activeView === "dashboard" ? "Dashboard" : activeView === "ai" ? "AI Assistant" : activeView === "leads" ? "Lead Generator" : activeView === "explore" ? "Explore" : "Settings"}
+              {activeView === "dashboard" ? "Dashboard" : activeView === "ai" ? "AI Assistant" : activeView === "leads" ? "Lead Generator" : activeView === "ads" ? "Ad Campaigns" : "Settings"}
             </h1>
             <p className="text-white/25 text-xs" style={{ fontFamily: "var(--font-space-grotesk)" }}>
-              {activeView === "dashboard" ? `${profile.industry} · ${profile.name}` : activeView === "ai" ? "Nova · Powered by Claude" : activeView === "leads" ? "AI-powered prospect finder" : activeView === "explore" ? `Trending · ${profile.niche || profile.industry}` : "Account & Subscription"}
+              {activeView === "dashboard" ? `${profile.industry} · ${profile.name}` : activeView === "ai" ? "Nova · Powered by Claude" : activeView === "leads" ? "AI-powered prospect finder" : activeView === "ads" ? "Ron · Ad Architect & Conversion Strategist" : "Account & Subscription"}
             </p>
           </div>
 
@@ -2194,9 +2205,9 @@ export default function DashboardPage() {
               <motion.div key="leads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full overflow-y-auto">
                 <LeadGeneratorSection onLeadsFound={() => generateNotification("lead")} />
               </motion.div>
-            ) : activeView === "explore" ? (
-              <motion.div key="explore" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
-                <ExplorePage profile={profile} />
+            ) : activeView === "ads" ? (
+              <motion.div key="ads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
+                <AdCampaignSection profile={profile} />
               </motion.div>
             ) : (
               <motion.div key="settings" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
@@ -2212,7 +2223,7 @@ export default function DashboardPage() {
         {[
           { icon: LayoutDashboard, label: "Home",    view: "dashboard" as ActiveView },
           { icon: Sparkles,        label: "AI Chat", view: "ai" as ActiveView },
-          { icon: Compass,         label: "Explore", view: "explore" as ActiveView },
+          { icon: Megaphone,       label: "Ads",     view: "ads" as ActiveView },
           { icon: Target,          label: "Leads",   view: "leads" as ActiveView },
           { icon: Settings,        label: "Settings",view: "settings" as ActiveView },
         ].map((item) => {

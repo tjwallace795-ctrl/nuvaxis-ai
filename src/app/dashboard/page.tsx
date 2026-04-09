@@ -42,6 +42,7 @@ import {
   Globe,
   Crown,
   AlertCircle,
+  Lock,
   VolumeX,
   ExternalLink,
   Search,
@@ -52,6 +53,7 @@ import {
   Megaphone,
 } from "lucide-react";
 import { AdCampaignSection } from "@/components/ad-campaign-section";
+import { PaywallModal } from "@/components/paywall-modal";
 
 type ActiveView = "dashboard" | "ai" | "leads" | "ads" | "settings";
 
@@ -95,6 +97,7 @@ interface ProfileState {
   website: string;
   bio: string;
   botName?: string;
+  subscriptionStatus: "free" | "starter" | "pro" | "agency";
   socialAccounts: { instagram: string; tiktok: string; youtube: string };
 }
 
@@ -109,6 +112,7 @@ const DEFAULT_PROFILE: ProfileState = {
   phone: "+1 (915) 555-0182",
   website: "wallacerealestate.com",
   bio: "Helping El Paso families find their perfect home since 2018.",
+  subscriptionStatus: "free",
   socialAccounts: { instagram: "", tiktok: "", youtube: "" },
 };
 
@@ -857,10 +861,13 @@ function TrendingVideos({ industry }: { industry: string }) {
 function SettingsPage({
   profile,
   onSave,
+  onUpgradeClick,
 }: {
   profile: ProfileState;
   onSave: (updated: ProfileState) => void;
+  onUpgradeClick: () => void;
 }) {
+  const isPro = profile.subscriptionStatus !== "free";
   const [activeSection, setActiveSection] = useState("profile");
   const [saved, setSaved] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<string>("");
@@ -972,28 +979,31 @@ function SettingsPage({
       name: "Starter",
       price: "$29",
       period: "/mo",
-      color: "border-white/[0.08]",
-      badge: null,
-      features: ["1 AI Assistant", "100 AI sessions/mo", "Basic market reports", "Email support"],
+      color: profile.subscriptionStatus === "starter" ? "border-blue-500/40" : "border-white/[0.08]",
+      badge: profile.subscriptionStatus === "starter" ? "Current Plan" : null,
+      badgeColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+      features: ["AI Assistant (unlimited chat)", "Lead Generator", "Ad Campaign Builder", "Basic market reports", "Email support"],
+      current: profile.subscriptionStatus === "starter",
     },
     {
       name: "Pro",
       price: "$79",
       period: "/mo",
-      color: "border-blue-500/40",
-      badge: "Current Plan",
-      badgeColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-      features: ["Unlimited AI sessions", "Real-time social scan", "Trending video feed", "Lead notifications", "Priority support"],
-      current: true,
+      color: profile.subscriptionStatus === "pro" ? "border-blue-500/40" : "border-white/[0.08]",
+      badge: profile.subscriptionStatus === "pro" ? "Current Plan" : "Most Popular",
+      badgeColor: profile.subscriptionStatus === "pro" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" : "text-violet-400 bg-violet-500/10 border-violet-500/20",
+      features: ["Everything in Starter", "Unlimited AI sessions", "Real-time social scan", "Trending video feed", "Lead notifications", "Priority support"],
+      current: profile.subscriptionStatus === "pro",
     },
     {
       name: "Agency",
       price: "$199",
       period: "/mo",
-      color: "border-violet-500/30",
-      badge: "Best Value",
+      color: profile.subscriptionStatus === "agency" ? "border-violet-500/40" : "border-violet-500/30",
+      badge: profile.subscriptionStatus === "agency" ? "Current Plan" : "Best Value",
       badgeColor: "text-violet-400 bg-violet-500/10 border-violet-500/20",
       features: ["Everything in Pro", "Up to 10 team members", "White-label dashboard", "Custom AI training", "Dedicated manager"],
+      current: profile.subscriptionStatus === "agency",
     },
   ];
 
@@ -1430,20 +1440,42 @@ function SettingsPage({
               <div className="space-y-4">
 
                 {/* Current plan summary */}
-                <div className="bg-blue-500/[0.07] border border-blue-500/25 rounded-2xl p-5">
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-2">
-                      <Crown className="w-4 h-4 text-blue-400" />
-                      <span className="text-white font-semibold text-sm" style={{ fontFamily: F }}>Pro Plan</span>
+                {isPro ? (
+                  <div className="bg-blue-500/[0.07] border border-blue-500/25 rounded-2xl p-5">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-4 h-4 text-blue-400" />
+                        <span className="text-white font-semibold text-sm capitalize" style={{ fontFamily: F }}>{profile.subscriptionStatus} Plan</span>
+                      </div>
+                      <span className="text-blue-400 text-xs border border-blue-500/25 bg-blue-500/10 px-2 py-0.5 rounded-full" style={{ fontFamily: F }}>Active</span>
                     </div>
-                    <span className="text-blue-400 text-xs border border-blue-500/25 bg-blue-500/10 px-2 py-0.5 rounded-full" style={{ fontFamily: F }}>Active</span>
+                    <p className="text-white/35 text-xs mb-3" style={{ fontFamily: F }}>Manage billing at your payment provider</p>
+                    <div className="flex items-end gap-1">
+                      <span className="text-white text-3xl font-bold" style={{ fontFamily: F }}>
+                        {profile.subscriptionStatus === "starter" ? "$29" : profile.subscriptionStatus === "agency" ? "$199" : "$79"}
+                      </span>
+                      <span className="text-white/30 text-sm mb-1">/month</span>
+                    </div>
                   </div>
-                  <p className="text-white/35 text-xs mb-3" style={{ fontFamily: F }}>Next billing date: May 8, 2026</p>
-                  <div className="flex items-end gap-1">
-                    <span className="text-white text-3xl font-bold" style={{ fontFamily: F }}>$79</span>
-                    <span className="text-white/30 text-sm mb-1">/month</span>
+                ) : (
+                  <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-5">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-white/40" />
+                        <span className="text-white font-semibold text-sm" style={{ fontFamily: F }}>Free Plan</span>
+                      </div>
+                      <span className="text-white/40 text-xs border border-white/[0.1] bg-white/[0.04] px-2 py-0.5 rounded-full" style={{ fontFamily: F }}>Active</span>
+                    </div>
+                    <p className="text-white/35 text-xs mb-4" style={{ fontFamily: F }}>AI chat is free forever. Upgrade to unlock all tools.</p>
+                    <button
+                      onClick={onUpgradeClick}
+                      className="w-full py-2.5 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white transition-all"
+                      style={{ fontFamily: F }}
+                    >
+                      Upgrade to unlock all tools
+                    </button>
                   </div>
-                </div>
+                )}
 
                 {/* Payment method */}
                 <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-5">
@@ -1860,8 +1892,34 @@ export default function DashboardPage() {
   const [activeView, setActiveView] = useState<ActiveView>("dashboard");
   const [profile, setProfile] = useState<ProfileState>(DEFAULT_PROFILE);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [adPrefill, setAdPrefill] = useState<{ niche: string; offer: string; targetAudience: string; platform: string } | undefined>(undefined);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallFeature, setPaywallFeature] = useState({ name: "", description: "" });
   const leadState = useLeadStore();
+
+  const isPro = profile.subscriptionStatus !== "free";
+
+  const gatedViews: ActiveView[] = ["leads", "ads"];
+
+  const navigateTo = (view: ActiveView) => {
+    if (!isPro && gatedViews.includes(view)) {
+      const featureMap: Record<string, { name: string; description: string }> = {
+        leads: {
+          name: "Lead Generator",
+          description: "Find and qualify high-intent prospects using AI. Requires a Starter, Pro, or Agency plan.",
+        },
+        ads: {
+          name: "Ad Campaign Builder",
+          description: "Build full ad campaign architecture with copy, compliance checks, and budget forecasting. Requires a plan.",
+        },
+      };
+      setPaywallFeature(featureMap[view] ?? { name: view, description: "This feature requires a subscription." });
+      setPaywallOpen(true);
+      return;
+    }
+    setActiveView(view);
+  };
 
   // Load persisted profile and leads on mount
   useEffect(() => {
@@ -1906,6 +1964,7 @@ export default function DashboardPage() {
             website: p.website || DEFAULT_PROFILE.website,
             bio: p.bio || DEFAULT_PROFILE.bio,
             botName: p.bot_name || "Nova",
+            subscriptionStatus: p.subscription_status || "free",
             socialAccounts: {
               instagram: p.social_instagram || "",
               tiktok: p.social_tiktok || "",
@@ -2036,11 +2095,11 @@ export default function DashboardPage() {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
 
   const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard",      view: "dashboard" as ActiveView, badge: null      },
-    { icon: Sparkles,        label: "AI Assistant",   view: "ai" as ActiveView,        badge: null      },
-    { icon: Target,          label: "Lead Generator", view: "leads" as ActiveView,     badge: null      },
-    { icon: Megaphone,       label: "Ad Campaigns",   view: "ads" as ActiveView,       badge: "Ron"     },
-    { icon: Settings,        label: "Settings",       view: "settings" as ActiveView,  badge: null      },
+    { icon: LayoutDashboard, label: "Dashboard",      view: "dashboard" as ActiveView, badge: null,   locked: false },
+    { icon: Sparkles,        label: "AI Assistant",   view: "ai" as ActiveView,        badge: "Free", locked: false },
+    { icon: Target,          label: "Lead Generator", view: "leads" as ActiveView,     badge: null,   locked: !isPro },
+    { icon: Megaphone,       label: "Ad Campaigns",   view: "ads" as ActiveView,       badge: "Ron",  locked: !isPro },
+    { icon: Settings,        label: "Settings",       view: "settings" as ActiveView,  badge: null,   locked: false },
   ];
 
   return (
@@ -2069,29 +2128,30 @@ export default function DashboardPage() {
             return (
               <button
                 key={item.label}
-                onClick={() => item.view && setActiveView(item.view)}
-                disabled={!item.view}
+                onClick={() => item.view && navigateTo(item.view)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all border ${
                   isActive
                     ? "bg-blue-600/20 text-blue-400 border-blue-500/20"
-                    : item.view
-                    ? "text-white/40 hover:text-white/80 hover:bg-white/[0.04] border-transparent"
-                    : "text-white/20 cursor-default border-transparent"
+                    : item.locked
+                    ? "text-white/25 hover:text-white/50 hover:bg-white/[0.03] border-transparent"
+                    : "text-white/50 hover:text-white/90 hover:bg-white/[0.04] border-transparent"
                 }`}
                 style={{ fontFamily: "var(--font-space-grotesk)" }}
               >
-                <Icon size={16} />
+                <Icon size={16} className={item.locked ? "text-white/20" : ""} />
                 <span className="flex-1 text-left">{item.label}</span>
-                {item.view === "leads" && leadState.newLeadCount > 0 && activeView !== "leads" ? (
+                {item.locked ? (
+                  <Lock size={11} className="text-white/20 flex-shrink-0" />
+                ) : item.view === "leads" && leadState.newLeadCount > 0 && activeView !== "leads" ? (
                   <span className="text-[10px] bg-emerald-500 text-white font-bold min-w-[18px] h-[18px] px-1 rounded-full flex items-center justify-center">
                     {leadState.newLeadCount > 9 ? "9+" : leadState.newLeadCount}
                   </span>
-                ) : item.badge === "New" ? (
-                  <span className="text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-1.5 py-0.5 rounded-full">
-                    New
+                ) : item.badge === "Free" ? (
+                  <span className="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 px-1.5 py-0.5 rounded-full">
+                    Free
                   </span>
                 ) : item.badge ? (
-                  <span className="text-[10px] bg-white/[0.05] text-white/20 px-1.5 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-white/[0.05] text-white/30 px-1.5 py-0.5 rounded-full">
                     {item.badge}
                   </span>
                 ) : null}
@@ -2108,7 +2168,9 @@ export default function DashboardPage() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white text-xs font-semibold truncate" style={{ fontFamily: "var(--font-space-grotesk)" }}>{profile.name}</p>
-              <p className="text-white/25 text-[11px] truncate">{profile.industry} · Pro</p>
+              <p className="text-white/25 text-[11px] truncate">
+                {profile.industry} · {isPro ? profile.subscriptionStatus.charAt(0).toUpperCase() + profile.subscriptionStatus.slice(1) : "Free"}
+              </p>
             </div>
             <LogOut size={13} className="text-white/15 group-hover:text-white/50 transition-colors flex-shrink-0" />
           </div>
@@ -2198,20 +2260,43 @@ export default function DashboardPage() {
                 <DashboardContent profile={profile} onGoToLeads={() => setActiveView("leads")} />
               </motion.div>
             ) : activeView === "ai" ? (
-              <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
-                <AnimatedAIChat assistantName={profile.botName || "Nova"} profile={profile} />
+              <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full flex flex-col">
+                {!isPro && (
+                  <div className="flex-shrink-0 flex items-center justify-between gap-3 px-4 py-2.5 bg-gradient-to-r from-blue-600/10 to-violet-600/10 border-b border-white/[0.06]">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Sparkles className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                      <p className="text-white/70 text-xs truncate" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                        <span className="text-white font-semibold">Free plan — </span>
+                        AI chat is yours. Ask me anything about growing your business with AI.
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => { setPaywallFeature({ name: "All Tools", description: "Unlock Lead Generator, Ad Campaigns, and more." }); setPaywallOpen(true); }}
+                      className="flex-shrink-0 text-[11px] font-semibold text-blue-400 hover:text-white border border-blue-500/30 hover:bg-blue-600 px-3 py-1 rounded-full transition-all"
+                      style={{ fontFamily: "var(--font-space-grotesk)" }}
+                    >
+                      Upgrade
+                    </button>
+                  </div>
+                )}
+                <div className="flex-1 min-h-0">
+                  <AnimatedAIChat assistantName={profile.botName || "Nova"} profile={profile} />
+                </div>
               </motion.div>
             ) : activeView === "leads" ? (
               <motion.div key="leads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full overflow-y-auto">
-                <LeadGeneratorSection onLeadsFound={() => generateNotification("lead")} />
+                <LeadGeneratorSection
+                  onLeadsFound={() => generateNotification("lead")}
+                  onBoostWithAd={(data) => { setAdPrefill(data); setActiveView("ads"); }}
+                />
               </motion.div>
             ) : activeView === "ads" ? (
               <motion.div key="ads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
-                <AdCampaignSection profile={profile} />
+                <AdCampaignSection profile={profile} prefill={adPrefill} />
               </motion.div>
             ) : (
               <motion.div key="settings" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
-                <SettingsPage profile={profile} onSave={handleProfileSave} />
+                <SettingsPage profile={profile} onSave={handleProfileSave} onUpgradeClick={() => { setPaywallFeature({ name: "All Tools", description: "Unlock Lead Generator, Ad Campaigns, and more." }); setPaywallOpen(true); }} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -2221,20 +2306,20 @@ export default function DashboardPage() {
       {/* Mobile bottom nav — hidden on desktop */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-neutral-950/95 backdrop-blur-xl border-t border-white/[0.06] flex items-stretch pb-safe">
         {[
-          { icon: LayoutDashboard, label: "Home",    view: "dashboard" as ActiveView },
-          { icon: Sparkles,        label: "AI Chat", view: "ai" as ActiveView },
-          { icon: Megaphone,       label: "Ads",     view: "ads" as ActiveView },
-          { icon: Target,          label: "Leads",   view: "leads" as ActiveView },
-          { icon: Settings,        label: "Settings",view: "settings" as ActiveView },
+          { icon: LayoutDashboard, label: "Home",    view: "dashboard" as ActiveView, locked: false      },
+          { icon: Sparkles,        label: "AI Chat", view: "ai" as ActiveView,        locked: false      },
+          { icon: Megaphone,       label: "Ads",     view: "ads" as ActiveView,       locked: !isPro     },
+          { icon: Target,          label: "Leads",   view: "leads" as ActiveView,     locked: !isPro     },
+          { icon: Settings,        label: "Settings",view: "settings" as ActiveView,  locked: false      },
         ].map((item) => {
           const Icon = item.icon;
           const isActive = activeView === item.view;
           return (
             <button
               key={item.label}
-              onClick={() => setActiveView(item.view)}
+              onClick={() => navigateTo(item.view)}
               className={`relative flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-colors ${
-                isActive ? "text-blue-400" : "text-white/30"
+                isActive ? "text-blue-400" : item.locked ? "text-white/20" : "text-white/40"
               }`}
             >
               {isActive && (
@@ -2242,7 +2327,12 @@ export default function DashboardPage() {
               )}
               <div className="relative">
                 <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
-                {item.view === "leads" && leadState.newLeadCount > 0 && !isActive && (
+                {item.locked && !isActive && (
+                  <span className="absolute -top-1 -right-1.5 w-3 h-3 bg-neutral-800 border border-white/10 rounded-full flex items-center justify-center">
+                    <Lock size={6} className="text-white/40" />
+                  </span>
+                )}
+                {!item.locked && item.view === "leads" && leadState.newLeadCount > 0 && !isActive && (
                   <span className="absolute -top-1 -right-1.5 min-w-[14px] h-3.5 bg-emerald-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center px-0.5">
                     {leadState.newLeadCount > 9 ? "9+" : leadState.newLeadCount}
                   </span>
@@ -2255,6 +2345,16 @@ export default function DashboardPage() {
           );
         })}
       </nav>
+
+      {/* Paywall Modal */}
+      <PaywallModal
+        open={paywallOpen}
+        featureName={paywallFeature.name}
+        featureDescription={paywallFeature.description}
+        onClose={() => setPaywallOpen(false)}
+        onUpgrade={() => { setPaywallOpen(false); setActiveView("settings"); }}
+        onChatFree={() => { setPaywallOpen(false); setActiveView("ai"); }}
+      />
     </div>
   );
 }

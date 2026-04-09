@@ -54,10 +54,10 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
-            href="#pricing"
+            href="/signup"
             className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition-all text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base shadow-lg shadow-blue-900/40"
           >
-            See Our Plans
+            Get Started Free
             <ArrowRight
               size={18}
               className="group-hover:translate-x-1 transition-transform"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
 import {
   Paperclip, XIcon, LoaderIcon, Command,
@@ -9,11 +9,11 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import * as React from "react";
+import { chatStore } from "@/lib/chat-store";
+import type { ChatProfile } from "@/lib/chat-store";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-}
+// Re-export ChatProfile so existing imports still work
+export type { ChatProfile };
 
 interface ToolEvent {
   name: string;
@@ -26,18 +26,6 @@ interface CommandSuggestion {
   label: string;
   description: string;
   prefix: string;
-}
-
-export interface ChatProfile {
-  businessName?: string;
-  name?: string;
-  industry?: string;
-  niche?: string;
-  location?: string;
-  email?: string;
-  website?: string;
-  bio?: string;
-  socialAccounts?: { instagram?: string; tiktok?: string; youtube?: string };
 }
 
 // ── Hooks ─────────────────────────────────────────────────────────────────────
@@ -136,18 +124,19 @@ interface AnimatedAIChatProps {
   profile?: ChatProfile;
 }
 
-const CHAT_HISTORY_KEY = "nuvaxis_chat_history";
-const CHAT_HISTORY_MAX = 50;
-
 export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAIChatProps) {
+  // UI-only local state
   const [value, setValue] = useState("");
   const [attachments, setAttachments] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [showCommandPalette, setShowCommandPalette] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [streamingText, setStreamingText] = useState("");
-  const [activeTools, setActiveTools] = useState<ToolEvent[]>([]);
+
+  // Subscribe to the module-level chat store (survives navigation)
+  const { messages, isLoading, streamingText, activeTools } = useSyncExternalStore(
+    chatStore.subscribe,
+    chatStore.getSnapshot,
+    chatStore.getServerSnapshot
+  );
 
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({ minHeight: 24, maxHeight: 200 });
   const commandPaletteRef = useRef<HTMLDivElement>(null);
@@ -155,31 +144,10 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
 
   const niche = profile?.niche || profile?.industry || "your business";
 
-  // Load chat history from localStorage on mount
+  // Hydrate messages from localStorage once on client mount
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const raw = localStorage.getItem(CHAT_HISTORY_KEY);
-        if (raw) {
-          const saved = JSON.parse(raw) as Message[];
-          if (Array.isArray(saved) && saved.length > 0) {
-            setMessages(saved);
-          }
-        }
-      }
-    } catch { /* non-critical */ }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    chatStore.loadFromStorage();
   }, []);
-
-  // Persist messages to localStorage whenever they change (cap at 50)
-  useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const toSave = messages.slice(-CHAT_HISTORY_MAX);
-        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(toSave));
-      }
-    } catch { /* non-critical */ }
-  }, [messages]);
 
   const commandSuggestions: CommandSuggestion[] = [
     { icon: <Search className="w-4 h-4" />,    label: "Search Web",      description: "Look up anything in real-time",              prefix: "/search" },
@@ -231,80 +199,12 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading, streamingText, activeTools]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = (text: string) => {
     if (!text.trim() || isLoading) return;
-
-    const userMsg: Message = { role: "user", content: text.trim() };
-    const history = [...messages, userMsg];
-    setMessages(history);
     setValue("");
     adjustHeight(true);
-    setIsLoading(true);
-    setStreamingText("");
-    setActiveTools([]);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: history.map((m) => ({ role: m.role, content: m.content })),
-          profile,
-        }),
-      });
-
-      if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let accumulated = "";
-      let buffer = "";
-
-      while (true) {
-        const { done, value: chunk } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(chunk, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          try {
-            const event = JSON.parse(line.slice(6));
-
-            if (event.type === "text") {
-              accumulated += event.content;
-              setStreamingText(accumulated);
-            } else if (event.type === "tool_start") {
-              setActiveTools((prev) => [
-                ...prev.filter((t) => t.name !== event.name),
-                { name: event.name, label: event.label, done: false },
-              ]);
-            } else if (event.type === "tool_done") {
-              setActiveTools((prev) =>
-                prev.map((t) => (t.name === event.name ? { ...t, done: true } : t))
-              );
-            } else if (event.type === "done") {
-              // Commit accumulated text as assistant message
-              if (accumulated.trim()) {
-                setMessages((prev) => [...prev, { role: "assistant", content: accumulated.trim() }]);
-              }
-              setStreamingText("");
-              setActiveTools([]);
-            } else if (event.type === "error") {
-              setMessages((prev) => [...prev, { role: "assistant", content: `⚠️ ${event.message}` }]);
-            }
-          } catch { /* malformed line — skip */ }
-        }
-      }
-    } catch {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Connection error. Please try again." }]);
-      setStreamingText("");
-      setActiveTools([]);
-    } finally {
-      setIsLoading(false);
-    }
+    // Delegate to the store — runs outside React lifecycle
+    chatStore.send(text, profile);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -321,7 +221,6 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
 
   const selectCommand = (index: number) => {
     const starter = commandStarters[commandSuggestions[index].prefix] ?? "";
-    // If the starter is a full question (no trailing space), send it directly
     if (!starter.endsWith(" ") && !starter.endsWith(": ")) {
       setValue("");
       setShowCommandPalette(false);
@@ -336,12 +235,10 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
   /** Strip dangerous tags and URLs from an HTML string before setting innerHTML. */
   const sanitizeHtml = (html: string): string =>
     html
-      // Remove <script>, <iframe>, <object>, <embed> tags (with their content)
       .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "")
       .replace(/<iframe\b[^>]*>[\s\S]*?<\/iframe>/gi, "")
       .replace(/<object\b[^>]*>[\s\S]*?<\/object>/gi, "")
       .replace(/<embed\b[^>]*\/?>/gi, "")
-      // Strip javascript: and data: from href/src attributes
       .replace(/(href|src)\s*=\s*["']?\s*(javascript|data)\s*:/gi, "$1=\"\"");
 
   const renderContent = (text: string) =>

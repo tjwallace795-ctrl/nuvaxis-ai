@@ -87,12 +87,18 @@ export default function Navbar() {
         </div>
 
         {/* CTA */}
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-3">
           <a
-            href="#contact"
+            href="/login"
+            className="text-gray-300 hover:text-white transition-colors text-sm font-medium px-4 py-2"
+          >
+            Log In
+          </a>
+          <a
+            href="/signup"
             className="bg-blue-600 hover:bg-blue-700 transition-colors text-white text-sm font-medium px-5 py-2.5 rounded-full"
           >
-            Get a Free Demo
+            Get Started
           </a>
         </div>
 
@@ -123,11 +129,18 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="#contact"
+            href="/login"
             onClick={() => setMenuOpen(false)}
-            className="mt-2 bg-blue-600 text-white text-sm font-medium px-5 py-3 rounded-full text-center"
+            className="mt-2 border border-white/20 text-white text-sm font-medium px-5 py-3 rounded-full text-center"
           >
-            Get a Free Demo
+            Log In
+          </a>
+          <a
+            href="/signup"
+            onClick={() => setMenuOpen(false)}
+            className="bg-blue-600 text-white text-sm font-medium px-5 py-3 rounded-full text-center"
+          >
+            Get Started
           </a>
         </motion.div>
       )}

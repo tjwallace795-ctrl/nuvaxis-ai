@@ -39,7 +39,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="text-gray-400 text-sm md:text-xl max-w-2xl mx-auto mb-7 md:mb-10 leading-relaxed"
+          className="text-white text-sm md:text-xl max-w-2xl mx-auto mb-7 md:mb-10 leading-relaxed"
         >
           Nuvaxis AI helps local businesses compete at the highest level with
           cutting-edge AI websites, smart automation, and digital growth tools
@@ -71,31 +71,6 @@ export default function HeroSection() {
           </a>
         </motion.div>
 
-        {/* Social proof strip */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="mt-8 md:mt-16 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-500"
-        >
-          <div className="flex items-center gap-2">
-            <div className="flex -space-x-2">
-              {["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-green-500"].map(
-                (color, i) => (
-                  <div
-                    key={i}
-                    className={`w-7 h-7 rounded-full ${color} border-2 border-black`}
-                  />
-                )
-              )}
-            </div>
-            <span>Trusted by local businesses</span>
-          </div>
-          <span className="hidden sm:block text-gray-700">|</span>
-          <span>Launch in as little as 7 days</span>
-          <span className="hidden sm:block text-gray-700">|</span>
-          <span>No tech knowledge required</span>
-        </motion.div>
       </div>
 
       {/* Bottom fade — blends into the cosmic bg below */}

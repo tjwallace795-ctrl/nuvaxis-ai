@@ -19,7 +19,7 @@ const steps = [
     icon: Rocket,
     title: "We Build & Launch",
     description:
-      "Our team builds your AI-powered website and integrations in as little as 7 days. You review, we refine, and we launch — fast.",
+      "Our team will have your website up and running in 3 days. You review, we refine, and we launch — fast.",
     color: "text-purple-400",
     border: "border-purple-500/30",
     glow: "shadow-purple-500/10",
@@ -57,7 +57,7 @@ export default function HowItWorks() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mt-3 mb-4">
             Simple. Fast. Powerful.
           </h2>
-          <p className="text-gray-400 text-sm md:text-lg max-w-xl mx-auto">
+          <p className="text-white text-sm md:text-lg max-w-xl mx-auto">
             Getting started with Nuvaxis AI is easier than you think. Three
             steps to transform your business.
           </p>
@@ -92,10 +92,10 @@ export default function HowItWorks() {
                     </span>
                   </div>
 
-                  <h3 className="text-white font-semibold text-base md:text-xl mb-2 md:mb-3">
+                  <h3 className="text-white font-bold text-lg md:text-2xl mb-2 md:mb-3">
                     {step.title}
                   </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-white text-sm leading-relaxed">
                     {step.description}
                   </p>
                 </motion.div>

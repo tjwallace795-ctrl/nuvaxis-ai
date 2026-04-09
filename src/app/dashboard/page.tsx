@@ -94,6 +94,7 @@ interface ProfileState {
   phone: string;
   website: string;
   bio: string;
+  botName?: string;
   socialAccounts: { instagram: string; tiktok: string; youtube: string };
 }
 
@@ -1837,7 +1838,7 @@ function DashboardContent({ profile, onGoToLeads }: { profile: ProfileState; onG
                 </div>
               </div>
               <div className="flex-1 min-h-0 overflow-hidden">
-                <AnimatedAIChat assistantName="Nova" profile={profile} />
+                <AnimatedAIChat assistantName={profile.botName || "Nova"} profile={profile} />
               </div>
             </div>
           </motion.div>
@@ -1881,6 +1882,13 @@ export default function DashboardPage() {
       .then((data) => {
         if (data.profile) {
           const p = data.profile;
+
+          // Redirect to setup if not completed
+          if (!p.setup_complete) {
+            router.push("/setup");
+            return;
+          }
+
           // Map from DB column names to ProfileState shape
           const loaded: ProfileState = {
             name: p.name || DEFAULT_PROFILE.name,
@@ -1893,13 +1901,13 @@ export default function DashboardPage() {
             phone: p.phone || DEFAULT_PROFILE.phone,
             website: p.website || DEFAULT_PROFILE.website,
             bio: p.bio || DEFAULT_PROFILE.bio,
+            botName: p.bot_name || "Nova",
             socialAccounts: {
               instagram: p.social_instagram || "",
               tiktok: p.social_tiktok || "",
               youtube: p.social_youtube || "",
             },
           };
-          // Only override if user has actually set data (non-empty name means customized)
           if (p.name || p.business_name) {
             setProfile(loaded);
             try {
@@ -2180,7 +2188,7 @@ export default function DashboardPage() {
               </motion.div>
             ) : activeView === "ai" ? (
               <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full">
-                <AnimatedAIChat assistantName="Nova" profile={profile} />
+                <AnimatedAIChat assistantName={profile.botName || "Nova"} profile={profile} />
               </motion.div>
             ) : activeView === "leads" ? (
               <motion.div key="leads" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }} className="h-full overflow-y-auto">

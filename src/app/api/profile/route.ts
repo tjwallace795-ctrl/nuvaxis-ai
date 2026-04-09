@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     name: body.name ?? "",
     business_name: body.businessName ?? "",
     industry: body.industry ?? "Business",
-    niche: body.niche ?? "",
+    niche: body.niche ?? body.industry ?? "",
     location: body.location ?? "",
     email: body.email ?? user.email ?? "",
     phone: body.phone ?? "",
@@ -54,6 +54,9 @@ export async function POST(request: Request) {
     social_instagram: body.socialAccounts?.instagram ?? "",
     social_tiktok: body.socialAccounts?.tiktok ?? "",
     social_youtube: body.socialAccounts?.youtube ?? "",
+    bot_name: body.botName ?? "Nova",
+    goal: body.goal ?? "",
+    setup_complete: body.setupComplete ?? false,
     updated_at: new Date().toISOString(),
   };
 

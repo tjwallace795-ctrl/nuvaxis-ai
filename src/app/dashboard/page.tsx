@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { AnimatedAIChat } from "@/components/ui/animated-ai-chat";
 import { CosmicParallaxBg } from "@/components/ui/parallax-cosmic-background";
 import { ContentIdeaModal } from "@/components/ui/content-idea-modal";
@@ -1853,6 +1855,7 @@ const PROFILE_KEY = "nuvaxis_profile";
 
 // ── Page root ─────────────────────────────────────────────────────────────────
 export default function DashboardPage() {
+  const router = useRouter();
   const [activeView, setActiveView] = useState<ActiveView>("dashboard");
   const [profile, setProfile] = useState<ProfileState>(DEFAULT_PROFILE);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -1861,6 +1864,7 @@ export default function DashboardPage() {
 
   // Load persisted profile and leads on mount
   useEffect(() => {
+    // 1. Seed immediately from localStorage (fast)
     try {
       if (typeof window !== "undefined") {
         const raw = localStorage.getItem(PROFILE_KEY);
@@ -1870,18 +1874,66 @@ export default function DashboardPage() {
         }
       }
     } catch { /* non-critical */ }
+
+    // 2. Fetch from Supabase (authoritative, per-user)
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.profile) {
+          const p = data.profile;
+          // Map from DB column names to ProfileState shape
+          const loaded: ProfileState = {
+            name: p.name || DEFAULT_PROFILE.name,
+            businessName: p.business_name || DEFAULT_PROFILE.businessName,
+            industry: p.industry || DEFAULT_PROFILE.industry,
+            niche: p.niche || DEFAULT_PROFILE.niche,
+            location: p.location || DEFAULT_PROFILE.location,
+            initials: (p.name || DEFAULT_PROFILE.name)[0]?.toUpperCase() ?? "U",
+            email: p.email || DEFAULT_PROFILE.email,
+            phone: p.phone || DEFAULT_PROFILE.phone,
+            website: p.website || DEFAULT_PROFILE.website,
+            bio: p.bio || DEFAULT_PROFILE.bio,
+            socialAccounts: {
+              instagram: p.social_instagram || "",
+              tiktok: p.social_tiktok || "",
+              youtube: p.social_youtube || "",
+            },
+          };
+          // Only override if user has actually set data (non-empty name means customized)
+          if (p.name || p.business_name) {
+            setProfile(loaded);
+            try {
+              localStorage.setItem(PROFILE_KEY, JSON.stringify(loaded));
+            } catch { /* non-critical */ }
+          }
+        }
+      })
+      .catch(() => { /* non-critical — localStorage fallback is active */ });
+
     leadStore.loadFromStorage();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleSignOut = useCallback(async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+  }, [router]);
+
   const handleProfileSave = useCallback((updated: ProfileState) => {
     setProfile(updated);
-    // Persist to localStorage
+    // Persist to localStorage (fast cache)
     try {
       if (typeof window !== "undefined") {
         localStorage.setItem(PROFILE_KEY, JSON.stringify(updated));
       }
     } catch { /* non-critical */ }
+    // Persist to Supabase (durable, per-user)
+    fetch("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updated),
+    }).catch(() => { /* non-critical */ });
     // Clear notifications so they regenerate for the new industry
     setNotifications([]);
   }, []);
@@ -2107,6 +2159,15 @@ export default function DashboardPage() {
             <div className="text-xs text-white/25 bg-white/[0.04] border border-white/[0.06] px-3 py-1.5 rounded-full" style={{ fontFamily: "var(--font-space-grotesk)" }}>
               Pro Plan
             </div>
+
+            {/* Sign out */}
+            <button
+              onClick={handleSignOut}
+              title="Sign out"
+              className="p-2 text-white/25 hover:text-red-400 transition-colors rounded-xl hover:bg-white/[0.04]"
+            >
+              <LogOut size={16} />
+            </button>
           </div>
         </motion.div>
 

@@ -82,6 +82,12 @@ interface AdCampaignSectionProps {
     location?: string;
     botName?: string;
   };
+  prefill?: {
+    niche?: string;
+    offer?: string;
+    targetAudience?: string;
+    platform?: string;
+  };
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -901,19 +907,37 @@ function FinancialsStep({ campaign, platform, onRestart, onBack }: {
 
 // ── Main Component ────────────────────────────────────────────────────────────
 
-export function AdCampaignSection({ profile }: AdCampaignSectionProps) {
+export function AdCampaignSection({ profile, prefill }: AdCampaignSectionProps) {
   const botName = profile?.botName || "Nova";
   const [step, setStep] = useState(1);
   const [discovery, setDiscovery] = useState<DiscoveryData>({
-    niche:          profile?.niche || profile?.industry || "",
-    offer:          "",
-    targetAudience: "",
-    platform:       "",
+    niche:          prefill?.niche || profile?.niche || profile?.industry || "",
+    offer:          prefill?.offer || "",
+    targetAudience: prefill?.targetAudience || "",
+    platform:       prefill?.platform || "",
   });
+
   const [videoDescription, setVideoDescription] = useState("");
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
+
+  // When a lead's "Boost with Ad" injects new prefill data, reset to step 1 with that data
+  const prefillKey = prefill ? `${prefill.niche}|${prefill.offer}|${prefill.platform}` : "";
+  useEffect(() => {
+    if (!prefill) return;
+    setDiscovery({
+      niche:          prefill.niche          || profile?.niche || profile?.industry || "",
+      offer:          prefill.offer          || "",
+      targetAudience: prefill.targetAudience || "",
+      platform:       prefill.platform       || "",
+    });
+    setStep(1);
+    setVideoDescription("");
+    setCampaign(null);
+    setError("");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefillKey]);
 
   const generate = async (skipVideo = false) => {
     setGenerating(true);

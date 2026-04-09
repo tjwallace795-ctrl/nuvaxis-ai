@@ -23,6 +23,7 @@ import {
   User,
   Building,
   Clock,
+  Megaphone,
 } from "lucide-react";
 import {
   leadStore,
@@ -280,12 +281,14 @@ function PersonCard({
   businessType,
   offer,
   market,
+  onBoostWithAd,
 }: {
   lead: IndividualLead;
   index: number;
   businessType: string;
   offer: string;
   market: string;
+  onBoostWithAd?: (data: { niche: string; offer: string; targetAudience: string; platform: string }) => void;
 }) {
   const [showQuick, setShowQuick] = useState(false);
   const [showDraft, setShowDraft] = useState(false);
@@ -457,7 +460,7 @@ function PersonCard({
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-2">
           <button
             onClick={() => { setShowQuick(!showQuick); setShowDraft(false); }}
             className={`flex-1 flex items-center justify-center gap-1.5 text-xs py-2 rounded-lg border transition-all ${showQuick ? "text-blue-300 bg-blue-500/15 border-blue-500/30" : "text-white/40 hover:text-white/70 bg-white/[0.03] border-white/[0.08] hover:border-white/[0.15]"}`}
@@ -471,6 +474,28 @@ function PersonCard({
             <Mail className="w-3.5 h-3.5" />Full Outreach Draft
           </button>
         </div>
+
+        {/* Boost with Ron — send lead context to Ad Campaigns */}
+        {onBoostWithAd && (
+          <button
+            onClick={() => {
+              const platformMap: Record<string, string> = {
+                "Facebook Group": "Meta", "Instagram": "Meta", "Twitter/X": "Meta",
+                "Nextdoor": "Meta", "Craigslist": "Google", "Reddit": "Meta", "LinkedIn": "LinkedIn",
+              };
+              const platform = Object.entries(platformMap).find(([k]) => lead.source?.includes(k))?.[1] ?? "Meta";
+              onBoostWithAd({
+                niche: businessType,
+                offer: offer || `Professional ${businessType} services`,
+                targetAudience: `People in ${lead.location || market} looking for ${businessType} — ${lead.intentSignal?.slice(0, 80) ?? "actively searching"}`,
+                platform,
+              });
+            }}
+            className="w-full flex items-center justify-center gap-1.5 text-xs py-2 rounded-lg border transition-all text-orange-300 bg-orange-500/[0.07] border-orange-500/20 hover:bg-orange-500/15 hover:border-orange-500/35"
+          >
+            <Megaphone className="w-3.5 h-3.5" />Run Ad Campaign for This Lead with Ron
+          </button>
+        )}
       </div>
 
       {/* Message script panel */}
@@ -652,9 +677,11 @@ const LOADING_MSGS = [
 export default function LeadGeneratorSection({
   onLeadsFound,
   compact,
+  onBoostWithAd,
 }: {
   onLeadsFound?: () => void;
   compact?: boolean;
+  onBoostWithAd?: (data: { niche: string; offer: string; targetAudience: string; platform: string }) => void;
 }) {
   const store = useLeadStore();
 
@@ -931,6 +958,7 @@ export default function LeadGeneratorSection({
                     businessType={businessType}
                     offer={offer}
                     market={market}
+                    onBoostWithAd={onBoostWithAd}
                   />
                 ))}
               </div>

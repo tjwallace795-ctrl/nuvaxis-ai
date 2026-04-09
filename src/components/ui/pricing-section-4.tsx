@@ -1,125 +1,241 @@
 "use client";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Sparkles as SparklesComp } from "@/components/ui/sparkles";
 import { TimelineContent } from "@/components/ui/timeline-animation";
-import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import NumberFlow from "@number-flow/react";
-import { motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { Check, Clock } from "lucide-react";
+import { useRef } from "react";
 
-const plans = [
+// ── Plan data ──────────────────────────────────────────────────────────────────
+
+const SOLO_PLANS = [
   {
     name: "Starter",
+    planId: "starter",
+    subtitle: "Web Presence",
     description:
-      "Great for small businesses and startups looking to get started with AI",
-    price: 12,
-    yearlyPrice: 99,
-    buttonText: "Get started",
-    buttonVariant: "outline" as const,
-    includes: [
-      "What's included:",
-      "AI Website Build",
-      "Custom branding & design",
-      "2-factor authentication",
-      "Basic analytics dashboard",
-      "Monthly performance report",
-      "Email support",
-      "1 revision per month",
+      "A clean, professional website that actually shows up on Google — built in under 2 weeks.",
+    price: 75,
+    buildFee: 200,
+    popular: false,
+    buttonText: "Start free trial ↗",
+    features: [
+      { label: "Up to 5-page website" },
+      { label: "Mobile-friendly design" },
+      { label: "Custom domain + hosting" },
+      { label: "Google Maps + contact form" },
+      { label: "Basic SEO setup" },
+      { label: "2 content updates/month" },
+      { label: "AI chatbot" },
+      { label: "Order management" },
     ],
   },
   {
-    name: "Business",
+    name: "Solo Pro",
+    planId: "solo-pro",
+    subtitle: null,
     description:
-      "Best value for growing businesses that need more advanced features",
-    price: 48,
-    yearlyPrice: 399,
-    buttonText: "Get started",
-    buttonVariant: "default" as const,
+      "Website + AI chatbot that handles inquiries 24/7 so you don't have to.",
+    price: 149,
+    buildFee: 350,
     popular: true,
-    includes: [
-      "Everything in Starter, plus:",
-      "Nova AI Chat Widget",
-      "Online ordering integration",
-      "Social media content plan",
-      "TikTok & Instagram embeds",
-      "Google Maps & reviews",
-      "Priority support",
-      "3 revisions per month",
-    ],
-  },
-  {
-    name: "Enterprise",
-    description:
-      "Advanced plan with enhanced AI automation and unlimited access for large teams",
-    price: 96,
-    yearlyPrice: 899,
-    buttonText: "Get started",
-    buttonVariant: "outline" as const,
-    includes: [
-      "Everything in Business, plus:",
-      "Full AI automation suite",
-      "Custom lead generation",
-      "Ad campaign management",
-      "Dedicated account manager",
-      "White-label options",
-      "Unlimited revisions",
-      "24/7 priority support",
+    buttonText: "Start free trial ↗",
+    features: [
+      { label: "Everything in Web Presence" },
+      { label: "Up to 8 pages" },
+      { label: "AI chatbot (answers FAQs + collects leads)" },
+      { label: "Appointment / booking link" },
+      { label: "Unlimited content updates" },
+      { label: "Priority email support" },
+      { label: "Order management system" },
+      { label: "Lead generator", soon: true },
     ],
   },
 ];
 
-const PricingSwitch = ({ onSwitch }: { onSwitch: (value: string) => void }) => {
-  const [selected, setSelected] = useState("0");
+const BUSINESS_PLANS = [
+  {
+    name: "Business",
+    planId: "business",
+    subtitle: "Business Revamp",
+    description:
+      "Full website rebuild + chatbot + organized order flow. Like what we built for Love Pho 2.",
+    price: 249,
+    buildFee: 599,
+    popular: false,
+    buttonText: "Start free trial ↗",
+    features: [
+      { label: "Up to 15-page custom website" },
+      { label: "AI chatbot (orders, FAQs, reservations)" },
+      { label: "Order management system" },
+      { label: "Menu / service catalog page" },
+      { label: "Google + Yelp review integration" },
+      { label: "Local SEO + Google Business" },
+      { label: "Monthly check-in call" },
+      { label: "Lead generator", soon: true },
+    ],
+  },
+  {
+    name: "Premium",
+    planId: "premium",
+    subtitle: "Growth Partner",
+    description:
+      "For companies that want the full package — web, AI tools, and a dedicated partner in their corner.",
+    price: 449,
+    buildFee: 999,
+    popular: false,
+    buttonText: "Start free trial ↗",
+    features: [
+      { label: "Everything in Business Revamp" },
+      { label: "Unlimited pages" },
+      { label: "Custom AI tool for your workflow" },
+      { label: "Staff / team member portal" },
+      { label: "Social media chatbot (FB + IG DMs)" },
+      { label: "Bi-weekly strategy calls" },
+      { label: "Priority same-day support" },
+      { label: "Lead generator — early access", soon: true },
+    ],
+  },
+];
 
-  const handleSwitch = (value: string) => {
-    setSelected(value);
-    onSwitch(value);
-  };
+const ADD_ONS = [
+  {
+    label: "Extra pages",
+    price: "+$25/page one-time",
+    note: "Add pages beyond your plan limit anytime.",
+  },
+  {
+    label: "Logo design",
+    price: "$150 one-time",
+    note: "Simple, clean logo if you don't have one yet.",
+  },
+  {
+    label: "Extra chatbot",
+    price: "+$49/mo",
+    note: "Second chatbot for a different location or use case.",
+  },
+  {
+    label: "Rush build",
+    price: "+$150 one-time",
+    note: "Need it done in 5 days or less? Rush fee applies.",
+  },
+  {
+    label: "Annual billing",
+    price: "2 months free",
+    note: "Pay upfront for the year, get 2 months at no charge.",
+    highlight: true,
+  },
+  {
+    label: "Lead generator",
+    price: "Coming soon",
+    note: "Salem Leads pipeline — add-on once the members portal launches.",
+    soon: true,
+  },
+];
 
+// ── Plan card ──────────────────────────────────────────────────────────────────
+
+function PlanCard({ plan }: { plan: (typeof SOLO_PLANS)[0] }) {
   return (
-    <div className="flex justify-center">
-      <div className="relative z-10 mx-auto flex w-fit rounded-full bg-neutral-900 border border-gray-700 p-1">
-        <button
-          onClick={() => handleSwitch("0")}
-          className={cn(
-            "relative z-10 w-fit h-10 rounded-full sm:px-6 px-3 sm:py-2 py-1 font-medium transition-colors",
-            selected === "0" ? "text-white" : "text-gray-200",
-          )}
-        >
-          {selected === "0" && (
-            <motion.span
-              layoutId={"switch"}
-              className="absolute top-0 left-0 h-10 w-full rounded-full border-4 shadow-sm shadow-blue-600 border-blue-600 bg-gradient-to-t from-blue-500 to-blue-600"
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          )}
-          <span className="relative">Monthly</span>
-        </button>
+    <div
+      className={cn(
+        "relative flex flex-col rounded-2xl border text-white overflow-hidden",
+        plan.popular
+          ? "border-blue-500/50 bg-gradient-to-b from-blue-950/60 to-neutral-900 shadow-[0_0_60px_-10px_rgba(37,99,235,0.45)]"
+          : "border-neutral-800 bg-gradient-to-b from-neutral-900 to-neutral-950",
+      )}
+    >
+      {plan.popular && (
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+      )}
 
-        <button
-          onClick={() => handleSwitch("1")}
+      <div className="p-6 pb-4">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-1">
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-xl font-semibold text-white">{plan.name}</h3>
+              {plan.popular && (
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-600 text-white px-2 py-0.5 rounded-full">
+                  Most popular
+                </span>
+              )}
+            </div>
+            {plan.subtitle && (
+              <p className="text-xs text-blue-400 font-medium mt-0.5">{plan.subtitle}</p>
+            )}
+          </div>
+        </div>
+
+        <p className="text-sm text-gray-400 mt-2 mb-4 leading-snug">{plan.description}</p>
+
+        {/* Price */}
+        <div className="mb-1">
+          <span className="text-4xl font-bold text-white">${plan.price}</span>
+          <span className="text-gray-400 text-sm ml-1">/mo</span>
+        </div>
+        <p className="text-xs text-gray-500 mb-1">
+          + ${plan.buildFee.toLocaleString()} one-time build fee
+        </p>
+        <p className="text-xs text-emerald-400/80 font-medium mb-5 flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+          7-day free trial — $0 today
+        </p>
+
+        {/* CTA */}
+        <a
+          href={`/checkout?plan=${plan.planId}`}
           className={cn(
-            "relative z-10 w-fit h-10 flex-shrink-0 rounded-full sm:px-6 px-3 sm:py-2 py-1 font-medium transition-colors",
-            selected === "1" ? "text-white" : "text-gray-200",
+            "block w-full py-3 rounded-xl text-center text-sm font-semibold transition-all",
+            plan.popular
+              ? "bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-900/40"
+              : "bg-white/[0.07] hover:bg-white/[0.12] text-white border border-white/[0.12]",
           )}
         >
-          {selected === "1" && (
-            <motion.span
-              layoutId={"switch"}
-              className="absolute top-0 left-0 h-10 w-full rounded-full border-4 shadow-sm shadow-blue-600 border-blue-600 bg-gradient-to-t from-blue-500 to-blue-600"
-              transition={{ type: "spring", stiffness: 500, damping: 30 }}
-            />
-          )}
-          <span className="relative flex items-center gap-2">Yearly</span>
-        </button>
+          {plan.buttonText}
+        </a>
+      </div>
+
+      {/* Features */}
+      <div className="px-6 pb-6 pt-2 border-t border-white/[0.07] flex-1">
+        <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-3 mt-3">
+          What&apos;s included
+        </p>
+        <ul className="space-y-2.5">
+          {plan.features.map((f, i) => (
+            <li key={i} className="flex items-center gap-2.5">
+              <span
+                className={cn(
+                  "flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center",
+                  f.soon
+                    ? "bg-yellow-500/10 border border-yellow-500/30"
+                    : "bg-blue-500/15 border border-blue-500/25",
+                )}
+              >
+                {f.soon ? (
+                  <Clock className="w-2.5 h-2.5 text-yellow-400" />
+                ) : (
+                  <Check className="w-2.5 h-2.5 text-blue-400" />
+                )}
+              </span>
+              <span className="text-sm text-gray-300 leading-snug">
+                {f.label}
+                {f.soon && (
+                  <span className="ml-1.5 text-[10px] font-semibold text-yellow-400/80 bg-yellow-500/10 border border-yellow-500/20 px-1.5 py-0.5 rounded-full">
+                    Coming soon
+                  </span>
+                )}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
-};
+}
+
+// ── Main component ─────────────────────────────────────────────────────────────
 
 export default function PricingSection4() {
-  const [isYearly, setIsYearly] = useState(false);
   const pricingRef = useRef<HTMLDivElement>(null);
 
   const revealVariants = {
@@ -127,33 +243,21 @@ export default function PricingSection4() {
       y: 0,
       opacity: 1,
       filter: "blur(0px)",
-      transition: {
-        delay: i * 0.4,
-        duration: 0.5,
-      },
+      transition: { delay: i * 0.35, duration: 0.5 },
     }),
-    hidden: {
-      filter: "blur(10px)",
-      y: -20,
-      opacity: 0,
-    },
+    hidden: { filter: "blur(10px)", y: -20, opacity: 0 },
   };
 
-  const togglePricingPeriod = (value: string) =>
-    setIsYearly(Number.parseInt(value) === 1);
-
   return (
-    <div
-      className="mx-auto relative overflow-hidden"
-      ref={pricingRef}
-    >
+    <div className="mx-auto relative overflow-hidden" ref={pricingRef}>
+      {/* Background sparkles */}
       <TimelineContent
         animationNum={4}
         timelineRef={pricingRef}
         customVariants={revealVariants}
         className="absolute top-0 h-96 w-full overflow-hidden [mask-image:radial-gradient(50%_50%,white,transparent)]"
       >
-        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#ffffff2c_1px,transparent_1px),linear-gradient(to_bottom,#3a3a3a01_1px,transparent_1px)] bg-[size:70px_80px]"></div>
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#ffffff2c_1px,transparent_1px),linear-gradient(to_bottom,#3a3a3a01_1px,transparent_1px)] bg-[size:70px_80px]" />
         <SparklesComp
           density={1800}
           direction="bottom"
@@ -163,6 +267,7 @@ export default function PricingSection4() {
         />
       </TimelineContent>
 
+      {/* Blue glow */}
       <TimelineContent
         animationNum={5}
         timelineRef={pricingRef}
@@ -177,129 +282,129 @@ export default function PricingSection4() {
               filter: "blur(92px)",
               WebkitFilter: "blur(92px)",
             }}
-          ></div>
+          />
         </div>
       </TimelineContent>
 
-      <article className="text-center mb-6 pt-20 md:pt-32 max-w-3xl mx-auto space-y-2 relative z-50 px-4 sm:px-6">
-        <h2 className="text-2xl md:text-4xl font-medium text-white">
-          <VerticalCutReveal
-            splitBy="words"
-            staggerDuration={0.15}
-            staggerFrom="first"
-            reverse={true}
-            containerClassName="justify-center"
-            transition={{
-              type: "spring",
-              stiffness: 250,
-              damping: 40,
-              delay: 0,
-            }}
-          >
-            Plans that work best for your business
-          </VerticalCutReveal>
-        </h2>
-
+      {/* ── Header ── */}
+      <article className="text-center mb-10 pt-20 md:pt-32 max-w-2xl mx-auto space-y-3 relative z-50 px-4 sm:px-6">
         <TimelineContent
-          as="p"
           animationNum={0}
           timelineRef={pricingRef}
           customVariants={revealVariants}
-          className="text-gray-300"
         >
-          Trusted by businesses across El Paso. Nuvaxis AI helps you grow with
-          smart technology — explore which plan is right for you.
+          <h2 className="text-2xl md:text-4xl font-semibold text-white">
+            Nuvaxis AI — Services &amp; Pricing
+          </h2>
         </TimelineContent>
-
         <TimelineContent
-          as="div"
+          as="p"
           animationNum={1}
           timelineRef={pricingRef}
           customVariants={revealVariants}
+          className="text-gray-400 text-sm md:text-base"
         >
-          <PricingSwitch onSwitch={togglePricingPeriod} />
+          Built for El Paso businesses. No fluff, no bloated retainers — just real work at fair prices.
         </TimelineContent>
       </article>
 
-      <div
-        className="absolute top-0 left-[10%] right-[10%] w-[80%] h-full z-0"
-        style={{
-          backgroundImage: `radial-gradient(circle at center, #206ce8 0%, transparent 70%)`,
-          opacity: 0.6,
-          mixBlendMode: "multiply",
-        }}
-      />
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 space-y-12 pb-16">
 
-      <div className="grid md:grid-cols-3 max-w-5xl gap-4 py-6 mx-auto px-4 sm:px-6">
-        {plans.map((plan, index) => (
-          <TimelineContent
-            key={plan.name}
-            as="div"
-            animationNum={2 + index}
-            timelineRef={pricingRef}
-            customVariants={revealVariants}
-          >
-            <Card
-              className={`relative text-white border-neutral-800 ${
-                plan.popular
-                  ? "bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 shadow-[0px_-13px_300px_0px_#0900ff] z-20"
-                  : "bg-gradient-to-r from-neutral-900 via-neutral-800 to-neutral-900 z-10"
-              }`}
-            >
-              <CardHeader className="text-left">
-                <div className="flex justify-between">
-                  <h3 className="text-2xl md:text-3xl mb-2">{plan.name}</h3>
-                  {plan.popular && (
-                    <span className="text-xs bg-blue-600 text-white px-2 py-1 rounded-full h-fit">
-                      Popular
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-baseline">
-                  <span className="text-3xl md:text-4xl font-semibold">
-                    $
-                    <NumberFlow
-                      format={{ currency: "USD" }}
-                      value={isYearly ? plan.yearlyPrice : plan.price}
-                      className="text-3xl md:text-4xl font-semibold"
-                    />
+        {/* ── Solo / Small Business ── */}
+        <TimelineContent
+          animationNum={2}
+          timelineRef={pricingRef}
+          customVariants={revealVariants}
+        >
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-4">
+            Solo operators &amp; small businesses
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {SOLO_PLANS.map((plan) => (
+              <PlanCard key={plan.name} plan={plan} />
+            ))}
+          </div>
+        </TimelineContent>
+
+        {/* ── Restaurants / Retail / Growing ── */}
+        <TimelineContent
+          animationNum={3}
+          timelineRef={pricingRef}
+          customVariants={revealVariants}
+        >
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-4">
+            Restaurants, retail &amp; growing companies
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {BUSINESS_PLANS.map((plan) => (
+              <PlanCard key={plan.name} plan={plan} />
+            ))}
+          </div>
+        </TimelineContent>
+
+        {/* ── Add-ons ── */}
+        <TimelineContent
+          animationNum={4}
+          timelineRef={pricingRef}
+          customVariants={revealVariants}
+        >
+          <p className="text-[11px] uppercase tracking-widest text-gray-500 font-semibold mb-4">
+            Add-ons
+          </p>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {ADD_ONS.map((addon) => (
+              <div
+                key={addon.label}
+                className={cn(
+                  "rounded-xl border p-4 space-y-1",
+                  addon.highlight
+                    ? "border-emerald-500/30 bg-emerald-500/[0.06]"
+                    : addon.soon
+                    ? "border-yellow-500/20 bg-yellow-500/[0.04]"
+                    : "border-neutral-800 bg-neutral-900/60",
+                )}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-sm font-semibold text-white">{addon.label}</p>
+                  <span
+                    className={cn(
+                      "text-xs font-bold px-2 py-0.5 rounded-full border whitespace-nowrap",
+                      addon.highlight
+                        ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/25"
+                        : addon.soon
+                        ? "text-yellow-400 bg-yellow-500/10 border-yellow-500/25"
+                        : "text-blue-300 bg-blue-500/10 border-blue-500/20",
+                    )}
+                  >
+                    {addon.price}
                   </span>
-                  <span className="text-gray-300 ml-1">
-                    /{isYearly ? "year" : "month"}
-                  </span>
                 </div>
-                <p className="text-sm text-gray-300 mb-4">{plan.description}</p>
-              </CardHeader>
+                <p className="text-xs text-gray-400 leading-snug">{addon.note}</p>
+              </div>
+            ))}
+          </div>
+        </TimelineContent>
 
-              <CardContent className="pt-0">
-                <a
-                  href="/signup"
-                  className={`block w-full mb-4 md:mb-6 p-3 md:p-4 text-base md:text-xl rounded-xl text-center ${
-                    plan.popular
-                      ? "bg-gradient-to-t from-blue-500 to-blue-600 shadow-lg shadow-blue-800 border border-blue-500 text-white"
-                      : "bg-gradient-to-t from-neutral-950 to-neutral-600 shadow-lg shadow-neutral-900 border border-neutral-800 text-white"
-                  }`}
-                >
-                  {plan.buttonText}
-                </a>
+        {/* ── Footer notes ── */}
+        <TimelineContent
+          animationNum={5}
+          timelineRef={pricingRef}
+          customVariants={revealVariants}
+        >
+          <div className="border-t border-white/[0.07] pt-6 space-y-2">
+            {[
+              "All plans include hosting, SSL, and maintenance. Build fees are waived on annual billing.",
+              "Ad spend goes directly to your platform — Nuvaxis AI never touches your ad budget.",
+              "Clients anywhere get a free 30-min consultation before signing.",
+            ].map((note) => (
+              <p key={note} className="text-xs text-gray-500 flex items-start gap-2">
+                <span className="text-gray-600 mt-0.5 flex-shrink-0">—</span>
+                {note}
+              </p>
+            ))}
+          </div>
+        </TimelineContent>
 
-                <div className="space-y-3 pt-4 border-t border-neutral-700">
-                  <h4 className="font-medium text-base mb-3">
-                    {plan.includes[0]}
-                  </h4>
-                  <ul className="space-y-2">
-                    {plan.includes.slice(1).map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-2">
-                        <span className="h-2.5 w-2.5 bg-neutral-500 rounded-full grid place-content-center"></span>
-                        <span className="text-sm text-gray-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          </TimelineContent>
-        ))}
       </div>
     </div>
   );

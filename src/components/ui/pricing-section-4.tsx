@@ -7,7 +7,11 @@ import { useRef } from "react";
 
 // ── Plan data ──────────────────────────────────────────────────────────────────
 
-const SOLO_PLANS = [
+const SOLO_PLANS: Array<{
+  name: string; planId: string; subtitle: string | null; description: string;
+  price: number; buildFee: number; popular: boolean; buttonText: string;
+  features: Array<{ label: string; soon?: boolean }>;
+}> = [
   {
     name: "Starter",
     planId: "starter",
@@ -52,7 +56,11 @@ const SOLO_PLANS = [
   },
 ];
 
-const BUSINESS_PLANS = [
+const BUSINESS_PLANS: Array<{
+  name: string; planId: string; subtitle: string | null; description: string;
+  price: number; buildFee: number; popular: boolean; buttonText: string;
+  features: Array<{ label: string; soon?: boolean }>;
+}> = [
   {
     name: "Business",
     planId: "business",

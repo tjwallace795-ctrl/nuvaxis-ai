@@ -1031,9 +1031,9 @@ export function AdCampaignSection({ profile, prefill }: AdCampaignSectionProps) 
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
-              className="flex items-center gap-3 px-4 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl"
+              className="flex flex-wrap items-center gap-2 px-3 py-2.5 bg-white/[0.04] border border-white/[0.08] rounded-xl"
             >
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 flex-1 min-w-0 text-xs">
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 flex-1 min-w-0 text-xs">
                 {discovery.niche && (
                   <span className="text-white font-medium truncate">{discovery.niche}</span>
                 )}

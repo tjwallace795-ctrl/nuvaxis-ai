@@ -46,10 +46,10 @@ export function PaywallModal({ open, featureName, featureDescription, onClose, o
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 16 }}
             transition={{ type: "spring", duration: 0.35, bounce: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none"
           >
             <div
-              className="pointer-events-auto w-full max-w-md bg-neutral-950 border border-white/[0.09] rounded-3xl overflow-hidden shadow-2xl"
+              className="pointer-events-auto w-full sm:max-w-md bg-neutral-950 border-0 sm:border border-white/[0.09] rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl max-h-[92dvh] overflow-y-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top gradient bar */}

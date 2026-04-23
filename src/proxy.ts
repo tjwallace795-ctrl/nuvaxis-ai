@@ -3,11 +3,26 @@ import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { rateLimit } from "@/lib/rate-limiter";
 
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' https://fonts.gstatic.com",
+  "img-src 'self' data: https: blob:",
+  "media-src 'self' https:",
+  "connect-src 'self' https://api.anthropic.com https://google.serper.dev https://api.resend.com https://ytjlwcwxxvttxlqqgmwl.supabase.co wss://ytjlwcwxxvttxlqqgmwl.supabase.co",
+  "frame-src 'none'",
+  "frame-ancestors 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
+
 /** Extract the real client IP from the request. */
 function getIP(request: NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
-    // x-forwarded-for can be a comma-separated list; take the first entry
     return forwarded.split(",")[0].trim();
   }
   return "127.0.0.1";
@@ -15,13 +30,14 @@ function getIP(request: NextRequest): string {
 
 /** Attach security headers to a response. */
 function applySecurityHeaders(response: NextResponse): NextResponse {
+  response.headers.set("Content-Security-Policy", CSP);
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("X-Frame-Options", "DENY");
   response.headers.set("X-XSS-Protection", "1; mode=block");
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set(
     "Permissions-Policy",
-    "camera=(), microphone=(), geolocation=()"
+    "camera=(), microphone=(), geolocation=(), payment=()"
   );
   return response;
 }
@@ -112,10 +128,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Match all API routes
-    "/api/:path*",
-    // Match dashboard routes (for auth protection)
-    "/dashboard/:path*",
-    "/dashboard",
+    "/((?!_next/static|_next/image|favicon\\.ico).*)",
   ],
 };

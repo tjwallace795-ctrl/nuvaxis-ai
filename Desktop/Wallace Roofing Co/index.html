@@ -1,0 +1,1961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Wallace Roofing Co LLC, family-owned, 5-star roofing in Paris, TX. Residential, commercial, repairs and coatings. Free estimates." />
+<meta name="theme-color" content="#1C1C1C" />
+<title>Wallace Roofing Co LLC, Paris, TX</title>
+
+<meta property="og:title" content="Wallace Roofing Co LLC" />
+<meta property="og:description" content="5-star, family-owned roofers in Paris, TX. Free estimates. Honest work." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://wallaceroofingcollc.com" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --navy: #1C1C1C;
+  --navy-deep: #0D0D0D;
+  --gold: #CC2A00;
+  --paper: #FAF8F3;
+  --paper-2: #F1ECE0;
+  --ink: #1C1C1C;
+  --ink-soft: #555555;
+  --line: rgba(26, 26, 26, 0.10);
+  --line-dark: rgba(245, 241, 232, 0.10);
+
+  --display: 'Fraunces', 'Times New Roman', serif;
+  --body: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  --container: 1240px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--gold);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+h1 { font-size: clamp(2.5rem, 5.5vw, 4.75rem); font-weight: 350; }
+h2 { font-size: clamp(2rem, 3.8vw, 3rem); }
+h3 { font-size: clamp(1.25rem, 2vw, 1.625rem); }
+h4 { font-size: 1.125rem; line-height: 1.3; }
+
+p { font-size: 1rem; line-height: 1.65; color: var(--ink-soft); }
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+section { padding: clamp(70px, 9vw, 110px) 0; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 26px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.btn-primary {
+  background: var(--gold);
+  color: var(--navy);
+}
+.btn-primary:hover {
+  background: #DD3300;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -8px rgba(204, 42, 0, 0.5);
+}
+.btn-dark {
+  background: var(--navy);
+  color: var(--paper);
+}
+.btn-dark:hover { background: #333333; }
+.btn-outline {
+  background: transparent;
+  color: var(--paper);
+  border-color: rgba(245, 241, 232, 0.3);
+}
+.btn-outline:hover { border-color: var(--paper); }
+.btn-outline-dark {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}
+.btn-outline-dark:hover { border-color: var(--ink); }
+.btn .arrow { transition: transform 0.3s var(--ease); }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* NAV */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 18px 0;
+  transition: all 0.4s var(--ease);
+}
+.nav.scrolled {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 12px 0;
+}
+.nav-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 500;
+}
+.nav-brand .logo-img { height: 64px; width: auto; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6)); }
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+.nav-links a {
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-cta { display: flex; align-items: center; gap: 16px; }
+.nav-phone {
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  opacity: 0.85;
+}
+.nav-toggle { display: none; background: transparent; border: 0; cursor: pointer; padding: 8px; }
+.nav-toggle span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--paper); margin: 5px 0;
+  transition: transform 0.3s var(--ease), opacity 0.2s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+@media (max-width: 900px) {
+  .nav { position: fixed; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(13,13,13,0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(245,241,232,0.08);
+    padding: 8px 24px 20px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li { border-bottom: 1px solid rgba(245,241,232,0.07); }
+  .nav-links li:last-child { border-bottom: 0; }
+  .nav-links a { display: block; padding: 14px 0; font-size: 15px; opacity: 1; }
+  .nav-toggle { display: block; }
+  .nav-phone .label { display: none; }
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  min-height: 75vh;
+  background: var(--navy-deep);
+  color: var(--paper);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 100px 0 60px;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('images/489618033_1433928417813899_8355382957177976400_n.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  z-index: 1;
+  animation: heroZoomOut 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes heroZoomOut {
+  from { transform: scale(1.12); }
+  to   { transform: scale(1.0); }
+}
+
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-headline .eyebrow  { animation: heroFadeUp 0.9s var(--ease) 0.25s both; }
+.hero-headline h1        { animation: heroFadeUp 1s   var(--ease) 0.5s  both; }
+.hero-headline p         { animation: heroFadeUp 0.9s var(--ease) 0.75s both; }
+.hero-actions            { animation: heroFadeUp 0.9s var(--ease) 0.95s both; }
+.hero-meta-item:nth-child(1) { animation: heroFadeUp 0.8s var(--ease) 1.1s both; }
+.hero-meta-item:nth-child(2) { animation: heroFadeUp 0.8s var(--ease) 1.2s both; }
+.hero-meta-item:nth-child(3) { animation: heroFadeUp 0.8s var(--ease) 1.3s both; }
+.hero-meta-item:nth-child(4) { animation: heroFadeUp 0.8s var(--ease) 1.4s both; }
+
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(13, 13, 13, 0.55) 0%, rgba(13, 13, 13, 0.7) 60%, rgba(13, 13, 13, 0.85) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 5;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+.hero-headline { max-width: 820px; }
+.hero-headline h1 {
+  color: var(--paper);
+  margin: 22px 0 24px;
+  font-weight: 350;
+}
+.hero-headline p {
+  font-size: 1.0625rem;
+  color: rgba(245, 241, 232, 0.82);
+  max-width: 540px;
+  margin-bottom: 36px;
+}
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.hero-meta {
+  margin-top: clamp(28px, 4vh, 48px);
+  display: flex;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero-meta-item {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.hero-meta-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.55);
+}
+.hero-meta-value {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  color: var(--paper);
+  font-weight: 400;
+}
+.hero-rating { display: inline-flex; align-items: center; gap: 10px; }
+.stars { display: inline-flex; gap: 1px; color: var(--gold); letter-spacing: 0; }
+
+.slide-indicator {
+  position: absolute;
+  bottom: 30px; right: 30px;
+  z-index: 6;
+  display: flex;
+  gap: 6px;
+}
+.slide-dot {
+  width: 28px; height: 1.5px;
+  background: rgba(245, 241, 232, 0.25);
+  border: 0;
+  cursor: pointer;
+  transition: background 0.3s;
+  padding: 0;
+}
+.slide-dot.active { background: var(--paper); }
+
+/* TRUST STRIP */
+.trust-strip {
+  background: var(--navy-deep);
+  border-top: 1px solid var(--line-dark);
+  padding: 22px 0;
+  color: var(--paper);
+}
+.trust-strip-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px;
+  justify-content: space-between;
+  align-items: center;
+}
+.trust-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px;
+  color: rgba(245, 241, 232, 0.78);
+}
+.trust-item svg { color: rgba(245, 241, 232, 0.55); flex: 0 0 auto; }
+.trust-item strong { color: var(--paper); font-weight: 500; }
+
+/* SERVICES */
+.section-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: end;
+  margin-bottom: 56px;
+}
+.section-header h2 { max-width: 560px; margin-top: 16px; }
+.section-header p { max-width: 460px; }
+@media (max-width: 800px) {
+  .section-header { grid-template-columns: 1fr; gap: 20px; }
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.service-card {
+  position: relative;
+  border-radius: 6px;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  min-height: 540px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.service-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px -12px rgba(13,13,13,0.55); }
+.service-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center top;
+  transition: transform 0.8s var(--ease);
+  z-index: 0;
+}
+.service-card:hover .service-card-bg { transform: scale(1.07); }
+.service-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(0,0,0,0.08) 0%,
+    rgba(0,0,0,0.12) 50%,
+    rgba(0,0,0,0.58) 100%
+  );
+  z-index: 1;
+}
+.service-card > *:not(.service-card-bg) { position: relative; z-index: 2; }
+.service-card .num {
+  font-family: var(--display);
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: auto;
+  letter-spacing: 0.04em;
+}
+.service-card .icon {
+  width: 40px; height: 40px;
+  margin-bottom: 16px;
+  margin-top: 16px;
+  color: rgba(255,255,255,0.8);
+}
+.service-card h3 {
+  font-size: 1.375rem;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+.service-card p {
+  font-size: 0.9375rem;
+  margin-bottom: 20px;
+  flex: unset;
+  color: rgba(255,255,255,0.78);
+}
+.service-card .learn {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.service-card .learn::after {
+  content: "→";
+  transition: transform 0.3s var(--ease);
+}
+.service-card:hover .learn::after { transform: translateX(4px); }
+
+@media (max-width: 1000px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; } }
+
+.estimate-banner {
+  margin-top: 40px;
+  padding: 24px 32px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.estimate-banner-text {
+  display: flex;
+  align-items: baseline;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.estimate-banner h3 {
+  font-family: var(--display);
+  font-size: 1.375rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+.estimate-banner h3 .price { color: var(--ink-soft); }
+.estimate-banner small {
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.02em;
+}
+
+/* ABOUT */
+.about {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 64px;
+  align-items: center;
+}
+@media (max-width: 900px) { .about { grid-template-columns: 1fr; gap: 40px; } }
+
+.about-image {
+  aspect-ratio: 4/5;
+  background: url('images/488867106_1431696751370399_5295580751787696604_n.jpg') center/cover no-repeat;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.about-image::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(7, 15, 34, 0.4));
+}
+.about-image .badge {
+  position: absolute;
+  bottom: 24px; left: 24px;
+  z-index: 2;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 14px 18px;
+  border-radius: 4px;
+}
+.about-image .badge .num {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.about-image .badge .label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  color: var(--ink-soft);
+}
+
+.about-content h2 { margin: 14px 0 22px; }
+.about-content > p { margin-bottom: 14px; }
+
+.values-list {
+  list-style: none;
+  margin-top: 36px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 36px;
+}
+@media (max-width: 600px) { .values-list { grid-template-columns: 1fr; } }
+.value-item { display: flex; gap: 14px; align-items: flex-start; }
+.value-item .num {
+  font-family: var(--display);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+  padding-top: 4px;
+}
+.value-item h4 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-weight: 500;
+  font-family: var(--body);
+  letter-spacing: -0.01em;
+}
+.value-item p { font-size: 0.9375rem; line-height: 1.55; margin: 0; }
+
+/* REVIEWS */
+.reviews-section { background: var(--navy); }
+.reviews-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.reviews-header h2 { margin-top: 14px; color: var(--paper); }
+.reviews-rating-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 22px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(245,241,232,0.15);
+  border-radius: 100px;
+  margin-top: 22px;
+}
+.reviews-rating-large .num {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  color: var(--paper);
+  font-weight: 500;
+}
+.reviews-rating-large small { color: rgba(245,241,232,0.55); font-size: 12px; }
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+  margin-bottom: 36px;
+}
+.reviews-grid .review-card { grid-column: span 2; }
+.reviews-grid .review-card:nth-child(4) { grid-column: 2 / 4; }
+.reviews-grid .review-card:nth-child(5) { grid-column: 4 / 6; }
+@media (max-width: 900px) {
+  .reviews-grid { grid-template-columns: 1fr; }
+  .reviews-grid .review-card,
+  .reviews-grid .review-card:nth-child(4),
+  .reviews-grid .review-card:nth-child(5) { grid-column: auto; }
+}
+
+.review-card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(245,241,232,0.1);
+  border-radius: 6px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.review-stars { font-size: 14px; }
+.review-quote {
+  font-family: var(--display);
+  font-size: 1.0625rem;
+  font-weight: 350;
+  line-height: 1.55;
+  color: var(--paper);
+}
+.review-author {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid rgba(245,241,232,0.1);
+}
+.review-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+.review-name { font-weight: 500; color: var(--paper); font-size: 0.9375rem; }
+.review-source { color: rgba(245,241,232,0.5); font-size: 12px; margin-top: 1px; }
+
+.review-cta { text-align: center; margin-top: 32px; }
+
+/* CONTACT */
+.contact-wrap {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 0;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+@media (max-width: 900px) { .contact-wrap { grid-template-columns: 1fr; } }
+
+.contact-info {
+  padding: 48px 40px;
+  background: var(--navy);
+  color: var(--paper);
+}
+.contact-info h2 {
+  color: var(--paper);
+  margin-bottom: 18px;
+  font-weight: 350;
+  font-size: 1.875rem;
+}
+.contact-info p { color: rgba(245, 241, 232, 0.78); margin-bottom: 32px; font-size: 0.9375rem; }
+.contact-detail {
+  display: flex; gap: 14px; align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line-dark);
+}
+.contact-detail:last-child { border-bottom: 0; }
+.contact-detail .icon {
+  flex: 0 0 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 241, 232, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(245, 241, 232, 0.7);
+}
+.contact-detail .label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.5);
+  margin-bottom: 4px;
+}
+.contact-detail .value {
+  font-family: var(--display);
+  font-size: 1rem;
+  color: var(--paper);
+}
+.contact-detail .value a { color: var(--paper); }
+.contact-detail .sub { font-size: 12px; color: rgba(245, 241, 232, 0.6); margin-top: 2px; line-height: 1.4; }
+
+/* FORM */
+.contact-form { padding: 48px 40px; }
+.contact-form h3 {
+  font-size: 1.625rem;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-weight: 400;
+}
+.contact-form .form-intro {
+  font-size: 0.9375rem;
+  margin-bottom: 28px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-field { display: flex; flex-direction: column; }
+.form-field.full { grid-column: 1 / -1; }
+.form-field label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 7px;
+}
+.form-field label .req { color: var(--gold); }
+.form-field input,
+.form-field select,
+.form-field textarea {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  font-family: var(--body);
+  font-size: 14px;
+  background: white;
+  color: var(--ink);
+  transition: border 0.2s;
+  width: 100%;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: 0;
+  border-color: var(--navy);
+}
+.form-field textarea { min-height: 100px; resize: vertical; }
+.form-radios { display: flex; gap: 6px; flex-wrap: wrap; }
+.form-radios label {
+  flex: 1;
+  min-width: 90px;
+  text-align: center;
+  padding: 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 0;
+  letter-spacing: 0.06em;
+  transition: all 0.2s;
+  font-size: 11px;
+}
+.form-radios input { display: none; }
+.form-radios input:checked + label {
+  background: var(--navy);
+  color: var(--paper);
+  border-color: var(--navy);
+}
+.form-checkbox {
+  display: flex; gap: 10px; align-items: start;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.form-checkbox input { margin-top: 3px; flex: 0 0 auto; width: auto !important; }
+.cm-note {
+  margin-top: 9px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.form-submit {
+  width: 100%;
+  padding: 16px;
+  background: var(--gold);
+  color: var(--navy);
+  border: 0;
+  border-radius: 4px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+}
+.form-submit:hover { background: #DD3300; transform: translateY(-1px); box-shadow: 0 8px 20px -6px rgba(204, 42, 0, 0.5); }
+
+.form-confirmation {
+  display: none;
+  padding: 32px;
+  background: var(--paper-2);
+  border-radius: 4px;
+  text-align: center;
+}
+.form-confirmation.shown { display: block; }
+.form-confirmation h4 {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+.form-confirmation p { color: var(--ink-soft); margin: 0; font-size: 0.9375rem; }
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .contact-info, .contact-form { padding: 32px 24px; }
+}
+@media (max-width: 600px) {
+  .trust-strip-inner { justify-content: center; gap: 16px 28px; }
+  .hero-meta { gap: 24px 36px; }
+  .estimate-banner { padding: 20px 24px; }
+}
+@media (max-width: 480px) {
+  .service-card { min-height: 440px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .hero-actions .btn { width: 100%; justify-content: center; }
+  .work-reel-text p { font-size: 1rem; }
+}
+
+/* WORK REEL */
+.work-reel-wrap {
+  display: grid;
+  grid-template-columns: 1fr 390px;
+  gap: 80px;
+  align-items: center;
+}
+@media (max-width: 1024px) {
+  .work-reel-wrap { grid-template-columns: 1fr; gap: 56px; }
+  .work-reel-video-col { display: flex; flex-direction: column; align-items: center; }
+}
+.work-reel-text h2 { margin: 16px 0 24px; font-size: clamp(2.2rem, 3.6vw, 3.2rem); line-height: 1.15; }
+.work-reel-text p { margin-bottom: 36px; max-width: 520px; font-size: 1.15rem; line-height: 1.8; }
+
+/* iPhone 17 Pro Max frame */
+/* Float wrapper */
+.iphone-float-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: phoneFloat 4s ease-in-out infinite;
+}
+@keyframes phoneFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-22px); }
+}
+.iphone-shadow {
+  width: 230px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.38) 0%, transparent 72%);
+  border-radius: 50%;
+  margin-top: 20px;
+  animation: shadowFloat 4s ease-in-out infinite;
+}
+@keyframes shadowFloat {
+  0%, 100% { transform: scaleX(1);    opacity: 0.45; }
+  50%       { transform: scaleX(0.6); opacity: 0.15; }
+}
+
+.iphone-frame {
+  position: relative;
+  width: min(360px, calc(100vw - 60px));
+  /* Black Titanium finish */
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.07) 0%, transparent 55%),
+    linear-gradient(160deg, #3c3c3e 0%, #28282a 35%, #1c1c1e 65%, #2e2e30 100%);
+  border-radius: 60px;
+  padding: 18px 15px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.13),
+    0 0 0 2.5px #111,
+    0 70px 160px rgba(0,0,0,0.7),
+    0 24px 64px rgba(0,0,0,0.45),
+    inset 0 1.5px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.5);
+  margin: 0 auto;
+  transition: transform 0.1s ease-out;
+  cursor: grab;
+}
+/* Action button (left, small oval above volume) */
+.iphone-btn-action {
+  position: absolute;
+  left: -6px;
+  top: 86px;
+  width: 6px;
+  height: 36px;
+  background: linear-gradient(to right, #222224, #3a3a3c);
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+/* Volume up */
+.iphone-btn-vol-up {
+  position: absolute;
+  left: -6px;
+  top: 140px;
+  width: 6px;
+  height: 68px;
+  background: linear-gradient(to right, #222224, #3a3a3c);
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+/* Volume down */
+.iphone-btn-vol-dn {
+  position: absolute;
+  left: -6px;
+  top: 220px;
+  width: 6px;
+  height: 68px;
+  background: linear-gradient(to right, #222224, #3a3a3c);
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+/* Power / side button */
+.iphone-btn-power {
+  position: absolute;
+  right: -6px;
+  top: 158px;
+  width: 6px;
+  height: 88px;
+  background: linear-gradient(to left, #222224, #3a3a3c);
+  border-radius: 0 4px 4px 0;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+/* USB-C port hint at bottom */
+.iphone-frame::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 52px;
+  height: 10px;
+  background: #111;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.06);
+}
+.iphone-inner {
+  position: relative;
+  background: #000;
+  border-radius: 46px;
+  overflow: hidden;
+}
+.iphone-inner video {
+  width: 100%;
+  display: block;
+  aspect-ratio: 9 / 19.5;
+  object-fit: cover;
+}
+.iphone-island {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 38px;
+  background: #000;
+  border-radius: 22px;
+  z-index: 10;
+  pointer-events: none;
+}
+.iphone-home-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 130px;
+  height: 5px;
+  background: rgba(255,255,255,0.28);
+  border-radius: 4px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.work-reel-socials {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 22px;
+}
+.work-reel-socials a {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: var(--navy);
+  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-soft);
+  transition: all 0.25s var(--ease);
+}
+.work-reel-socials a:hover {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* FOOTER */
+footer {
+  background: var(--navy-deep);
+  color: rgba(245, 241, 232, 0.7);
+  padding: 72px 0 28px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 56px;
+}
+@media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
+@media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+.footer-brand {
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 1.125rem;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.footer-brand small {
+  display: block;
+  font-family: var(--body);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.55);
+  margin-top: 4px;
+}
+.footer-tagline { font-size: 13px; line-height: 1.6; margin-bottom: 22px; max-width: 320px; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line-dark);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(245, 241, 232, 0.65);
+  transition: all 0.2s;
+}
+.footer-social a:hover { border-color: rgba(245, 241, 232, 0.5); color: var(--paper); }
+.footer-col h5 {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(245, 241, 232, 0.5);
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-col a { font-size: 13px; }
+.footer-col a:hover { color: var(--paper); }
+.footer-bottom {
+  padding-top: 28px;
+  border-top: 1px solid var(--line-dark);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11px;
+  color: rgba(245, 241, 232, 0.45);
+  letter-spacing: 0.04em;
+}
+
+/* CHAT WIDGET */
+#chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 1000; font-family: var(--body); }
+#chat-toggle {
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--paper);
+  border: 0;
+  cursor: pointer;
+  box-shadow: 0 10px 28px -8px rgba(13, 13, 13, 0.5);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s var(--ease);
+  position: relative;
+}
+#chat-toggle:hover { transform: scale(1.05); }
+#chat-toggle .badge {
+  position: absolute; top: -2px; right: -2px;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--navy);
+}
+
+#chat-panel {
+  position: absolute;
+  bottom: 72px; right: 0;
+  width: 360px;
+  max-width: calc(100vw - 48px);
+  height: 520px;
+  max-height: calc(100vh - 120px);
+  background: var(--paper);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px -10px rgba(13, 13, 13, 0.35);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+#chat-panel.shown { display: flex; }
+.chat-header {
+  background: var(--navy);
+  color: var(--paper);
+  padding: 16px 18px;
+  display: flex; align-items: center; gap: 12px;
+}
+.chat-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--navy);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.chat-title { font-family: var(--display); font-size: 1rem; }
+.chat-status {
+  font-size: 11px;
+  color: rgba(245, 241, 232, 0.7);
+  display: flex; align-items: center; gap: 6px;
+}
+.chat-status::before {
+  content: ""; width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+.chat-close {
+  margin-left: auto;
+  background: transparent;
+  border: 0;
+  color: rgba(245, 241, 232, 0.7);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 18px;
+}
+.chat-close:hover { color: var(--paper); }
+
+#chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.msg {
+  max-width: 85%;
+  padding: 11px 15px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  animation: msgIn 0.3s var(--ease);
+}
+@keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.msg.bot {
+  background: white;
+  color: var(--ink);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--line);
+}
+.msg.user {
+  background: var(--navy);
+  color: var(--paper);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.msg-typing { display: flex; gap: 4px; padding: 12px 16px; align-items: center; }
+.msg-typing span {
+  width: 6px; height: 6px;
+  background: var(--ink-soft);
+  border-radius: 50%;
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+.msg-typing span:nth-child(2) { animation-delay: 0.15s; }
+.msg-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-5px); opacity: 1; }
+}
+
+.chat-quick-replies { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 18px 10px; }
+.chat-quick-replies button {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-family: var(--body);
+  color: var(--ink);
+  cursor: pointer;
+}
+.chat-quick-replies button:hover { background: var(--navy); color: var(--paper); border-color: var(--navy); }
+
+#chat-form {
+  display: flex;
+  padding: 12px 14px;
+  gap: 8px;
+  background: white;
+  border-top: 1px solid var(--line);
+}
+#chat-input {
+  flex: 1;
+  padding: 10px 13px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-family: var(--body);
+  font-size: 14px;
+  outline: 0;
+}
+#chat-input:focus { border-color: var(--navy); }
+#chat-form button {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--paper);
+  border: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+@media (max-width: 480px) {
+  #chat-panel { width: calc(100vw - 32px); right: 0; bottom: 70px; }
+  #chat-widget { bottom: 16px; right: 16px; }
+}
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(16px); transition: all 0.7s var(--ease); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">
+      <img src="images/logo.png" alt="Wallace Roofing Co LLC" class="logo-img" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="tel:9035550000" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span class="label">(903) 555-0000</span>
+      </a>
+      <a href="#contact" class="btn btn-primary" style="padding: 10px 18px; font-size: 11px;">Free Estimate</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+    <div class="hero-headline">
+      <span class="eyebrow">Family-Owned · Paris, Texas</span>
+      <h1>Roofing built on honesty, not high pressure.</h1>
+      <p>Three decades of putting roofs over Lamar County homes and businesses. Free estimates. Real workmanship. No surprises.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Get a Free Estimate <span class="arrow">→</span></a>
+        <a href="tel:9035550000" class="btn btn-outline">Call (903) 555-0000</a>
+      </div>
+    </div>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Google Rating</span>
+        <span class="hero-meta-value hero-rating"><span class="stars">★★★★★</span> 5.0</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Verified Reviews</span>
+        <span class="hero-meta-value">40+</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Service Area</span>
+        <span class="hero-meta-value">Paris &amp; Lamar County</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Free Estimates</span>
+        <span class="hero-meta-value">Same-Week</span>
+      </div>
+    </div>
+  </div>
+
+</header>
+
+<!-- TRUST -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span><strong>5.0 stars</strong> · 40+ Google reviews</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Family-owned, locally operated</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span><strong>Insured &amp; licensed</strong> in Texas</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span><strong>Free estimates</strong> · Same-week scheduling</span>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="eyebrow">Our Services</span>
+        <h2>Everything your roof needs, done once, done right.</h2>
+      </div>
+      <p>From asphalt shingle replacements to flat-roof commercial coatings, we handle the full scope of residential and commercial roofing across Paris and the surrounding Lamar County area.</p>
+    </div>
+
+    <div class="services-grid reveal">
+      <article class="service-card" data-service="residential">
+        <div class="service-card-bg" style="background-image: url('images/489618033_1433928417813899_8355382957177976400_n.jpg'); background-position: center 30%;"></div>
+        <div class="num">01 / Residential</div>
+        <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 30 L32 10 L56 30 V54 H8 Z"/>
+          <path d="M22 54 V38 H42 V54"/>
+          <path d="M50 18 V26"/>
+        </svg>
+        <h3>Residential Roofing</h3>
+        <p>Full roof replacements, asphalt shingle systems, metal roofing, and matched repairs for homes built to handle East Texas weather.</p>
+        <span class="learn">Learn More</span>
+      </article>
+
+      <article class="service-card" data-service="commercial">
+        <div class="service-card-bg" style="background-image: url('images/svc-commercial.jpg'); background-position: 50% 20%;"></div>
+        <div class="num">02 / Commercial</div>
+        <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="8" y="14" width="48" height="40"/>
+          <path d="M16 22 H22 M28 22 H34 M40 22 H46"/>
+          <path d="M16 32 H22 M28 32 H34 M40 32 H46"/>
+          <path d="M16 42 H22 M28 42 H34 M40 42 H46"/>
+        </svg>
+        <h3>Commercial Roofing</h3>
+        <p>Flat roofs, TPO, metal, and modified-bitumen systems for storefronts, warehouses, churches, and multi-family properties throughout the region.</p>
+        <span class="learn">Learn More</span>
+      </article>
+
+      <article class="service-card" data-service="repair">
+        <div class="service-card-bg" style="background-image: url('images/svc-repair.jpg');"></div>
+        <div class="num">03 / Repair</div>
+        <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 30 L32 14 L50 30"/>
+          <path d="M20 30 V50 H44 V30"/>
+          <circle cx="32" cy="40" r="3"/>
+          <path d="M32 32 V37 M32 43 V48"/>
+        </svg>
+        <h3>Emergency Repair</h3>
+        <p>Active leaks, missing shingles, storm and tree damage. Tarping and same-day inspections available when the weather turns ugly.</p>
+        <span class="learn">Learn More</span>
+      </article>
+
+      <article class="service-card" data-service="coatings">
+        <div class="service-card-bg" style="background-image: url('images/489140580_1430271598179581_8663404460962481311_n.jpg'); background-position: center center;"></div>
+        <div class="num">04 / Coatings</div>
+        <svg class="icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M8 36 L32 22 L56 36 V52 H8 Z"/>
+          <path d="M14 28 C 18 24, 22 26, 26 24"/>
+          <path d="M32 16 V8 M28 12 H36"/>
+          <circle cx="32" cy="14" r="1.5" fill="currentColor"/>
+        </svg>
+        <h3>Coatings &amp; Maintenance</h3>
+        <p>Roof coatings, waterproofing, gutter service, and annual maintenance plans that extend roof life and prevent expensive surprises.</p>
+        <span class="learn">Learn More</span>
+      </article>
+    </div>
+
+    <div class="estimate-banner reveal">
+      <div class="estimate-banner-text">
+        <h3>Estimates are <span class="price">free.</span></h3>
+        <h3>Inspections <span class="price">$150.</span></h3>
+        <small>Inspection fee credited toward any work performed.</small>
+      </div>
+      <a href="#contact" class="btn btn-dark">Schedule Yours</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section" id="reviews">
+  <div class="container">
+    <div class="reviews-header reveal">
+      <span class="eyebrow">Lamar County Homeowners</span>
+      <h2>What our neighbors say.</h2>
+      <div class="reviews-rating-large">
+        <span class="num">5.0</span>
+        <span class="stars">★★★★★</span>
+        <small>40 verified Google reviews</small>
+      </div>
+    </div>
+
+    <div class="reviews-grid reveal">
+      <div class="review-card">
+        <div class="review-stars stars">★★★★★</div>
+        <div class="review-quote">They came through for me and my family. The honesty and fair price made all the difference, I was worried about losing my homeowner's insurance and they got it handled right away.</div>
+        <div class="review-author">
+          <div class="review-avatar">L</div>
+          <div>
+            <div class="review-name">Latricia Y.</div>
+            <div class="review-source">Verified Google review</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars stars">★★★★★</div>
+        <div class="review-quote">Quick response, came out and did my inspection in a timely manner. Very reasonable. I'd recommend them for any roofing need.</div>
+        <div class="review-author">
+          <div class="review-avatar">L</div>
+          <div>
+            <div class="review-name">Lacey</div>
+            <div class="review-source">Verified Google review</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars stars">★★★★★</div>
+        <div class="review-quote">Wallace Roofing did an exceptional job for us. Showed up when they said they would, finished on time, and treated our property with respect from start to finish.</div>
+        <div class="review-author">
+          <div class="review-avatar">S</div>
+          <div>
+            <div class="review-name">Samantha B.</div>
+            <div class="review-source">Verified Google review</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars stars">★★★★★</div>
+        <div class="review-quote">I called Wallace Roofing after a bad storm and they were out the next morning. Fixed the damage fast, kept me updated the whole time, and the price was beyond fair. Will never use anyone else.</div>
+        <div class="review-author">
+          <div class="review-avatar">D</div>
+          <div>
+            <div class="review-name">Derrick M.</div>
+            <div class="review-source">Verified Google review</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-stars stars">★★★★★</div>
+        <div class="review-quote">These guys are the real deal. No runaround, no upselling, just straight honest work. My roof looks brand new and they cleaned up every scrap before they left. Highly recommend to anyone in Paris.</div>
+        <div class="review-author">
+          <div class="review-avatar">T</div>
+          <div>
+            <div class="review-name">Tina R.</div>
+            <div class="review-source">Verified Google review</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-cta">
+      <a href="https://reviews.birdeye.com/wallace-roofing-co-llc-166495880164024" target="_blank" rel="noopener" class="btn btn-outline">Read all 40 reviews</a>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY PREVIEW -->
+<section id="work-reel">
+  <div class="container">
+    <div class="work-reel-wrap reveal">
+      <div class="work-reel-text">
+        <span class="eyebrow">See Our Work</span>
+        <h2>Real jobs. Real results.</h2>
+        <p>A look at what we do on the job every day across Paris and Lamar County. Residential replacements, commercial roofing, storm repairs — all done by the same family that answers the phone.</p>
+        <div style="display:flex; gap:14px; flex-wrap:wrap;">
+          <a href="gallery.html" class="btn btn-dark">View Full Gallery <span class="arrow">→</span></a>
+          <a href="#contact" class="btn btn-primary">Get a Free Estimate <span class="arrow">→</span></a>
+        </div>
+      </div>
+      <div class="work-reel-video-col">
+        <div class="iphone-float-wrap">
+          <div class="iphone-frame">
+            <div class="iphone-btn-action"></div>
+            <div class="iphone-btn-vol-up"></div>
+            <div class="iphone-btn-vol-dn"></div>
+            <div class="iphone-btn-power"></div>
+            <div class="iphone-inner">
+              <div class="iphone-island"></div>
+              <video autoplay muted loop playsinline preload="auto">
+                <source src="images/work-reel.mp4" type="video/mp4" />
+              </video>
+              <div class="iphone-home-bar"></div>
+            </div>
+          </div>
+          <div class="iphone-shadow"></div>
+        </div>
+        <div class="work-reel-socials">
+          <a href="https://www.facebook.com/wallaceroofingco" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/wallaceroofingco/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://reviews.birdeye.com/wallace-roofing-co-llc-166495880164024" target="_blank" rel="noopener" aria-label="Google Reviews">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="reveal" style="text-align: center; margin-bottom: 40px;">
+      <span class="eyebrow">Get In Touch</span>
+      <h2 style="margin-top: 12px;">Tell us about your roof. We'll handle the rest.</h2>
+    </div>
+
+    <div class="contact-wrap reveal">
+      <div class="contact-info">
+        <h2>Send a message, get a real reply.</h2>
+        <p>Fill out the form and choose how you'd like Wally — our AI assistant — to reach you. He'll follow up by call or text within a minute to go over your request and get you scheduled.</p>
+
+        <div class="contact-detail">
+          <div class="icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="label">Office</div>
+            <div class="value">145 W Neagle Avenue</div>
+            <div class="sub">Paris, TX 75460</div>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="label">Phone</div>
+            <div class="value"><a href="tel:9035550000">(903) 555-0000</a></div>
+            <div class="sub">Mon, Fri 8am to 6pm</div>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="label">Hours</div>
+            <div class="value" style="font-size: 0.9375rem;">Mon, Fri · 8am, 6pm</div>
+            <div class="sub">Saturday closed · Sunday by appointment</div>
+          </div>
+        </div>
+
+        <div class="contact-detail">
+          <div class="icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="label">Email</div>
+            <div class="value"><a href="mailto:hello@wallaceroofingcollc.com">hello@wallaceroofingcollc.com</a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <div id="form-content">
+          <h3>Tell us what's going on.</h3>
+          <p class="form-intro">Free estimates. Inspections $150 (credited toward work performed). Required fields marked with <span style="color: var(--gold);">*</span>.</p>
+
+          <form id="lead-form" novalidate>
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="name">Your Name <span class="req">*</span></label>
+                <input type="text" id="name" name="name" required autocomplete="name" />
+              </div>
+              <div class="form-field">
+                <label for="phone">Phone <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(903) ___-____" />
+              </div>
+              <div class="form-field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required autocomplete="email" />
+              </div>
+              <div class="form-field">
+                <label for="address">Property Address <span class="req">*</span></label>
+                <input type="text" id="address" name="address" required autocomplete="street-address" />
+              </div>
+              <div class="form-field full">
+                <label>Property Type</label>
+                <div class="form-radios">
+                  <input type="radio" id="pt-home" name="property_type" value="home" checked />
+                  <label for="pt-home">Home</label>
+                  <input type="radio" id="pt-rental" name="property_type" value="rental" />
+                  <label for="pt-rental">Rental</label>
+                  <input type="radio" id="pt-commercial" name="property_type" value="commercial" />
+                  <label for="pt-commercial">Commercial</label>
+                  <input type="radio" id="pt-multifamily" name="property_type" value="multifamily" />
+                  <label for="pt-multifamily">Multi-family</label>
+                </div>
+              </div>
+              <div class="form-field full">
+                <label for="service">What do you need? <span class="req">*</span></label>
+                <select id="service" name="service" required>
+                  <option value="">Choose a service…</option>
+                  <option value="estimate">Free estimate</option>
+                  <option value="inspection">Roof inspection ($150)</option>
+                  <option value="leak">Roof leak / repair</option>
+                  <option value="replacement">Full roof replacement</option>
+                  <option value="storm">Storm or hail damage</option>
+                  <option value="commercial">Commercial roofing</option>
+                  <option value="coating">Coating / waterproofing</option>
+                  <option value="gutters">Gutter service</option>
+                  <option value="other">Something else</option>
+                </select>
+              </div>
+              <div class="form-field full">
+                <label>How urgent?</label>
+                <div class="form-radios">
+                  <input type="radio" id="u-emergency" name="urgency" value="emergency" />
+                  <label for="u-emergency">Emergency</label>
+                  <input type="radio" id="u-soon" name="urgency" value="this_week" checked />
+                  <label for="u-soon">This week</label>
+                  <input type="radio" id="u-flexible" name="urgency" value="flexible" />
+                  <label for="u-flexible">Just gathering info</label>
+                </div>
+              </div>
+              <div class="form-field full">
+                <label for="description">Tell us a bit more (optional)</label>
+                <textarea id="description" name="description" placeholder="Active leak in the bedroom ceiling, started after last week's rain…"></textarea>
+              </div>
+              <div class="form-field full">
+                <label>How would you like Wally to reach you? <span class="req">*</span></label>
+                <div class="form-radios">
+                  <input type="radio" id="cm-call" name="contact_method" value="call" checked />
+                  <label for="cm-call">&#128222; Phone Call</label>
+                  <input type="radio" id="cm-text" name="contact_method" value="text" />
+                  <label for="cm-text">&#128172; Text Message</label>
+                </div>
+                <p class="cm-note" id="cm-note">Wally will call you within a minute to go over your request and get you scheduled.</p>
+              </div>
+              <div class="form-field full">
+                <button type="submit" class="form-submit">
+                  <span>Send My Request</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="form-confirmation" class="form-confirmation">
+          <h4>Thanks, we got it.</h4>
+          <p id="confirm-msg">Wally will reach out shortly to go over your request.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          Wallace Roofing
+          <small>Co. LLC · Paris, Texas</small>
+        </div>
+        <p class="footer-tagline">Family-owned residential and commercial roofing. Honest, careful work across Paris and Lamar County.</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/wallaceroofingco" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/wallaceroofingco/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://reviews.birdeye.com/wallace-roofing-co-llc-166495880164024" target="_blank" rel="noopener" aria-label="Reviews">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="#services">Residential Roofing</a></li>
+          <li><a href="#services">Commercial Roofing</a></li>
+          <li><a href="#services">Emergency Repair</a></li>
+          <li><a href="#services">Coatings &amp; Maintenance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li>145 W Neagle Ave</li>
+          <li>Paris, TX 75460</li>
+          <li><a href="tel:9035550000">(903) 555-0000</a></li>
+          <li><a href="mailto:hello@wallaceroofingcollc.com">hello@wallaceroofingcollc.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Wallace Roofing Co. LLC. Licensed &amp; insured in Texas.</span>
+      <span>Site by Nuvaxis AI</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CHAT WIDGET -->
+<div id="chat-widget">
+  <button id="chat-toggle" aria-label="Open chat with Wally, our AI assistant">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="badge">1</span>
+  </button>
+  <div id="chat-panel" role="dialog" aria-label="Wallace Roofing AI assistant">
+    <div class="chat-header">
+      <div class="chat-avatar">W</div>
+      <div>
+        <div class="chat-title">Wally</div>
+        <div class="chat-status">Online · usually replies instantly</div>
+      </div>
+      <button class="chat-close" id="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div id="chat-messages"></div>
+    <div class="chat-quick-replies" id="chat-quick-replies">
+      <button data-q="I have a leak in my roof.">I have a leak</button>
+      <button data-q="I need a free estimate for roof replacement.">Need an estimate</button>
+      <button data-q="I had storm damage and need an inspection.">Storm damage</button>
+      <button data-q="It's a commercial property.">Commercial roof</button>
+    </div>
+    <form id="chat-form">
+      <input id="chat-input" type="text" placeholder="Type your question…" autocomplete="off" />
+      <button type="submit" aria-label="Send">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+const nav = document.getElementById('nav');
+const heroBg = document.querySelector('.hero-bg');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+  if (heroBg) {
+    heroBg.style.backgroundPositionY = `calc(30% + ${window.scrollY * 0.4}px)`;
+  }
+}, { passive: true });
+
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+document.querySelectorAll('.service-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const map = { residential: 'estimate', commercial: 'commercial', repair: 'leak', coatings: 'coating' };
+    const select = document.getElementById('service');
+    if (select) select.value = map[card.dataset.service] || '';
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+const phoneInput = document.getElementById('phone');
+phoneInput.addEventListener('input', (e) => {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+  if (v.length > 6) v = `(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;
+  else if (v.length > 3) v = `(${v.slice(0,3)}) ${v.slice(3)}`;
+  else if (v.length > 0) v = `(${v}`;
+  e.target.value = v;
+});
+
+const LEAD_WORKER_URL = 'https://wallace-lead.support-nuvaxisai.workers.dev';
+
+// Update hint text when customer switches call/text preference
+document.querySelectorAll('input[name="contact_method"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const note = document.getElementById('cm-note');
+    if (radio.value === 'text') {
+      note.textContent = 'Wally will text you within a minute to go over your request and get you scheduled.';
+    } else {
+      note.textContent = 'Wally will call you within a minute to go over your request and get you scheduled.';
+    }
+  });
+});
+
+document.getElementById('lead-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target).entries());
+  const method = data.contact_method || 'call';
+
+  await Promise.allSettled([
+    fetch(LEAD_WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }),
+    fetch('https://formsubmit.co/ajax/hello@wallaceroofingcollc.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ ...data, _subject: 'New Roofing Lead — Wallace Roofing Co' }),
+    }),
+  ]);
+
+  const confirmMsg = document.getElementById('confirm-msg');
+  if (method === 'text') {
+    confirmMsg.textContent = "Wally will text you in the next minute or two. He'll ask a few follow-up questions, then a Wallace family member will confirm your appointment.";
+  } else {
+    confirmMsg.textContent = "Wally will call you in the next minute or two. He'll go over your request, answer any questions, and get you scheduled. A Wallace family member will confirm your appointment.";
+  }
+
+  document.getElementById('form-content').style.display = 'none';
+  document.getElementById('form-confirmation').classList.add('shown');
+});
+
+(function() {
+  const toggle = document.getElementById('chat-toggle');
+  const panel = document.getElementById('chat-panel');
+  const closeBtn = document.getElementById('chat-close');
+  const messages = document.getElementById('chat-messages');
+  const form = document.getElementById('chat-form');
+  const input = document.getElementById('chat-input');
+  const quickReplies = document.getElementById('chat-quick-replies');
+  const badge = toggle.querySelector('.badge');
+  let conversation = [{ role: 'assistant', content: "Hey there, I'm Wally with Wallace Roofing. What's going on with the roof? I'll get a few quick details so we can get you taken care of." }];
+  function render() {
+    messages.innerHTML = '';
+    conversation.forEach(m => {
+      const div = document.createElement('div');
+      div.className = 'msg ' + (m.role === 'assistant' ? 'bot' : 'user');
+      div.textContent = m.content;
+      messages.appendChild(div);
+    });
+    messages.scrollTop = messages.scrollHeight;
+  }
+  function showTyping() {
+    const div = document.createElement('div');
+    div.className = 'msg bot msg-typing'; div.id = 'typing';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  }
+  function hideTyping() { const t = document.getElementById('typing'); if (t) t.remove(); }
+  toggle.addEventListener('click', () => {
+    panel.classList.add('shown');
+    badge.style.display = 'none';
+    if (!messages.children.length) render();
+    setTimeout(() => input.focus(), 100);
+  });
+  closeBtn.addEventListener('click', () => panel.classList.remove('shown'));
+  quickReplies.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      input.value = e.target.dataset.q;
+      form.dispatchEvent(new Event('submit'));
+      quickReplies.style.display = 'none';
+    }
+  });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = input.value.trim(); if (!text) return;
+    input.value = ''; quickReplies.style.display = 'none';
+    conversation.push({ role: 'user', content: text });
+    render(); showTyping();
+    try {
+      // ⚠️ HOOK UP BACKEND: replace mockReply with fetch('/api/chat')
+      await new Promise(r => setTimeout(r, 1100));
+      const reply = mockReply(text, conversation);
+      hideTyping();
+      conversation.push({ role: 'assistant', content: reply });
+      render();
+    } catch (err) {
+      hideTyping();
+      conversation.push({ role: 'assistant', content: "Sorry, call (903) 555-0000 or use the form below." });
+      render();
+    }
+  });
+  function mockReply(userText, convo) {
+    const t = userText.toLowerCase();
+    const turn = convo.filter(m => m.role === 'user').length;
+    if (turn === 1) {
+      if (/leak|drip|water|stain|ceiling/.test(t)) return "Sorry to hear that. Is water actively coming in right now, or is it more of a stain that shows up after rain?";
+      if (/storm|hail|wind|tree|branch/.test(t)) return "Got it. Was there a recent storm? About what day, and have you noticed any leaks inside or shingles in the yard?";
+      if (/estimate|quote|price|cost|new roof|replace/.test(t)) return "Happy to help. Is this a residential or commercial property, and roughly how old is the current roof?";
+      if (/commercial|business|office|warehouse|store/.test(t)) return "Thanks for letting me know. What type of building is it, and is there an active leak or are you planning ahead?";
+      return "Got it. Can you tell me a little more about what's going on?";
+    }
+    if (turn === 2) return "Thanks. What's the property address, and what's the best name and phone number for our team?";
+    if (turn === 3) return "Perfect. About how old is the roof, and do you happen to know the material, shingle, metal, tile, or flat?";
+    if (turn === 4) return "Got it. Last quick question, is this an emergency, or are you flexible on scheduling?";
+    return "Thanks for those details. I'll pass everything to a member of the Wallace family and they'll follow up shortly. If urgent, call (903) 555-0000.";
+  }
+})();
+
+// Mobile nav
+(function () {
+  const toggle = document.querySelector('.nav-toggle');
+  const links  = document.querySelector('.nav-links');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+  });
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    links.classList.remove('open');
+    toggle.classList.remove('open');
+  }));
+})();
+
+// iPhone 3D tilt interaction
+(function () {
+  const frame = document.querySelector('.iphone-frame');
+  if (!frame) return;
+  let isHovered = false;
+  frame.addEventListener('mouseenter', () => { isHovered = true; });
+  frame.addEventListener('mousemove', (e) => {
+    if (!isHovered) return;
+    const r = frame.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+    const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+    frame.style.transform = `perspective(900px) rotateY(${dx * 16}deg) rotateX(${dy * -11}deg) scale(1.035)`;
+  });
+  frame.addEventListener('mouseleave', () => {
+    isHovered = false;
+    frame.style.transform = '';
+  });
+  // Touch tilt for mobile
+  frame.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    const r = frame.getBoundingClientRect();
+    const dx = (t.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+    const dy = (t.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+    frame.style.transform = `perspective(900px) rotateY(${dx * 16}deg) rotateX(${dy * -11}deg) scale(1.035)`;
+  }, { passive: true });
+  frame.addEventListener('touchend', () => { frame.style.transform = ''; });
+})();
+</script>
+</body>
+</html>

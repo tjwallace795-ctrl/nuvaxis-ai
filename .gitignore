@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+jspm_packages/
+.pnp
+.pnp.js
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Electron build output
+dist/
+out/
+build/
+release/
+app/dist/
+.webpack/
+.vite/
+
+# Electron packaging artifacts
+*.dmg
+*.exe
+*.msi
+*.deb
+*.rpm
+*.snap
+*.AppImage
+*.zip
+*.tar.gz
+*.blockmap
+
+# Electron-builder
+/release-builds/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Test / coverage
+coverage/
+.nyc_output/
+*.lcov
+.cache/
+
+# Env / secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+*.pem
+*.key
+
+# Editor / IDE
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# TypeScript
+*.tsbuildinfo
+
+# Temp
+tmp/
+temp/

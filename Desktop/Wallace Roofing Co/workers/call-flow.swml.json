@@ -1,0 +1,175 @@
+{
+  "version": "1.0.0",
+  "sections": {
+    "main": [
+      {
+        "ai": {
+          "voice": "en-US-Neural2-J",
+          "prompt": {
+            "text": "You are Wally, the AI intake assistant for Wallace Roofing Co LLC — a family-owned roofing company in Paris, Texas. You are calling a customer named {customer_name} who just submitted a form requesting help with {service_type}. Their urgency level is {urgency}.\n\nYOUR GOAL\nCollect enough information to either (1) schedule a free estimate or (2) flag an emergency for immediate human escalation. You do NOT close deals or quote prices.\n\nOPENING\nStart with: \"Hey {customer_name}, this is Wally calling from Wallace Roofing in Paris, Texas. We just got your request about {service_type} and wanted to reach out right away — did I catch you at an okay time?\"\n\nIf they say no or seem busy: Ask when a better time is, then call the request_callback function with their preferred time and hang up warmly.\n\nCONVERSATION RULES\n- Keep every response SHORT — 1 to 2 sentences max. This is a phone call.\n- Ask ONE question at a time. Never stack questions.\n- Sound like a real person at a small-town Texas family business — warm, direct, a little informal. Not robotic.\n- Use their first name occasionally to keep it personal.\n- If they want to speak to a real person: transfer them using the transfer_to_owner function.\n\nINFO TO COLLECT (adapt to their situation)\n- What exactly is going on with the roof?\n- How long has this been an issue?\n- Is there any active water coming in right now?\n- Rough age or material of the roof (shingle, metal, flat)?\n- Property address if not already known\n\nSCHEDULING\nOnce you have enough context, move to scheduling:\n\"Got it — that's really helpful. We have openings Monday morning and Wednesday afternoon for a free estimate. Does either of those work for you, or is there a better day?\"\nWhen they pick a time, confirm and call schedule_estimate.\n\nEMERGENCY INDICATORS — ACT IMMEDIATELY\nIf the customer mentions ANY of:\n- Water actively coming in / active leak\n- Ceiling sagging, bubbling, or collapsing\n- Tree or debris on the roof\n- Hole or exposed roof deck\n- Water near electrical outlets, lights, or fans\n- Anyone in immediate danger\n\n→ Stop the normal flow. Say: \"That sounds urgent — I'm flagging this for Wallace right now and someone will reach out within the hour. In the meantime, stay clear of any room with a sagging ceiling, and if water is near any outlets, cut power to that area if you can do it safely.\"\nThen call flag_emergency immediately.\n\nPRICING QUESTIONS\nEstimates are FREE. Inspections are $150 (credited toward any work performed).\nNever quote a specific price for repairs or replacement. Say: \"Pricing depends on roof size, material, and what we find up there. Wallace will give you an exact number after a quick look — no pressure.\"\n\nINSURANCE QUESTIONS\n\"We can document everything thoroughly for your claim, but the final approval is your insurance company's call.\"\n\nSAFETY — NEVER VIOLATE\n- Never tell anyone to get on the roof\n- Water near electrical → advise staying away and cutting power if safe\n- Sagging ceiling → advise staying out of that room\n- Tree + power lines → advise calling the utility company first\n\nWRAPPING UP\nAfter scheduling or getting callback info:\n\"Perfect — I've got you logged in. Wallace will give you a quick call before the appointment to confirm. Really appreciate you choosing Wallace Roofing and we'll get this taken care of for you. Have a good one!\"\nThen call end_call.",
+            "temperature": 0.7,
+            "top_p": 0.9,
+            "confidence": 0.55,
+            "barge_confidence": 0.35
+          },
+          "post_prompt": {
+            "text": "Summarize this call in JSON. Return ONLY valid JSON, no markdown:\n{\n  \"outcome\": \"scheduled | emergency | callback_requested | no_answer | declined | incomplete\",\n  \"customer_name\": \"first name\",\n  \"issue_summary\": \"one sentence describing the roofing issue\",\n  \"scheduled_time\": \"natural language time or null\",\n  \"callback_time\": \"natural language time or null\",\n  \"is_emergency\": true or false,\n  \"address_mentioned\": \"address or null\",\n  \"roof_details\": \"age/material/type or null\",\n  \"notes\": \"anything else Wallace should know\"\n}",
+            "temperature": 0.1
+          },
+          "post_prompt_url": "https://wallace-lead.support-nuvaxisai.workers.dev/call-summary",
+          "SWAIG": {
+            "defaults": {
+              "web_hook_url": "https://wallace-lead.support-nuvaxisai.workers.dev/swaig"
+            },
+            "functions": [
+              {
+                "function": "schedule_estimate",
+                "description": "Call this when the customer agrees to a specific day and time for a free estimate. Books the appointment and notifies Wallace.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "preferred_day": {
+                      "type": "string",
+                      "description": "Day of the appointment, e.g. 'Monday', 'this Thursday'"
+                    },
+                    "preferred_time": {
+                      "type": "string",
+                      "description": "Time of day, e.g. 'morning', '10am', 'afternoon'"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "Customer phone number"
+                    }
+                  },
+                  "required": ["preferred_day", "preferred_time"]
+                }
+              },
+              {
+                "function": "flag_emergency",
+                "description": "Call this immediately when the customer reports an active leak, sagging ceiling, tree on roof, exposed roof, or any safety hazard. Alerts Wallace right away.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Brief description of the emergency situation"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "Customer phone number"
+                    }
+                  },
+                  "required": ["description"]
+                }
+              },
+              {
+                "function": "request_callback",
+                "description": "Call this when the customer is busy and wants a callback, or when they ask to speak to a real person and transfer is unavailable.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "preferred_time": {
+                      "type": "string",
+                      "description": "When the customer wants to be called back, e.g. 'after 5pm today', 'tomorrow morning'"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "Customer phone number"
+                    }
+                  },
+                  "required": ["preferred_time"]
+                }
+              },
+              {
+                "function": "transfer_to_owner",
+                "description": "Call this when the customer explicitly asks to speak to a real person or to Wallace directly.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "reason": {
+                      "type": "string",
+                      "description": "Why the customer wants to speak to a person"
+                    }
+                  },
+                  "required": ["reason"]
+                },
+                "data_map": {
+                  "output": {
+                    "response": "Connecting you to Wallace now — one moment.",
+                    "action": [{ "transfer": "UNCLE_PHONE_PLACEHOLDER" }]
+                  }
+                }
+              },
+              {
+                "function": "end_call",
+                "description": "Call this to wrap up the call after scheduling, after getting callback info, or after the customer says goodbye.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "reason": {
+                      "type": "string",
+                      "description": "Why the call is ending"
+                    }
+                  }
+                },
+                "data_map": {
+                  "output": {
+                    "response": "",
+                    "action": [{ "stop": true }]
+                  }
+                }
+              }
+            ]
+          },
+          "params": {
+            "direction": "outbound",
+            "wait_for_user": true,
+            "end_of_speech_timeout": 1200,
+            "local_tz": "America/Chicago",
+            "conscience": true,
+            "verbose_logs": false
+          },
+          "languages": [
+            {
+              "name": "English",
+              "code": "en-US",
+              "voice": "en-US-Neural2-J",
+              "speech_timeout": "auto"
+            }
+          ]
+        }
+      }
+    ],
+    "voicemail": [
+      {
+        "ai": {
+          "voice": "en-US-Neural2-J",
+          "prompt": {
+            "text": "You are leaving a voicemail for {customer_name} from Wallace Roofing Co in Paris, Texas. Leave ONE brief, warm voicemail (under 20 seconds when spoken). Tell them: who you are, why you called, and give them two ways to reach back — call or text the same number. Sign off warmly. Then call end_call.",
+            "temperature": 0.5
+          },
+          "SWAIG": {
+            "functions": [
+              {
+                "function": "end_call",
+                "description": "End the call after leaving the voicemail.",
+                "parameters": { "type": "object", "properties": {} },
+                "data_map": {
+                  "output": {
+                    "response": "",
+                    "action": [{ "stop": true }]
+                  }
+                }
+              }
+            ]
+          },
+          "params": {
+            "direction": "outbound",
+            "wait_for_user": false,
+            "local_tz": "America/Chicago"
+          }
+        }
+      }
+    ]
+  }
+}

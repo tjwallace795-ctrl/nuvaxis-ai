@@ -1,0 +1,32 @@
+name = "wallace-lead"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "LEADS"
+id = "1a9190e731d746a68382d6f548a699b6"
+
+[triggers]
+crons = ["* * * * *"]
+
+# Secrets — set each one with: wrangler secret put SECRET_NAME
+#
+# Twilio (SMS)
+#   wrangler secret put TWILIO_SID        # AC... account SID
+#   wrangler secret put TWILIO_TOKEN      # Auth Token
+#   wrangler secret put TWILIO_FROM       # +19035551234 (your Twilio number)
+#
+# SignalWire (AI voice calls)
+#   wrangler secret put SW_SPACE          # e.g. reeltycheck
+#   wrangler secret put SW_PROJECT_ID     # found in SignalWire dashboard → API
+#   wrangler secret put SW_TOKEN          # SignalWire API token
+#   wrangler secret put SW_FROM           # +1903... (SignalWire phone number)
+#   wrangler secret put WORKER_URL        # https://wallace-lead.YOUR.workers.dev
+#
+# People
+#   wrangler secret put UNCLE_PHONE       # +19035550000 (uncle's actual mobile)
+#   wrangler secret put UNCLE_EMAIL       # hello@wallaceroofingcollc.com
+#
+# AI / Email
+#   wrangler secret put GEMINI_API_KEY    # Google Gemini API key
+#   wrangler secret put RESEND_API_KEY    # resend.com key (email notifications)

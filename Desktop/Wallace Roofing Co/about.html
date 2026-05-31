@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="About Wallace Roofing Co LLC, a family-owned roofing contractor in Paris, TX with 30+ years of experience." />
+<meta name="theme-color" content="#1C1C1C" />
+<title>About Us, Wallace Roofing Co LLC</title>
+
+<link rel="icon" type="image/png" href="images/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --navy: #1C1C1C;
+  --navy-deep: #0D0D0D;
+  --gold: #CC2A00;
+  --paper: #FAF8F3;
+  --paper-2: #F1ECE0;
+  --ink: #1C1C1C;
+  --ink-soft: #555555;
+  --line: rgba(26, 26, 26, 0.10);
+  --line-dark: rgba(245, 241, 232, 0.10);
+  --display: 'Fraunces', 'Times New Roman', serif;
+  --body: 'DM Sans', system-ui, sans-serif;
+  --container: 1240px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--gold); }
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+h1 { font-size: clamp(2.5rem, 5.5vw, 4.75rem); font-weight: 350; }
+h2 { font-size: clamp(2rem, 3.8vw, 3rem); }
+h3 { font-size: clamp(1.25rem, 2vw, 1.625rem); }
+h4 { font-size: 1.125rem; line-height: 1.3; }
+p { font-size: 1rem; line-height: 1.65; color: var(--ink-soft); }
+
+.container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+section { padding: clamp(70px, 9vw, 110px) 0; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 26px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.btn-primary { background: var(--gold); color: var(--navy); }
+.btn-primary:hover { background: #DD3300; transform: translateY(-1px); box-shadow: 0 10px 24px -8px rgba(204, 42, 0, 0.5); }
+.btn-dark { background: var(--navy); color: var(--paper); }
+.btn-dark:hover { background: #333333; }
+.btn-outline-dark { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn-outline-dark:hover { border-color: var(--ink); }
+.btn .arrow { transition: transform 0.3s var(--ease); }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* NAV */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 18px 0;
+  transition: all 0.4s var(--ease);
+}
+.nav.scrolled {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 12px 0;
+}
+.nav-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 500;
+}
+.nav-brand .logo-img { height: 64px; width: auto; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6)); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+.nav-links a:hover, .nav-links a.active { opacity: 1; }
+.nav-cta { display: flex; align-items: center; gap: 16px; }
+.nav-phone {
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  opacity: 0.85;
+}
+.nav-toggle { display: none; background: transparent; border: 0; cursor: pointer; padding: 8px; }
+.nav-toggle span {
+  display: block; width: 22px; height: 1.5px;
+  background: var(--paper); margin: 5px 0;
+  transition: transform 0.3s ease, opacity 0.2s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+@media (max-width: 900px) {
+  .nav { position: fixed; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0; right: 0;
+    flex-direction: column;
+    gap: 0;
+    background: rgba(13,13,13,0.97);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(245,241,232,0.08);
+    padding: 8px 24px 20px;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li { border-bottom: 1px solid rgba(245,241,232,0.07); }
+  .nav-links li:last-child { border-bottom: 0; }
+  .nav-links a { display: block; padding: 14px 0; font-size: 15px; opacity: 1; }
+  .nav-toggle { display: block; }
+  .nav-phone .label { display: none; }
+}
+
+/* PAGE HEADER */
+.page-header {
+  background: var(--navy-deep);
+  color: var(--paper);
+  padding: 160px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+@media (max-width: 600px) { .page-header { padding: 110px 0 56px; } }
+.page-header::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: url('images/488867106_1431696751370399_5295580751787696604_n.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  opacity: 0.2;
+}
+.page-header-content { position: relative; z-index: 2; }
+.page-header h1 { color: var(--paper); margin: 18px 0 20px; font-weight: 350; }
+.page-header p {
+  font-size: 1.0625rem;
+  color: rgba(245, 241, 232, 0.78);
+  max-width: 560px;
+}
+
+/* ABOUT MAIN */
+.about-main {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 72px;
+  align-items: start;
+}
+@media (max-width: 900px) { .about-main { grid-template-columns: 1fr; gap: 40px; } }
+
+.about-image-wrap {
+  position: sticky;
+  top: 110px;
+}
+@media (max-width: 900px) { .about-image-wrap { position: static; top: auto; } }
+.about-image {
+  aspect-ratio: 4/5;
+  background: url('images/488867106_1431696751370399_5295580751787696604_n.jpg') center/cover no-repeat;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+.about-image::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(7, 15, 34, 0.4));
+}
+.about-image .badge {
+  position: absolute;
+  bottom: 24px; left: 24px;
+  z-index: 2;
+  background: var(--paper);
+  color: var(--ink);
+  padding: 14px 18px;
+  border-radius: 4px;
+}
+.about-image .badge .num {
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+.about-image .badge .label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  color: var(--ink-soft);
+}
+
+.about-content h2 { margin: 14px 0 22px; }
+.about-content > p { margin-bottom: 14px; }
+.about-content > p:last-of-type { margin-bottom: 0; }
+
+.values-list {
+  list-style: none;
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 40px;
+}
+@media (max-width: 600px) { .values-list { grid-template-columns: 1fr; } }
+.value-item { display: flex; gap: 14px; align-items: flex-start; }
+.value-item .num {
+  font-family: var(--display);
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+  padding-top: 4px;
+}
+.value-item h4 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-weight: 500;
+  font-family: var(--body);
+  letter-spacing: -0.01em;
+}
+.value-item p { font-size: 0.9375rem; line-height: 1.55; margin: 0; }
+
+/* STATS STRIP */
+.stats-strip {
+  background: var(--navy);
+  color: var(--paper);
+  padding: 56px 0;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+@media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+.stat-num {
+  font-family: var(--display);
+  font-size: clamp(2.5rem, 4vw, 3.5rem);
+  font-weight: 350;
+  color: var(--paper);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.55);
+  margin-top: 10px;
+}
+.stat-sub {
+  font-size: 13px;
+  color: rgba(245, 241, 232, 0.65);
+  margin-top: 6px;
+}
+
+/* PHOTO GRID */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 700px) { .photo-grid { grid-template-columns: repeat(2, 1fr); } }
+.photo-grid-item {
+  aspect-ratio: 1/1;
+  background-size: cover;
+  background-position: center;
+  border-radius: 4px;
+}
+
+/* CTA BANNER */
+.cta-banner {
+  background: var(--paper-2);
+  border-top: 1px solid var(--line);
+}
+.cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.cta-inner h2 { max-width: 560px; margin-top: 12px; }
+.cta-inner p { max-width: 440px; margin-top: 12px; }
+.cta-actions { display: flex; gap: 14px; flex-wrap: wrap; flex-shrink: 0; }
+
+/* FOOTER */
+footer {
+  background: var(--navy-deep);
+  color: rgba(245, 241, 232, 0.7);
+  padding: 72px 0 28px;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 56px;
+}
+@media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; } }
+@media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; } }
+.footer-brand {
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 1.125rem;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.footer-brand small {
+  display: block;
+  font-family: var(--body);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 232, 0.55);
+  margin-top: 4px;
+}
+.footer-tagline { font-size: 13px; line-height: 1.6; margin-bottom: 22px; max-width: 320px; }
+.footer-social { display: flex; gap: 10px; }
+.footer-social a {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line-dark);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(245, 241, 232, 0.65);
+  transition: all 0.2s;
+}
+.footer-social a:hover { border-color: rgba(245, 241, 232, 0.5); color: var(--paper); }
+.footer-col h5 {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(245, 241, 232, 0.5);
+  margin-bottom: 16px;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.footer-col a { font-size: 13px; }
+.footer-col a:hover { color: var(--paper); }
+.footer-bottom {
+  padding-top: 28px;
+  border-top: 1px solid var(--line-dark);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11px;
+  color: rgba(245, 241, 232, 0.45);
+  letter-spacing: 0.04em;
+}
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(16px); transition: all 0.7s var(--ease); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <img src="images/logo.png" alt="Wallace Roofing Co LLC" class="logo-img" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#services">Services</a></li>
+      <li><a href="/about" class="active">About</a></li>
+      <li><a href="/#reviews">Reviews</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="tel:9033780229" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span class="label">(903) 378-0229</span>
+      </a>
+      <a href="/#contact" class="btn btn-primary" style="padding: 10px 18px; font-size: 11px;">Free Estimate</a>
+    </div>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+  <div class="container page-header-content">
+    <span class="eyebrow">Our Story</span>
+    <h1>A family business, the way roofing used to be done.</h1>
+    <p>Locally owned and family-operated out of Paris, Texas. We started on a handshake, and we still run that way today.</p>
+  </div>
+</header>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="reveal">
+        <div class="stat-num">30+</div>
+        <div class="stat-label">Years of Trade Experience</div>
+      </div>
+      <div class="reveal">
+        <div class="stat-num">5.0</div>
+        <div class="stat-label">Google Rating</div>
+        <div class="stat-sub">40+ verified reviews</div>
+      </div>
+      <div class="reveal">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Family Operated</div>
+        <div class="stat-sub">Paris, TX since day one</div>
+      </div>
+      <div class="reveal">
+        <div class="stat-num">$0</div>
+        <div class="stat-label">Cost for Estimates</div>
+        <div class="stat-sub">Same-week scheduling</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT MAIN -->
+<section>
+  <div class="container">
+    <div class="about-main">
+      <div class="about-image-wrap reveal">
+        <div class="about-image">
+          <div class="badge">
+            <div class="num">30+</div>
+            <div class="label">Years of Trade Experience</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-content reveal">
+        <span class="eyebrow">About Wallace Roofing</span>
+        <h2>Roofing you can trust because we live here too.</h2>
+        <p>Wallace Roofing Co. LLC is a locally owned, family-operated roofing contractor based at 145 W Neagle Avenue in Paris, Texas. We started on a handshake, and we still run that way today.</p>
+        <p>Our customers don't get passed off to a sales team. When you call, you talk to the same family that climbs the ladder. That's why forty Lamar County homeowners have given us a perfect five-star rating, and why most of our work comes from people we've already taken care of recommending us to their neighbors.</p>
+        <p>We handle everything from asphalt shingle replacements on single-family homes to flat-roof commercial systems on warehouses and churches. Whether it's storm damage, an active leak, or a roof that's simply reached the end of its life, we show up, give you a straight answer, and do the work right the first time.</p>
+
+        <ul class="values-list">
+          <li class="value-item">
+            <span class="num">01</span>
+            <div>
+              <h4>Honest, fair pricing</h4>
+              <p>Free written estimates. No high-pressure tactics, no upsells you don't need.</p>
+            </div>
+          </li>
+          <li class="value-item">
+            <span class="num">02</span>
+            <div>
+              <h4>Real Texas workmanship</h4>
+              <p>Materials and methods built for our weather. Roofs that last decades, not seasons.</p>
+            </div>
+          </li>
+          <li class="value-item">
+            <span class="num">03</span>
+            <div>
+              <h4>Insurance experienced</h4>
+              <p>We document damage thoroughly so your claim has the best chance of approval.</p>
+            </div>
+          </li>
+          <li class="value-item">
+            <span class="num">04</span>
+            <div>
+              <h4>You'll see us again</h4>
+              <p>We answer calls after the job is done. Family business, hometown reputation.</p>
+            </div>
+          </li>
+          <li class="value-item">
+            <span class="num">05</span>
+            <div>
+              <h4>Residential &amp; commercial</h4>
+              <p>From single-family homes to storefronts and warehouses across Lamar County.</p>
+            </div>
+          </li>
+          <li class="value-item">
+            <span class="num">06</span>
+            <div>
+              <h4>Storm &amp; insurance claims</h4>
+              <p>We've guided dozens of families through the claims process from first inspection to final approval.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHOTO GRID -->
+<section style="background: var(--paper-2); padding: clamp(56px, 7vw, 88px) 0;">
+  <div class="container">
+    <div class="reveal" style="margin-bottom: 40px;">
+      <span class="eyebrow">Recent Work</span>
+      <h2 style="margin-top: 14px;">Roofs we've put our name on.</h2>
+    </div>
+    <div class="photo-grid reveal">
+      <div class="photo-grid-item" style="background-image: url('images/490181037_1433905141149560_6472321870458685395_n.jpg');"></div>
+      <div class="photo-grid-item" style="background-image: url('images/487509335_1424128465460561_1254670056136225472_n.jpg');"></div>
+      <div class="photo-grid-item" style="background-image: url('images/488256439_1429338594939548_670697716458091697_n.jpg');"></div>
+      <div class="photo-grid-item" style="background-image: url('images/489436954_1433007134572694_3973554370858063176_n.jpg');"></div>
+      <div class="photo-grid-item" style="background-image: url('images/489569694_1432846247922116_8844906189251858430_n.jpg');"></div>
+      <div class="photo-grid-item" style="background-image: url('images/489618033_1433928417813899_8355382957177976400_n.jpg');"></div>
+    </div>
+    <div style="text-align: center; margin-top: 32px;">
+      <a href="/gallery" class="btn btn-dark">View Full Gallery <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-banner">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <div>
+        <span class="eyebrow">Ready to get started?</span>
+        <h2>Free estimates. Honest answers. Real workmanship.</h2>
+        <p>Tell us about your roof and a Wallace family member will follow up to schedule your visit.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="/#contact" class="btn btn-primary">Get a Free Estimate <span class="arrow">→</span></a>
+        <a href="tel:9033780229" class="btn btn-outline-dark">Call (903) 378-0229</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          Wallace Roofing
+          <small>Co. LLC · Paris, Texas</small>
+        </div>
+        <p class="footer-tagline">Family-owned residential and commercial roofing. Honest, careful work across Paris and Lamar County.</p>
+        <div class="footer-social">
+          <a href="https://www.facebook.com/wallaceroofingco" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
+          </a>
+          <a href="https://www.instagram.com/wallaceroofingco/" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://reviews.birdeye.com/wallace-roofing-co-llc-166495880164024" target="_blank" rel="noopener" aria-label="Reviews">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Services</h5>
+        <ul>
+          <li><a href="/#services">Residential Roofing</a></li>
+          <li><a href="/#services">Commercial Roofing</a></li>
+          <li><a href="/#services">Emergency Repair</a></li>
+          <li><a href="/#services">Coatings &amp; Maintenance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/#reviews">Reviews</a></li>
+          <li><a href="/gallery">Gallery</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li>145 W Neagle Ave</li>
+          <li>Paris, TX 75460</li>
+          <li><a href="tel:9033780229">(903) 378-0229</a></li>
+          <li><a href="mailto:hello@wallaceroofingco.com">hello@wallaceroofingco.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Wallace Roofing Co. LLC. Licensed &amp; insured in Texas.</span>
+      <span><a href="/privacy-policy" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(245,241,232,0.25);">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(245,241,232,0.25);">Terms &amp; Conditions</a></span>
+      <span>Site by Nuvaxis AI</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+nav.classList.toggle('scrolled', window.scrollY > 40);
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+(function () {
+  const toggle = document.querySelector('.nav-toggle');
+  const links  = document.querySelector('.nav-links');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+  });
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    links.classList.remove('open');
+    toggle.classList.remove('open');
+  }));
+})();
+</script>
+</body>
+</html>

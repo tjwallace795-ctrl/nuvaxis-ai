@@ -10,11 +10,13 @@
 <meta property="og:title" content="Wallace Roofing Co LLC" />
 <meta property="og:description" content="5-star, family-owned roofers in Paris, TX. Free estimates. Honest work." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://wallaceroofingcollc.com" />
+<meta property="og:url" content="https://wallaceroofingco.com" />
 
+<link rel="icon" type="image/png" href="images/logo.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
 
 <style>
 :root {
@@ -27,6 +29,9 @@
   --ink-soft: #555555;
   --line: rgba(26, 26, 26, 0.10);
   --line-dark: rgba(245, 241, 232, 0.10);
+  --nora: #A85872;
+  --nora-deep: #7D3A52;
+  --nora-soft: #F7ECF0;
 
   --display: 'Fraunces', 'Times New Roman', serif;
   --body: 'DM Sans', system-ui, -apple-system, sans-serif;
@@ -226,7 +231,7 @@ section { padding: clamp(70px, 9vw, 110px) 0; }
 .hero-bg {
   position: absolute;
   inset: 0;
-  background-image: url('images/489618033_1433928417813899_8355382957177976400_n.jpg');
+  background-image: url('images/bg-hero.jpg');
   background-size: cover;
   background-position: center 30%;
   z-index: 1;
@@ -549,7 +554,11 @@ section { padding: clamp(70px, 9vw, 110px) 0; }
 .value-item p { font-size: 0.9375rem; line-height: 1.55; margin: 0; }
 
 /* REVIEWS */
-.reviews-section { background: var(--navy); }
+.reviews-section {
+  background:
+    linear-gradient(to bottom, rgba(8,8,8,0.78) 0%, rgba(8,8,8,0.72) 60%, rgba(8,8,8,0.84) 100%),
+    url('images/bg-roofs.jpg') center / cover fixed;
+}
 .reviews-header {
   text-align: center;
   margin-bottom: 56px;
@@ -575,57 +584,135 @@ section { padding: clamp(70px, 9vw, 110px) 0; }
 
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   margin-bottom: 36px;
+  overflow: visible;
+  padding: 16px 8px 24px;
+  position: relative;
 }
-.reviews-grid .review-card { grid-column: span 2; }
-.reviews-grid .review-card:nth-child(4) { grid-column: 2 / 4; }
-.reviews-grid .review-card:nth-child(5) { grid-column: 4 / 6; }
 @media (max-width: 900px) {
   .reviews-grid { grid-template-columns: 1fr; }
-  .reviews-grid .review-card,
-  .reviews-grid .review-card:nth-child(4),
-  .reviews-grid .review-card:nth-child(5) { grid-column: auto; }
 }
 
 .review-card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(245,241,232,0.1);
-  border-radius: 6px;
-  padding: 28px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+  will-change: transform;
+  transform-origin: center center;
 }
-.review-stars { font-size: 14px; }
-.review-quote {
-  font-family: var(--display);
-  font-size: 1.0625rem;
-  font-weight: 350;
-  line-height: 1.55;
-  color: var(--paper);
+.review-photo {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+  background: #e0ddd6;
+  cursor: zoom-in;
+  transition: filter 0.2s ease;
 }
-.review-author {
-  display: flex; align-items: center; gap: 12px;
-  margin-top: auto;
-  padding-top: 18px;
-  border-top: 1px solid rgba(245,241,232,0.1);
+.review-photo:hover { filter: brightness(1.07); }
+
+/* LIGHTBOX */
+.review-lightbox {
+  position: fixed; inset: 0; z-index: 9500;
+  background: rgba(0,0,0,0.92);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.28s ease;
+  backdrop-filter: blur(6px);
+  cursor: zoom-out;
+}
+.review-lightbox.lb-open { opacity: 1; pointer-events: all; }
+.review-lightbox img {
+  max-width: 90vw; max-height: 86vh;
+  border-radius: 10px;
+  box-shadow: 0 12px 80px rgba(0,0,0,0.70);
+  transform: scale(0.88);
+  transition: transform 0.32s var(--ease);
+  cursor: default;
+}
+.review-lightbox.lb-open img { transform: scale(1); }
+.lb-close {
+  position: absolute; top: 18px; right: 22px;
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 50%; cursor: pointer;
+  color: #fff; font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  z-index: 1;
+}
+.lb-close:hover { background: rgba(255,255,255,0.22); transform: rotate(90deg); }
+.review-body {
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.review-top-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
 }
 .review-avatar {
-  width: 36px; height: 36px;
+  width: 42px; height: 42px;
   border-radius: 50%;
-  background: var(--gold);
-  color: var(--paper);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--display);
-  font-weight: 500;
-  font-size: 0.9375rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #fff;
+  flex: 0 0 auto;
 }
-.review-name { font-weight: 500; color: var(--paper); font-size: 0.9375rem; }
-.review-source { color: rgba(245,241,232,0.5); font-size: 12px; margin-top: 1px; }
+.review-avatar.av-r { background: #e06030; }
+.review-avatar.av-l { background: #1a73e8; }
+.review-avatar.av-lc { background: #188038; }
+.review-avatar.av-p { background: #8430ce; }
+.review-meta { display: flex; flex-direction: column; gap: 1px; }
+.review-name { font-weight: 600; color: #1c1c1c; font-size: 0.9375rem; line-height: 1.2; }
+.review-reviewer-info { color: #70757a; font-size: 11.5px; }
+.review-stars-row { display: flex; align-items: center; gap: 8px; }
+.review-stars { color: #fbbc04; font-size: 15px; letter-spacing: 1px; }
+.review-quote {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #3c4043;
+  flex: 1;
+}
+.review-source-row {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f1f1;
+}
+.review-google-logo {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px;
+  color: #70757a;
+  font-weight: 500;
+}
+.review-google-logo svg { flex: 0 0 auto; }
 
 .review-cta { text-align: center; margin-top: 32px; }
+.review-cta .btn-google {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 28px;
+  background: #fff;
+  color: #3c4043;
+  border: 1px solid rgba(245,241,232,0.3);
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.review-cta .btn-google:hover { background: rgba(255,255,255,0.92); box-shadow: 0 2px 12px rgba(0,0,0,0.2); }
 
 /* CONTACT */
 .contact-wrap {
@@ -744,9 +831,9 @@ section { padding: clamp(70px, 9vw, 110px) 0; }
 }
 .form-radios input { display: none; }
 .form-radios input:checked + label {
-  background: var(--navy);
+  background: var(--nora);
   color: var(--paper);
-  border-color: var(--navy);
+  border-color: var(--nora);
 }
 .form-checkbox {
   display: flex; gap: 10px; align-items: start;
@@ -756,12 +843,115 @@ section { padding: clamp(70px, 9vw, 110px) 0; }
   cursor: pointer;
 }
 .form-checkbox input { margin-top: 3px; flex: 0 0 auto; width: auto !important; }
+.sms-consent-note {
+  margin-top: 7px;
+  font-size: 11px;
+  color: #aaa;
+  line-height: 1.5;
+}
 .cm-note {
   margin-top: 9px;
   font-size: 12px;
   color: var(--ink-soft);
   line-height: 1.5;
 }
+.schedule-callout {
+  background: #f9f7f2;
+  border: 1px solid #e2e0da;
+  border-left: 3px solid var(--gold);
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin-top: 4px;
+}
+.schedule-callout .callout-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #888;
+  margin: 0 0 12px;
+}
+.schedule-timing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.schedule-timing-grid .form-field { margin: 0; }
+.schedule-timing-grid .form-field label {
+  font-size: 10px;
+  margin-bottom: 5px;
+}
+.tz-select-wrap { margin-top: 10px; }
+.tz-select-wrap label { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #666; display: block; margin-bottom: 5px; font-weight: 600; }
+.wants-appt-box {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #e2e0da;
+}
+.wants-appt-box .form-checkbox { font-size: 12.5px; color: var(--ink); }
+.wants-appt-box .form-checkbox span { font-size: 11.5px; color: var(--ink-soft); display: block; margin-top: 2px; }
+.no-estimate-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #888;
+  line-height: 1.5;
+}
+.book-callout { border-left-color: #c2860a; }
+.book-avail-note {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+.book-no-estimate {
+  font-size: 12px;
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+.book-date-hint {
+  font-size: 11px;
+  color: #c2860a;
+  display: block;
+  margin-top: 4px;
+}
+.form-field.has-error input,
+.form-field.has-error select,
+.form-field.has-error textarea {
+  border-color: #CC2A00;
+  box-shadow: 0 0 0 2px rgba(204, 42, 0, 0.12);
+}
+.field-error {
+  display: block;
+  color: #CC2A00;
+  font-size: 11.5px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+/* Flatpickr overrides */
+.flatpickr-calendar {
+  font-family: var(--body);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  border: 1px solid #e2e0da;
+}
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+  color: #ccc;
+  background: #f5f4f0;
+  text-decoration: line-through;
+}
+#book-date { cursor: pointer; }
 .form-submit {
   width: 100%;
   padding: 16px;
@@ -1058,7 +1248,7 @@ footer {
 #chat-toggle {
   width: 58px; height: 58px;
   border-radius: 50%;
-  background: var(--navy);
+  background: linear-gradient(135deg, var(--nora-deep), var(--nora));
   color: var(--paper);
   border: 0;
   cursor: pointer;
@@ -1071,13 +1261,13 @@ footer {
 #chat-toggle .badge {
   position: absolute; top: -2px; right: -2px;
   background: var(--gold);
-  color: var(--navy);
+  color: #fff;
   font-size: 10px;
   font-weight: 700;
   width: 18px; height: 18px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid var(--navy);
+  border: 2px solid var(--nora-deep);
 }
 
 #chat-panel {
@@ -1097,7 +1287,7 @@ footer {
 }
 #chat-panel.shown { display: flex; }
 .chat-header {
-  background: var(--navy);
+  background: linear-gradient(135deg, var(--nora-deep) 0%, var(--nora) 100%);
   color: var(--paper);
   padding: 16px 18px;
   display: flex; align-items: center; gap: 12px;
@@ -1105,7 +1295,7 @@ footer {
 .chat-avatar {
   width: 36px; height: 36px;
   border-radius: 50%;
-  background: var(--paper);
+  background: rgba(255,255,255,0.18);
   color: var(--navy);
   display: flex; align-items: center; justify-content: center;
   font-family: var(--display);
@@ -1152,11 +1342,11 @@ footer {
 }
 @keyframes msgIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 .msg.bot {
-  background: white;
+  background: var(--nora-soft);
   color: var(--ink);
   align-self: flex-start;
   border-bottom-left-radius: 4px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(168,88,114,0.15);
 }
 .msg.user {
   background: var(--navy);
@@ -1189,7 +1379,7 @@ footer {
   color: var(--ink);
   cursor: pointer;
 }
-.chat-quick-replies button:hover { background: var(--navy); color: var(--paper); border-color: var(--navy); }
+.chat-quick-replies button:hover { background: var(--nora); color: var(--paper); border-color: var(--nora); }
 
 #chat-form {
   display: flex;
@@ -1207,16 +1397,28 @@ footer {
   font-size: 14px;
   outline: 0;
 }
-#chat-input:focus { border-color: var(--navy); }
+#chat-input:focus { border-color: var(--nora); }
 #chat-form button {
   width: 38px; height: 38px;
   border-radius: 50%;
-  background: var(--navy);
+  background: var(--nora);
   color: var(--paper);
   border: 0;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
 }
+
+.chat-footer-note {
+  padding: 8px 16px 10px;
+  text-align: center;
+  font-size: 11px;
+  color: #999;
+  border-top: 1px solid var(--line);
+  background: #fafafa;
+  border-radius: 0 0 16px 16px;
+}
+.chat-footer-note a { color: var(--nora); text-decoration: none; font-weight: 500; }
+.chat-footer-note a:hover { text-decoration: underline; }
 
 @media (max-width: 480px) {
   #chat-panel { width: calc(100vw - 32px); right: 0; bottom: 70px; }
@@ -1239,14 +1441,15 @@ footer {
     </a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/testimonials">Reviews</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="tel:9035550000" class="nav-phone">
+      <a href="tel:9033780229" class="nav-phone">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        <span class="label">(903) 555-0000</span>
+        <span class="label">(903) 378-0229</span>
       </a>
       <a href="#contact" class="btn btn-primary" style="padding: 10px 18px; font-size: 11px;">Free Estimate</a>
     </div>
@@ -1265,7 +1468,7 @@ footer {
       <p>Three decades of putting roofs over Lamar County homes and businesses. Free estimates. Real workmanship. No surprises.</p>
       <div class="hero-actions">
         <a href="#contact" class="btn btn-primary">Get a Free Estimate <span class="arrow">→</span></a>
-        <a href="tel:9035550000" class="btn btn-outline">Call (903) 555-0000</a>
+        <a href="tel:9033780229" class="btn btn-outline">Call (903) 378-0229</a>
       </div>
     </div>
 
@@ -1280,7 +1483,7 @@ footer {
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Service Area</span>
-        <span class="hero-meta-value">Paris &amp; Lamar County</span>
+        <span class="hero-meta-value">Paris &amp; Surrounding Areas</span>
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Free Estimates</span>
@@ -1406,69 +1609,83 @@ footer {
     </div>
 
     <div class="reviews-grid reveal">
+
       <div class="review-card">
-        <div class="review-stars stars">★★★★★</div>
-        <div class="review-quote">They came through for me and my family. The honesty and fair price made all the difference, I was worried about losing my homeowner's insurance and they got it handled right away.</div>
-        <div class="review-author">
-          <div class="review-avatar">L</div>
-          <div>
-            <div class="review-name">Latricia Y.</div>
-            <div class="review-source">Verified Google review</div>
+        <img class="review-photo" src="https://lh3.googleusercontent.com/grass-cs/ANxoTn3qXg2x009DNfm-iTpv5hj67DAiZdX7qDqLjb2adssUfGO47F-_Yu3MwKDwS722achrmVGWO6M3j9vZSkMq5wZlyFvttN-euyF7qnxm56cLyiEEyL3Xq2M1rA9RP5pRN1Xc3FdD=w600-h400-k-no" alt="Roofing work by Wallace Roofing Co" loading="lazy" />
+        <div class="review-body">
+          <div class="review-top-row">
+            <div class="review-avatar av-r">R</div>
+            <div class="review-meta">
+              <div class="review-name">Roshawnda Green</div>
+              <div class="review-reviewer-info">Google Reviewer</div>
+            </div>
+          </div>
+          <div class="review-stars-row">
+            <span class="review-stars">★★★★★</span>
+          </div>
+          <div class="review-quote">We had a wonderful experience with this company and he made sure all our needs where meet when it came to getting a new roof! I would recommend anyone to this company! Amazing job and we love it!!</div>
+          <div class="review-source-row">
+            <div class="review-google-logo">
+              <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Posted on Google
+            </div>
           </div>
         </div>
       </div>
 
       <div class="review-card">
-        <div class="review-stars stars">★★★★★</div>
-        <div class="review-quote">Quick response, came out and did my inspection in a timely manner. Very reasonable. I'd recommend them for any roofing need.</div>
-        <div class="review-author">
-          <div class="review-avatar">L</div>
-          <div>
-            <div class="review-name">Lacey</div>
-            <div class="review-source">Verified Google review</div>
+        <img class="review-photo" src="https://lh3.googleusercontent.com/grass-cs/ANxoTn3bU3hrnlaW28_A5JCX_irj_q9hroNE8aQNFJ6RRCiGzJkS3HIOmqy1GSKk80-wLRxiO_icDsW3G5TEmLxIjSiqWjEpvEtTwZiwngJadxYDzUBC7kpxg88hGTld_ThvXbzVe0hv=w600-h400-k-no" alt="Roofing work by Wallace Roofing Co" loading="lazy" />
+        <div class="review-body">
+          <div class="review-top-row">
+            <div class="review-avatar av-l">L</div>
+            <div class="review-meta">
+              <div class="review-name">Latricia Young</div>
+              <div class="review-reviewer-info">4 reviews &middot; 2 photos</div>
+            </div>
+          </div>
+          <div class="review-stars-row">
+            <span class="review-stars">★★★★★</span>
+          </div>
+          <div class="review-quote">Thank you Wallace Roofing for an exceptional job, your upmost honesty, and great price. I was about to lose my insurance on my house, and you came through for me and my Family!</div>
+          <div class="review-source-row">
+            <div class="review-google-logo">
+              <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Posted on Google
+            </div>
           </div>
         </div>
       </div>
 
       <div class="review-card">
-        <div class="review-stars stars">★★★★★</div>
-        <div class="review-quote">Wallace Roofing did an exceptional job for us. Showed up when they said they would, finished on time, and treated our property with respect from start to finish.</div>
-        <div class="review-author">
-          <div class="review-avatar">S</div>
-          <div>
-            <div class="review-name">Samantha B.</div>
-            <div class="review-source">Verified Google review</div>
+        <img class="review-photo" src="https://lh3.googleusercontent.com/grass-cs/ANxoTn1XmW7ndDekLBgrDIhqInv6Ntcj41-YUzPS1VnmcahPkdEkbk73psITKKu72K3sJa5Qr41Wlos4Yns8YhhaLm6t7QuYB4fUiJhjoYGHRaTb8s-zRP_GrSYojzqelgz56cWjErAlWQ=w600-h400-k-no" alt="Roofing work by Wallace Roofing Co" loading="lazy" />
+        <div class="review-body">
+          <div class="review-top-row">
+            <div class="review-avatar av-p">C</div>
+            <div class="review-meta">
+              <div class="review-name">Clarice Turner</div>
+              <div class="review-reviewer-info">&#9733; Local Guide &middot; 24 reviews &middot; 19 photos</div>
+            </div>
+          </div>
+          <div class="review-stars-row">
+            <span class="review-stars">★★★★★</span>
+          </div>
+          <div class="review-quote">Deondre is a life saver. I have used his business for all my remodel, painting and roofing needs. His prices are fair and quality is the best!!!</div>
+          <div class="review-source-row">
+            <div class="review-google-logo">
+              <svg width="14" height="14" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Posted on Google
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="review-card">
-        <div class="review-stars stars">★★★★★</div>
-        <div class="review-quote">I called Wallace Roofing after a bad storm and they were out the next morning. Fixed the damage fast, kept me updated the whole time, and the price was beyond fair. Will never use anyone else.</div>
-        <div class="review-author">
-          <div class="review-avatar">D</div>
-          <div>
-            <div class="review-name">Derrick M.</div>
-            <div class="review-source">Verified Google review</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="review-card">
-        <div class="review-stars stars">★★★★★</div>
-        <div class="review-quote">These guys are the real deal. No runaround, no upselling, just straight honest work. My roof looks brand new and they cleaned up every scrap before they left. Highly recommend to anyone in Paris.</div>
-        <div class="review-author">
-          <div class="review-avatar">T</div>
-          <div>
-            <div class="review-name">Tina R.</div>
-            <div class="review-source">Verified Google review</div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="review-cta">
-      <a href="https://reviews.birdeye.com/wallace-roofing-co-llc-166495880164024" target="_blank" rel="noopener" class="btn btn-outline">Read all 40 reviews</a>
+      <a href="/testimonials" class="btn-google">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Read all 40 reviews
+      </a>
     </div>
   </div>
 </section>
@@ -1482,7 +1699,7 @@ footer {
         <h2>Real jobs. Real results.</h2>
         <p>A look at what we do on the job every day across Paris and Lamar County. Residential replacements, commercial roofing, storm repairs — all done by the same family that answers the phone.</p>
         <div style="display:flex; gap:14px; flex-wrap:wrap;">
-          <a href="gallery.html" class="btn btn-dark">View Full Gallery <span class="arrow">→</span></a>
+          <a href="/gallery" class="btn btn-dark">View Full Gallery <span class="arrow">→</span></a>
           <a href="#contact" class="btn btn-primary">Get a Free Estimate <span class="arrow">→</span></a>
         </div>
       </div>
@@ -1530,7 +1747,7 @@ footer {
     <div class="contact-wrap reveal">
       <div class="contact-info">
         <h2>Send a message, get a real reply.</h2>
-        <p>Fill out the form and choose how you'd like Wally — our AI assistant — to reach you. He'll follow up by call or text within a minute to go over your request and get you scheduled.</p>
+        <p>Fill out the form and choose how you'd like Nora — our AI assistant — to reach you. She'll follow up by call or text within a minute to go over your request and get you scheduled.</p>
 
         <div class="contact-detail">
           <div class="icon">
@@ -1549,7 +1766,7 @@ footer {
           </div>
           <div>
             <div class="label">Phone</div>
-            <div class="value"><a href="tel:9035550000">(903) 555-0000</a></div>
+            <div class="value"><a href="tel:9033780229">(903) 378-0229</a></div>
             <div class="sub">Mon, Fri 8am to 6pm</div>
           </div>
         </div>
@@ -1571,7 +1788,7 @@ footer {
           </div>
           <div>
             <div class="label">Email</div>
-            <div class="value"><a href="mailto:hello@wallaceroofingcollc.com">hello@wallaceroofingcollc.com</a></div>
+            <div class="value"><a href="mailto:hello@wallaceroofingco.com">hello@wallaceroofingco.com</a></div>
           </div>
         </div>
       </div>
@@ -1589,7 +1806,7 @@ footer {
               </div>
               <div class="form-field">
                 <label for="phone">Phone <span class="req">*</span></label>
-                <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(903) ___-____" />
+                <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(___) ___-____" />
               </div>
               <div class="form-field">
                 <label for="email">Email <span class="req">*</span></label>
@@ -1603,9 +1820,11 @@ footer {
                 <label>Property Type</label>
                 <div class="form-radios">
                   <input type="radio" id="pt-home" name="property_type" value="home" checked />
-                  <label for="pt-home">Home</label>
+                  <label for="pt-home">My Home</label>
+                  <input type="radio" id="pt-family" name="property_type" value="family_home" />
+                  <label for="pt-family">Family Home</label>
                   <input type="radio" id="pt-rental" name="property_type" value="rental" />
-                  <label for="pt-rental">Rental</label>
+                  <label for="pt-rental">Rental Property</label>
                   <input type="radio" id="pt-commercial" name="property_type" value="commercial" />
                   <label for="pt-commercial">Commercial</label>
                   <input type="radio" id="pt-multifamily" name="property_type" value="multifamily" />
@@ -1643,15 +1862,119 @@ footer {
                 <textarea id="description" name="description" placeholder="Active leak in the bedroom ceiling, started after last week's rain…"></textarea>
               </div>
               <div class="form-field full">
-                <label>How would you like Wally to reach you? <span class="req">*</span></label>
+                <label>How would you like to connect? <span class="req">*</span></label>
                 <div class="form-radios">
                   <input type="radio" id="cm-call" name="contact_method" value="call" checked />
-                  <label for="cm-call">&#128222; Phone Call</label>
-                  <input type="radio" id="cm-text" name="contact_method" value="text" />
-                  <label for="cm-text">&#128172; Text Message</label>
+                  <label for="cm-call">&#128222; Nora Calls Me</label>
+                  <input type="radio" id="cm-book" name="contact_method" value="book" />
+                  <label for="cm-book">&#128197; Book Online</label>
                 </div>
-                <p class="cm-note" id="cm-note">Wally will call you within a minute to go over your request and get you scheduled.</p>
+                <p class="cm-note" id="cm-note">Nora will call you within 2-3 minutes to go over your request and get you set up.</p>
+                <p class="no-estimate-note" id="no-estimate-note">Pricing and estimates are handled by Mr. Wallace personally &mdash; Nora schedules your consultation but cannot quote prices.</p>
+                <p class="sms-consent-note">By submitting this form, you consent to receive calls or text messages from Wallace Roofing Co LLC. Msg &amp; data rates may apply. Reply STOP to opt-out, HELP for help.</p>
               </div>
+
+              <!-- CALL SCHEDULER -->
+              <div class="form-field full" id="schedule-section" style="display:none;">
+                <label>When should Nora call?</label>
+                <div class="form-radios" style="margin-bottom:10px;">
+                  <input type="radio" id="sch-now" name="call_timing" value="now" checked />
+                  <label for="sch-now">&#9889; Call me right away</label>
+                  <input type="radio" id="sch-later" name="call_timing" value="scheduled" />
+                  <label for="sch-later">&#128197; Schedule a specific time</label>
+                </div>
+
+                <div class="schedule-callout" id="schedule-picker" style="display:none;">
+                  <p class="callout-title">&#128222; Schedule Nora's Call</p>
+                  <div class="schedule-timing-grid">
+                    <div class="form-field">
+                      <label for="sched-date">Date <span class="req">*</span></label>
+                      <input type="date" id="sched-date" name="scheduled_date" />
+                    </div>
+                    <div class="form-field">
+                      <label for="sched-time">Time <span class="req">*</span></label>
+                      <input type="time" id="sched-time" name="scheduled_time" />
+                    </div>
+                  </div>
+                  <div class="tz-select-wrap">
+                    <label for="sched-tz">Time Zone <span class="req">*</span></label>
+                    <select id="sched-tz" name="scheduled_timezone">
+                      <option value="America/Chicago" selected>Central Time — CT (Paris, TX)</option>
+                      <option value="America/New_York">Eastern Time — ET</option>
+                      <option value="America/Denver">Mountain Time — MT</option>
+                      <option value="America/Los_Angeles">Pacific Time — PT</option>
+                      <option value="America/Phoenix">Arizona — MST (no DST)</option>
+                      <option value="America/Anchorage">Alaska — AKT</option>
+                      <option value="Pacific/Honolulu">Hawaii — HST</option>
+                    </select>
+                  </div>
+
+                  <div class="wants-appt-box">
+                    <div class="form-checkbox">
+                      <input type="checkbox" id="wants-appt" name="wants_appointment" value="true" />
+                      <label for="wants-appt" style="cursor:pointer;">
+                        <strong>I'd also like to pre-schedule an appointment with Mr. Wallace</strong>
+                        <span>Nora will confirm your issue details when she calls &mdash; no need to schedule again during the call.</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ONLINE BOOKING PANEL -->
+              <div class="form-field full" id="book-panel" style="display:none;">
+                <div class="schedule-callout book-callout">
+                  <p class="callout-title">&#128197; Schedule Your Appointment</p>
+                  <p class="book-avail-note">Pick your preferred date and time for the job &mdash; any day works, <strong>Monday through Sunday, 8 AM to 6 PM</strong>. Mr. Wallace will review and confirm your appointment personally.</p>
+                  <p class="book-no-estimate">&#128205; Pricing &amp; estimates are handled by Mr. Wallace directly over the phone &mdash; Nora handles scheduling, but all quotes come from Mr. Wallace himself.</p>
+                  <div class="schedule-timing-grid">
+                    <div class="form-field">
+                      <label for="book-date">Preferred Date <span class="req">*</span></label>
+                      <input type="date" id="book-date" name="book_date" />
+                      <span class="book-date-hint" id="book-date-hint"></span>
+                    </div>
+                    <div class="form-field">
+                      <label for="book-time">Preferred Time <span class="req">*</span></label>
+                      <select id="book-time" name="book_time">
+                        <option value="">Select a time&hellip;</option>
+                        <option value="08:00">8:00 AM</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="tz-select-wrap">
+                    <label for="book-tz">Time Zone <span class="req">*</span></label>
+                    <select id="book-tz" name="book_timezone">
+                      <option value="America/Chicago" selected>Central Time &mdash; CT (Paris, TX)</option>
+                      <option value="America/New_York">Eastern Time &mdash; ET</option>
+                      <option value="America/Denver">Mountain Time &mdash; MT</option>
+                      <option value="America/Los_Angeles">Pacific Time &mdash; PT</option>
+                      <option value="America/Phoenix">Arizona &mdash; MST (no DST)</option>
+                      <option value="America/Anchorage">Alaska &mdash; AKT</option>
+                      <option value="Pacific/Honolulu">Hawaii &mdash; HST</option>
+                    </select>
+                  </div>
+                  <div class="form-field" style="margin-top:14px;">
+                    <label for="book-contact-pref">How would you like Mr. Wallace to reach you? <span class="req">*</span></label>
+                    <select id="book-contact-pref" name="book_contact_pref" required>
+                      <option value="">Select an option...</option>
+                      <option value="call">Phone Call</option>
+                      <option value="text">Text Message</option>
+                      <option value="email">Email</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
               <div class="form-field full">
                 <button type="submit" class="form-submit">
                   <span>Send My Request</span>
@@ -1664,7 +1987,7 @@ footer {
 
         <div id="form-confirmation" class="form-confirmation">
           <h4>Thanks, we got it.</h4>
-          <p id="confirm-msg">Wally will reach out shortly to go over your request.</p>
+          <p id="confirm-msg">Nora will reach out shortly to go over your request.</p>
         </div>
       </div>
     </div>
@@ -1705,9 +2028,9 @@ footer {
       <div class="footer-col">
         <h5>Company</h5>
         <ul>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="#reviews">Reviews</a></li>
-          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/testimonials">Reviews</a></li>
+          <li><a href="/gallery">Gallery</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
@@ -1716,29 +2039,36 @@ footer {
         <ul>
           <li>145 W Neagle Ave</li>
           <li>Paris, TX 75460</li>
-          <li><a href="tel:9035550000">(903) 555-0000</a></li>
-          <li><a href="mailto:hello@wallaceroofingcollc.com">hello@wallaceroofingcollc.com</a></li>
+          <li><a href="tel:9033780229">(903) 378-0229</a></li>
+          <li><a href="mailto:hello@wallaceroofingco.com">hello@wallaceroofingco.com</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Wallace Roofing Co. LLC. Licensed &amp; insured in Texas.</span>
+      <span><a href="/privacy-policy" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(245,241,232,0.25);">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(245,241,232,0.25);">Terms &amp; Conditions</a></span>
       <span>Site by Nuvaxis AI</span>
     </div>
   </div>
 </footer>
 
+<!-- PHOTO LIGHTBOX -->
+<div class="review-lightbox" id="reviewLightbox" role="dialog" aria-modal="true" aria-label="Full photo">
+  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <img src="" alt="" id="lbImg" />
+</div>
+
 <!-- CHAT WIDGET -->
 <div id="chat-widget">
-  <button id="chat-toggle" aria-label="Open chat with Wally, our AI assistant">
+  <button id="chat-toggle" aria-label="Open chat with Nora, our AI assistant">
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <span class="badge">1</span>
   </button>
   <div id="chat-panel" role="dialog" aria-label="Wallace Roofing AI assistant">
     <div class="chat-header">
-      <div class="chat-avatar">W</div>
+      <div class="chat-avatar">N</div>
       <div>
-        <div class="chat-title">Wally</div>
+        <div class="chat-title">Nora</div>
         <div class="chat-status">Online · usually replies instantly</div>
       </div>
       <button class="chat-close" id="chat-close" aria-label="Close chat">×</button>
@@ -1756,6 +2086,9 @@ footer {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>
     </form>
+    <div class="chat-footer-note">
+      Prefer a live person? Call <a href="tel:9033780229">(903) 378-0229</a>
+    </div>
   </div>
 </div>
 
@@ -1795,41 +2128,269 @@ phoneInput.addEventListener('input', (e) => {
 
 const LEAD_WORKER_URL = 'https://wallace-lead.support-nuvaxisai.workers.dev';
 
-// Update hint text when customer switches call/text preference
-document.querySelectorAll('input[name="contact_method"]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    const note = document.getElementById('cm-note');
-    if (radio.value === 'text') {
-      note.textContent = 'Wally will text you within a minute to go over your request and get you scheduled.';
-    } else {
-      note.textContent = 'Wally will call you within a minute to go over your request and get you scheduled.';
-    }
+// Set default date (today) and time (now + 30 min) on the Nora scheduler
+(function() {
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const padded = (n) => String(n).padStart(2, '0');
+  const plus30 = new Date(now.getTime() + 30 * 60000);
+  const defaultTime = `${padded(plus30.getHours())}:${padded(plus30.getMinutes())}`;
+  const dateInput = document.getElementById('sched-date');
+  const timeInput = document.getElementById('sched-time');
+  if (dateInput) { dateInput.min = todayStr; dateInput.value = todayStr; }
+  if (timeInput) { timeInput.value = defaultTime; }
+})();
+
+// ── Flatpickr booking calendar ─────────────────────────────
+// Any day Mon–Sun, 8 AM–6 PM. 1-week advance minimum (waived for emergencies).
+// Fully-booked dates (all slots taken by confirmed jobs) are greyed out.
+(function() {
+  // 8am–6pm in minutes from midnight
+  const SLOT_MINS = [480,540,600,660,720,780,840,900,960,1020,1080];
+  const JOB_MINS  = 360; // 6-hour job window
+
+  let confirmedSlots = [];
+  let fpInstance = null;
+
+  function toMin(timeStr) {
+    const [h, m] = (timeStr || '00:00').split(':').map(Number);
+    return h * 60 + (m || 0);
+  }
+
+  function bookedMinsForDate(dateStr) {
+    return confirmedSlots.filter(s => s.date === dateStr).map(s => toMin(s.time));
+  }
+
+  function isSlotBlocked(slotMin, bookedMins) {
+    return bookedMins.some(b => slotMin < b + JOB_MINS && b < slotMin + JOB_MINS);
+  }
+
+  function isDateFullyBooked(dateStr) {
+    const booked = bookedMinsForDate(dateStr);
+    return booked.length > 0 && SLOT_MINS.every(s => isSlotBlocked(s, booked));
+  }
+
+  function isEmergency() {
+    return document.querySelector('input[name="urgency"]:checked')?.value === 'emergency';
+  }
+
+  function getMinDate() {
+    const d = new Date();
+    if (!isEmergency()) d.setDate(d.getDate() + 7);
+    return d;
+  }
+
+  function getDisabledDates() {
+    return [(date) => isDateFullyBooked(date.toISOString().slice(0, 10))];
+  }
+
+  function initFlatpickr() {
+    if (typeof flatpickr === 'undefined') { setTimeout(initFlatpickr, 80); return; }
+    const minDate = getMinDate();
+    const input = document.getElementById('book-date');
+    if (!input) return;
+    // Always clear the input value so Flatpickr uses defaultDate, not stale value
+    if (fpInstance) { fpInstance.destroy(); fpInstance = null; }
+    input.value = '';
+    fpInstance = flatpickr('#book-date', {
+      minDate,
+      defaultDate: minDate,
+      dateFormat: 'Y-m-d',
+      disableMobile: false,
+      disable: getDisabledDates(),
+      onChange(selectedDates, dateStr) {
+        updateTimeOptions(dateStr);
+        document.getElementById('book-date-hint').textContent = '';
+      },
+    });
+    updateTimeOptions(minDate.toISOString().slice(0, 10));
+  }
+
+  function updateTimeOptions(dateStr) {
+    const sel = document.getElementById('book-time');
+    if (!sel) return;
+    const booked = bookedMinsForDate(dateStr);
+    Array.from(sel.options).forEach(opt => {
+      if (!opt.value) return;
+      const blocked = isSlotBlocked(toMin(opt.value), booked);
+      opt.disabled = blocked;
+      opt.style.color = blocked ? '#ccc' : '';
+      const base = opt.textContent.replace(' — unavailable', '');
+      opt.textContent = base + (blocked ? ' — unavailable' : '');
+    });
+    if (sel.value && isSlotBlocked(toMin(sel.value), booked)) sel.value = '';
+  }
+
+  fetch('https://wallace-lead.support-nuvaxisai.workers.dev/booked-slots')
+    .then(r => r.json())
+    .then(slots => { confirmedSlots = slots || []; })
+    .catch(() => { confirmedSlots = []; })
+    .finally(() => initFlatpickr());
+
+  // Re-init when urgency changes (emergency removes the 1-week lock)
+  document.querySelectorAll('input[name="urgency"]').forEach(r =>
+    r.addEventListener('change', () => {
+      if (document.querySelector('input[name="contact_method"]:checked')?.value === 'book') initFlatpickr();
+    })
+  );
+
+  window._initBookCalendar = () => { initFlatpickr(); };
+})();
+
+// Show/hide scheduler section based on contact method
+function updateSchedulerVisibility() {
+  const method = document.querySelector('input[name="contact_method"]:checked')?.value;
+  const schedSection = document.getElementById('schedule-section');
+  const bookPanel = document.getElementById('book-panel');
+  const note = document.getElementById('cm-note');
+  const noEstNote = document.getElementById('no-estimate-note');
+  const nowRadio = document.getElementById('sch-now');
+
+  if (method === 'book') {
+    schedSection.style.display = 'none';
+    bookPanel.style.display = '';
+    note.style.display = 'none';
+    noEstNote.style.display = 'none';
+    if (nowRadio) { nowRadio.checked = true; document.getElementById('schedule-picker').style.display = 'none'; }
+    if (window._initBookCalendar) window._initBookCalendar();
+  } else {
+    // call (default)
+    schedSection.style.display = '';
+    bookPanel.style.display = 'none';
+    note.style.display = '';
+    note.textContent = 'Nora will call you within 2-3 minutes to go over your request and get you set up.';
+    noEstNote.style.display = '';
+  }
+}
+document.querySelectorAll('input[name="contact_method"]').forEach(r => r.addEventListener('change', updateSchedulerVisibility));
+updateSchedulerVisibility();
+
+// Show/hide date/time picker based on timing preference
+document.querySelectorAll('input[name="call_timing"]').forEach(r => {
+  r.addEventListener('change', () => {
+    const picker = document.getElementById('schedule-picker');
+    picker.style.display = r.value === 'scheduled' ? '' : 'none';
   });
+});
+
+// ── Inline form validation ──────────────────────────────────
+function setFieldError(inputEl, message) {
+  const field = inputEl.closest('.form-field');
+  if (!field) return;
+  field.classList.add('has-error');
+  let err = field.querySelector('.field-error');
+  if (!err) { err = document.createElement('span'); err.className = 'field-error'; field.appendChild(err); }
+  err.textContent = message;
+}
+function clearFieldError(inputEl) {
+  const field = inputEl.closest('.form-field');
+  if (!field) return;
+  field.classList.remove('has-error');
+  const err = field.querySelector('.field-error');
+  if (err) err.textContent = '';
+}
+function clearAllErrors() {
+  document.querySelectorAll('#lead-form .has-error').forEach(f => {
+    f.classList.remove('has-error');
+    const e = f.querySelector('.field-error'); if (e) e.textContent = '';
+  });
+}
+// Clear error on input
+['name','phone','email','address','service'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', () => clearFieldError(el));
 });
 
 document.getElementById('lead-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+  clearAllErrors();
   const data = Object.fromEntries(new FormData(e.target).entries());
   const method = data.contact_method || 'call';
+  const timing = data.call_timing || 'now';
+  let firstError = null;
 
-  await Promise.allSettled([
+  function markError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) { setFieldError(el, msg); if (!firstError) firstError = el; }
+  }
+
+  // Required text fields
+  if (!data.name?.trim()) markError('name', 'Please enter your name.');
+  const digits = (data.phone || '').replace(/\D/g, '');
+  if (digits.length < 10) markError('phone', 'Please enter a valid 10-digit phone number.');
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email || '');
+  if (!emailOk) markError('email', 'Please enter a valid email address.');
+  if (!data.address?.trim()) markError('address', 'Please enter your property address.');
+  if (!data.service) markError('service', 'Please select a service.');
+
+  // Validate scheduled Nora call
+  if (method === 'call' && timing === 'scheduled') {
+    if (!data.scheduled_date || !data.scheduled_time) {
+      markError('sched-date', 'Please select a date and time for Nora to call you.');
+    } else {
+      const pickedMs = new Date(`${data.scheduled_date}T${data.scheduled_time}:00`).getTime();
+      if (pickedMs < Date.now() + 9 * 60000) markError('sched-date', 'Please choose a time at least 10 minutes from now.');
+    }
+  }
+
+  // Validate online booking
+  if (method === 'book') {
+    if (!data.book_date) markError('book-date', 'Please select a date for your appointment.');
+    if (!data.book_time) markError('book-time', 'Please select a preferred time.');
+    if (!data.book_contact_pref) markError('book-contact-pref', 'Please select how you would like Mr. Wallace to reach you.');
+  }
+
+  if (firstError) {
+    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const [workerRes, web3Res] = await Promise.allSettled([
     fetch(LEAD_WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     }),
-    fetch('https://formsubmit.co/ajax/hello@wallaceroofingcollc.com', {
+    fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ ...data, _subject: 'New Roofing Lead — Wallace Roofing Co' }),
+      body: JSON.stringify({ ...data, access_key: '89b2bb7e-cb16-4960-9ebd-c3f401633eed', subject: 'New Roofing Lead - Wallace Roofing Co', from_name: 'Wallace Roofing Website' }),
     }),
   ]);
 
+  // Detailed diagnostics
+  const workerOk = workerRes.status === 'fulfilled' && workerRes.value?.ok;
+  const web3Ok   = web3Res.status   === 'fulfilled' && web3Res.value?.ok;
+
+  console.log('Submission results:', {
+    worker: { ok: workerOk, status: workerRes.status, httpStatus: workerRes.value?.status, reason: workerRes.reason?.message },
+    web3:   { ok: web3Ok,   status: web3Res.status,   httpStatus: web3Res.value?.status,   reason: web3Res.reason?.message },
+  });
+
+  if (!workerOk && !web3Ok) {
+    alert('Something went wrong submitting your request. Please try again or call us at (903) 378-0229.');
+    console.error('Both worker and web3forms failed:', { worker: workerRes, web3: web3Res });
+    return;
+  }
+
+  if (!workerOk) {
+    console.warn('Worker submission failed (possible ad blocker or network issue):', workerRes);
+  }
+
   const confirmMsg = document.getElementById('confirm-msg');
-  if (method === 'text') {
-    confirmMsg.textContent = "Wally will text you in the next minute or two. He'll ask a few follow-up questions, then a Wallace family member will confirm your appointment.";
+  const tzLabels = { 'America/Chicago': 'CT', 'America/New_York': 'ET', 'America/Denver': 'MT', 'America/Los_Angeles': 'PT', 'America/Phoenix': 'MST', 'America/Anchorage': 'AKT', 'Pacific/Honolulu': 'HST' };
+  if (method === 'book' && data.book_date && data.book_time) {
+    const tz = data.book_timezone || 'America/Chicago';
+    const tzLabel = tzLabels[tz] || tz;
+    const bookTime = new Date(`${data.book_date}T${data.book_time}:00`).toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    confirmMsg.textContent = `Thanks, we got it! Your appointment request for ${bookTime} ${tzLabel} has been submitted. Mister Wallace will reach out within 1 to 5 business days to go over the details with you. Please check your inbox, and your spam or junk folder just in case, for your confirmation email.`;
+  } else if (timing === 'scheduled' && data.scheduled_date && data.scheduled_time) {
+    const tz = data.scheduled_timezone || 'America/Chicago';
+    const tzLabel = tzLabels[tz] || tz;
+    const readableTime = new Date(`${data.scheduled_date}T${data.scheduled_time}:00`).toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    confirmMsg.textContent = `Nora is scheduled to call you on ${readableTime} ${tzLabel}. She'll go over your request, answer any questions, and get you set up with Mr. Wallace.`;
   } else {
-    confirmMsg.textContent = "Wally will call you in the next minute or two. He'll go over your request, answer any questions, and get you scheduled. A Wallace family member will confirm your appointment.";
+    confirmMsg.textContent = "Nora will be calling you in about 2-3 minutes. She'll go over your request, answer any questions, and get you set up with Mr. Wallace.";
   }
 
   document.getElementById('form-content').style.display = 'none';
@@ -1845,7 +2406,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   const input = document.getElementById('chat-input');
   const quickReplies = document.getElementById('chat-quick-replies');
   const badge = toggle.querySelector('.badge');
-  let conversation = [{ role: 'assistant', content: "Hey there, I'm Wally with Wallace Roofing. What's going on with the roof? I'll get a few quick details so we can get you taken care of." }];
+  let conversation = [{ role: 'assistant', content: "Hey there! I'm Nora with Wallace Roofing. What's going on with your roof? I'll get a few quick details so we can get you taken care of." }];
   function render() {
     messages.innerHTML = '';
     conversation.forEach(m => {
@@ -1885,33 +2446,71 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     conversation.push({ role: 'user', content: text });
     render(); showTyping();
     try {
-      // ⚠️ HOOK UP BACKEND: replace mockReply with fetch('/api/chat')
-      await new Promise(r => setTimeout(r, 1100));
-      const reply = mockReply(text, conversation);
+      const res = await fetch('https://wallace-lead.support-nuvaxisai.workers.dev/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversation })
+      });
+      const data = await res.json();
       hideTyping();
-      conversation.push({ role: 'assistant', content: reply });
+      conversation.push({ role: 'assistant', content: data.reply || "Sorry, something went wrong. Call us at (903) 378-0229." });
       render();
     } catch (err) {
       hideTyping();
-      conversation.push({ role: 'assistant', content: "Sorry, call (903) 555-0000 or use the form below." });
+      conversation.push({ role: 'assistant', content: "Sorry, call (903) 378-0229 or use the form below." });
       render();
     }
   });
-  function mockReply(userText, convo) {
-    const t = userText.toLowerCase();
-    const turn = convo.filter(m => m.role === 'user').length;
-    if (turn === 1) {
-      if (/leak|drip|water|stain|ceiling/.test(t)) return "Sorry to hear that. Is water actively coming in right now, or is it more of a stain that shows up after rain?";
-      if (/storm|hail|wind|tree|branch/.test(t)) return "Got it. Was there a recent storm? About what day, and have you noticed any leaks inside or shingles in the yard?";
-      if (/estimate|quote|price|cost|new roof|replace/.test(t)) return "Happy to help. Is this a residential or commercial property, and roughly how old is the current roof?";
-      if (/commercial|business|office|warehouse|store/.test(t)) return "Thanks for letting me know. What type of building is it, and is there an active leak or are you planning ahead?";
-      return "Got it. Can you tell me a little more about what's going on?";
-    }
-    if (turn === 2) return "Thanks. What's the property address, and what's the best name and phone number for our team?";
-    if (turn === 3) return "Perfect. About how old is the roof, and do you happen to know the material, shingle, metal, tile, or flat?";
-    if (turn === 4) return "Got it. Last quick question, is this an emergency, or are you flexible on scheduling?";
-    return "Thanks for those details. I'll pass everything to a member of the Wallace family and they'll follow up shortly. If urgent, call (903) 555-0000.";
+})();
+
+// Review card 3-D tilt
+(function () {
+  document.querySelectorAll('.reviews-grid .review-card').forEach(card => {
+    let raf = null;
+    card.addEventListener('mousemove', e => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r  = card.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+        const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+        card.style.transition = 'transform 0.08s ease, box-shadow 0.08s ease';
+        card.style.transform  = `perspective(800px) rotateY(${dx * 10}deg) rotateX(${dy * -8}deg) scale(1.05) translateZ(10px)`;
+        card.style.boxShadow  = `${-dx * 16}px ${dy * -10 + 22}px 48px rgba(0,0,0,0.28)`;
+      });
+    });
+    card.addEventListener('mouseleave', () => {
+      if (raf) cancelAnimationFrame(raf);
+      card.style.transition = 'transform 0.55s cubic-bezier(0.22,1,0.36,1), box-shadow 0.55s cubic-bezier(0.22,1,0.36,1)';
+      card.style.transform  = '';
+      card.style.boxShadow  = '';
+    });
+  });
+})();
+
+// Review photo lightbox
+(function () {
+  const lb  = document.getElementById('reviewLightbox');
+  const img = document.getElementById('lbImg');
+  const btn = document.getElementById('lbClose');
+  if (!lb) return;
+
+  document.querySelectorAll('.reviews-grid .review-photo').forEach(photo => {
+    photo.addEventListener('click', () => {
+      img.src = photo.src;
+      img.alt = photo.alt || '';
+      lb.classList.add('lb-open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  function closeLb() {
+    lb.classList.remove('lb-open');
+    document.body.style.overflow = '';
+    setTimeout(() => { img.src = ''; }, 300);
   }
+  btn.addEventListener('click', closeLb);
+  lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 })();
 
 // Mobile nav
@@ -1957,5 +2556,6 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   frame.addEventListener('touchend', () => { frame.style.transform = ''; });
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </body>
 </html>

@@ -1,0 +1,19 @@
+name = "wallace-sms"
+main = "src/index.js"
+compatibility_date = "2026-01-01"
+
+[[kv_namespaces]]
+binding = "LEADS"
+id = "1a9190e731d746a68382d6f548a699b6"
+
+# Secrets — run these after deploying:
+#   wrangler secret put TWILIO_SID
+#   wrangler secret put TWILIO_TOKEN
+#   wrangler secret put TWILIO_FROM
+#   wrangler secret put UNCLE_PHONE
+#   wrangler secret put GEMINI_API_KEY
+
+# After A2P 10DLC approval, add a custom route:
+# [[routes]]
+# pattern = "sms.wallaceroofingcollc.com/inbound"
+# custom_domain = true

@@ -1747,7 +1747,7 @@ footer {
     <div class="contact-wrap reveal">
       <div class="contact-info">
         <h2>Send a message, get a real reply.</h2>
-        <p>Fill out the form and choose how you'd like Nora — our AI assistant — to reach you. She'll follow up by call or text within a minute to go over your request and get you scheduled.</p>
+        <p>Fill out the form to request an appointment. Mr. Wallace will personally review and confirm your booking — you'll get a confirmation email once it's set.</p>
 
         <div class="contact-detail">
           <div class="icon">
@@ -1861,68 +1861,10 @@ footer {
                 <label for="description">Tell us a bit more (optional)</label>
                 <textarea id="description" name="description" placeholder="Active leak in the bedroom ceiling, started after last week's rain…"></textarea>
               </div>
-              <div class="form-field full">
-                <label>How would you like to connect? <span class="req">*</span></label>
-                <div class="form-radios">
-                  <input type="radio" id="cm-call" name="contact_method" value="call" checked />
-                  <label for="cm-call">&#128222; Nora Calls Me</label>
-                  <input type="radio" id="cm-book" name="contact_method" value="book" />
-                  <label for="cm-book">&#128197; Book Online</label>
-                </div>
-                <p class="cm-note" id="cm-note">Nora will call you within 2-3 minutes to go over your request and get you set up.</p>
-                <p class="no-estimate-note" id="no-estimate-note">Pricing and estimates are handled by Mr. Wallace personally &mdash; Nora schedules your consultation but cannot quote prices.</p>
-                <p class="sms-consent-note">By submitting this form, you consent to receive calls or text messages from Wallace Roofing Co LLC. Msg &amp; data rates may apply. Reply STOP to opt-out, HELP for help.</p>
-              </div>
+              <input type="hidden" name="contact_method" value="book" />
 
-              <!-- CALL SCHEDULER -->
-              <div class="form-field full" id="schedule-section" style="display:none;">
-                <label>When should Nora call?</label>
-                <div class="form-radios" style="margin-bottom:10px;">
-                  <input type="radio" id="sch-now" name="call_timing" value="now" checked />
-                  <label for="sch-now">&#9889; Call me right away</label>
-                  <input type="radio" id="sch-later" name="call_timing" value="scheduled" />
-                  <label for="sch-later">&#128197; Schedule a specific time</label>
-                </div>
-
-                <div class="schedule-callout" id="schedule-picker" style="display:none;">
-                  <p class="callout-title">&#128222; Schedule Nora's Call</p>
-                  <div class="schedule-timing-grid">
-                    <div class="form-field">
-                      <label for="sched-date">Date <span class="req">*</span></label>
-                      <input type="date" id="sched-date" name="scheduled_date" />
-                    </div>
-                    <div class="form-field">
-                      <label for="sched-time">Time <span class="req">*</span></label>
-                      <input type="time" id="sched-time" name="scheduled_time" />
-                    </div>
-                  </div>
-                  <div class="tz-select-wrap">
-                    <label for="sched-tz">Time Zone <span class="req">*</span></label>
-                    <select id="sched-tz" name="scheduled_timezone">
-                      <option value="America/Chicago" selected>Central Time — CT (Paris, TX)</option>
-                      <option value="America/New_York">Eastern Time — ET</option>
-                      <option value="America/Denver">Mountain Time — MT</option>
-                      <option value="America/Los_Angeles">Pacific Time — PT</option>
-                      <option value="America/Phoenix">Arizona — MST (no DST)</option>
-                      <option value="America/Anchorage">Alaska — AKT</option>
-                      <option value="Pacific/Honolulu">Hawaii — HST</option>
-                    </select>
-                  </div>
-
-                  <div class="wants-appt-box">
-                    <div class="form-checkbox">
-                      <input type="checkbox" id="wants-appt" name="wants_appointment" value="true" />
-                      <label for="wants-appt" style="cursor:pointer;">
-                        <strong>I'd also like to pre-schedule an appointment with Mr. Wallace</strong>
-                        <span>Nora will confirm your issue details when she calls &mdash; no need to schedule again during the call.</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- ONLINE BOOKING PANEL -->
-              <div class="form-field full" id="book-panel" style="display:none;">
+              <!-- BOOKING PANEL -->
+              <div class="form-field full" id="book-panel">
                 <div class="schedule-callout book-callout">
                   <p class="callout-title">&#128197; Schedule Your Appointment</p>
                   <p class="book-avail-note">Pick your preferred date and time for the job &mdash; any day works, <strong>Monday through Sunday, 8 AM to 6 PM</strong>. Mr. Wallace will review and confirm your appointment personally.</p>
@@ -1976,8 +1918,9 @@ footer {
               </div>
 
               <div class="form-field full">
+                <p class="sms-consent-note" style="margin-bottom:12px;">By submitting this form, you consent to receive calls or text messages from Wallace Roofing Co LLC. Msg &amp; data rates may apply. Reply STOP to opt-out, HELP for help.</p>
                 <button type="submit" class="form-submit">
-                  <span>Send My Request</span>
+                  <span>Book My Appointment</span>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </button>
               </div>
@@ -2237,41 +2180,8 @@ const LEAD_WORKER_URL = 'https://wallace-lead.support-nuvaxisai.workers.dev';
   window._initBookCalendar = () => { initFlatpickr(); };
 })();
 
-// Show/hide scheduler section based on contact method
-function updateSchedulerVisibility() {
-  const method = document.querySelector('input[name="contact_method"]:checked')?.value;
-  const schedSection = document.getElementById('schedule-section');
-  const bookPanel = document.getElementById('book-panel');
-  const note = document.getElementById('cm-note');
-  const noEstNote = document.getElementById('no-estimate-note');
-  const nowRadio = document.getElementById('sch-now');
-
-  if (method === 'book') {
-    schedSection.style.display = 'none';
-    bookPanel.style.display = '';
-    note.style.display = 'none';
-    noEstNote.style.display = 'none';
-    if (nowRadio) { nowRadio.checked = true; document.getElementById('schedule-picker').style.display = 'none'; }
-    if (window._initBookCalendar) window._initBookCalendar();
-  } else {
-    // call (default)
-    schedSection.style.display = '';
-    bookPanel.style.display = 'none';
-    note.style.display = '';
-    note.textContent = 'Nora will call you within 2-3 minutes to go over your request and get you set up.';
-    noEstNote.style.display = '';
-  }
-}
-document.querySelectorAll('input[name="contact_method"]').forEach(r => r.addEventListener('change', updateSchedulerVisibility));
-updateSchedulerVisibility();
-
-// Show/hide date/time picker based on timing preference
-document.querySelectorAll('input[name="call_timing"]').forEach(r => {
-  r.addEventListener('change', () => {
-    const picker = document.getElementById('schedule-picker');
-    picker.style.display = r.value === 'scheduled' ? '' : 'none';
-  });
-});
+// Init booking calendar on load
+if (window._initBookCalendar) window._initBookCalendar();
 
 // ── Inline form validation ──────────────────────────────────
 function setFieldError(inputEl, message) {
@@ -2305,8 +2215,6 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   clearAllErrors();
   const data = Object.fromEntries(new FormData(e.target).entries());
-  const method = data.contact_method || 'call';
-  const timing = data.call_timing || 'now';
   let firstError = null;
 
   function markError(id, msg) {
@@ -2314,7 +2222,6 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     if (el) { setFieldError(el, msg); if (!firstError) firstError = el; }
   }
 
-  // Required text fields
   if (!data.name?.trim()) markError('name', 'Please enter your name.');
   const digits = (data.phone || '').replace(/\D/g, '');
   if (digits.length < 10) markError('phone', 'Please enter a valid 10-digit phone number.');
@@ -2322,23 +2229,9 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
   if (!emailOk) markError('email', 'Please enter a valid email address.');
   if (!data.address?.trim()) markError('address', 'Please enter your property address.');
   if (!data.service) markError('service', 'Please select a service.');
-
-  // Validate scheduled Nora call
-  if (method === 'call' && timing === 'scheduled') {
-    if (!data.scheduled_date || !data.scheduled_time) {
-      markError('sched-date', 'Please select a date and time for Nora to call you.');
-    } else {
-      const pickedMs = new Date(`${data.scheduled_date}T${data.scheduled_time}:00`).getTime();
-      if (pickedMs < Date.now() + 9 * 60000) markError('sched-date', 'Please choose a time at least 10 minutes from now.');
-    }
-  }
-
-  // Validate online booking
-  if (method === 'book') {
-    if (!data.book_date) markError('book-date', 'Please select a date for your appointment.');
-    if (!data.book_time) markError('book-time', 'Please select a preferred time.');
-    if (!data.book_contact_pref) markError('book-contact-pref', 'Please select how you would like Mr. Wallace to reach you.');
-  }
+  if (!data.book_date) markError('book-date', 'Please select a date for your appointment.');
+  if (!data.book_time) markError('book-time', 'Please select a preferred time.');
+  if (!data.book_contact_pref) markError('book-contact-pref', 'Please select how you would like Mr. Wallace to reach you.');
 
   if (firstError) {
     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2354,11 +2247,10 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ ...data, access_key: '89b2bb7e-cb16-4960-9ebd-c3f401633eed', subject: 'New Roofing Lead - Wallace Roofing Co', from_name: 'Wallace Roofing Website' }),
+      body: JSON.stringify({ ...data, access_key: '89b2bb7e-cb16-4960-9ebd-c3f401633eed', subject: 'New Appointment Request - Wallace Roofing Co', from_name: 'Wallace Roofing Website' }),
     }),
   ]);
 
-  // Detailed diagnostics
   const workerOk = workerRes.status === 'fulfilled' && workerRes.value?.ok;
   const web3Ok   = web3Res.status   === 'fulfilled' && web3Res.value?.ok;
 
@@ -2369,29 +2261,15 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
 
   if (!workerOk && !web3Ok) {
     alert('Something went wrong submitting your request. Please try again or call us at (903) 403-3585.');
-    console.error('Both worker and web3forms failed:', { worker: workerRes, web3: web3Res });
     return;
-  }
-
-  if (!workerOk) {
-    console.warn('Worker submission failed (possible ad blocker or network issue):', workerRes);
   }
 
   const confirmMsg = document.getElementById('confirm-msg');
   const tzLabels = { 'America/Chicago': 'CT', 'America/New_York': 'ET', 'America/Denver': 'MT', 'America/Los_Angeles': 'PT', 'America/Phoenix': 'MST', 'America/Anchorage': 'AKT', 'Pacific/Honolulu': 'HST' };
-  if (method === 'book' && data.book_date && data.book_time) {
-    const tz = data.book_timezone || 'America/Chicago';
-    const tzLabel = tzLabels[tz] || tz;
-    const bookTime = new Date(`${data.book_date}T${data.book_time}:00`).toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-    confirmMsg.textContent = `Thanks, we got it! Your appointment request for ${bookTime} ${tzLabel} has been submitted. Mister Wallace will reach out within 1 to 5 business days to go over the details with you. Please check your inbox, and your spam or junk folder just in case, for your confirmation email.`;
-  } else if (timing === 'scheduled' && data.scheduled_date && data.scheduled_time) {
-    const tz = data.scheduled_timezone || 'America/Chicago';
-    const tzLabel = tzLabels[tz] || tz;
-    const readableTime = new Date(`${data.scheduled_date}T${data.scheduled_time}:00`).toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-    confirmMsg.textContent = `Nora is scheduled to call you on ${readableTime} ${tzLabel}. She'll go over your request, answer any questions, and get you set up with Mr. Wallace.`;
-  } else {
-    confirmMsg.textContent = "Nora will be calling you in about 2-3 minutes. She'll go over your request, answer any questions, and get you set up with Mr. Wallace.";
-  }
+  const tz = data.book_timezone || 'America/Chicago';
+  const tzLabel = tzLabels[tz] || tz;
+  const bookTime = new Date(`${data.book_date}T${data.book_time}:00`).toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  confirmMsg.textContent = `We got it! Your appointment request for ${bookTime} ${tzLabel} has been submitted. Mr. Wallace will review and confirm your booking — check your inbox (and spam folder) for your confirmation email.`;
 
   document.getElementById('form-content').style.display = 'none';
   document.getElementById('form-confirmation').classList.add('shown');

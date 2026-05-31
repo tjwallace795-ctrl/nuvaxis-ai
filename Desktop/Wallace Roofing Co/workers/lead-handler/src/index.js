@@ -339,12 +339,11 @@ async function processLead(lead, e164, env) {
             await env.LEADS.put(`lead:${lead.leadId}`, JSON.stringify(pending));
             // Track this as the most recent pending booking so Mr. Wallace can confirm via SMS
             await env.LEADS.put("owner:last_pending_lead", lead.leadId, { expirationTtl: 7 * 24 * 3600 });
-            // Send customer an acknowledgment that their request was received
-            if (lead.email) {
-              await sendBookingAcknowledgmentEmail(lead, apptLabel, env);
-            }
-            // Mr. Wallace gets the detailed lead email via sendEmail (already in tasks)
-            // Customer will receive the real confirmation ONLY after Mr. Wallace clicks "Confirm This Appointment"
+            // Send customer acknowledgment and owner booking notification
+            await Promise.allSettled([
+              lead.email ? sendBookingAcknowledgmentEmail(lead, apptLabel, env) : Promise.resolve(),
+              sendOwnerBookingNotification(pending, apptLabel, env),
+            ]);
             console.log("Booking saved as BOOK_PENDING for", lead.name, lead.book_date, lead.book_time);
           } catch (err) {
             console.error("Booking pending error:", err.message);

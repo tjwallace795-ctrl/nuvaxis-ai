@@ -2238,6 +2238,14 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     return;
   }
 
+  const web3Data = { ...data };
+  if (web3Data.book_time) {
+    const [h, m] = web3Data.book_time.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+    web3Data.book_time = `${hr}:${m.toString().padStart(2, '0')} ${ampm}`;
+  }
+
   const [workerRes, web3Res] = await Promise.allSettled([
     fetch(LEAD_WORKER_URL, {
       method: 'POST',
@@ -2247,7 +2255,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ ...data, access_key: '89b2bb7e-cb16-4960-9ebd-c3f401633eed', subject: 'New Appointment Request - Wallace Roofing Co', from_name: 'Wallace Roofing Website' }),
+      body: JSON.stringify({ ...web3Data, access_key: '89b2bb7e-cb16-4960-9ebd-c3f401633eed', subject: 'New Appointment Request - Wallace Roofing Co', from_name: 'Wallace Roofing Website' }),
     }),
   ]);
 

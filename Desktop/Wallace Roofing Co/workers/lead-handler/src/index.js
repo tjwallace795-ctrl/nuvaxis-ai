@@ -3675,41 +3675,63 @@ async function sendBookingAcknowledgmentEmail(lead, apptLabel, env) {
   const firstName = lead.name?.split(" ")[0] || lead.name || "there";
   const contactPref = lead.book_contact_pref || "call";
   const prefText = { call: "phone call", text: "text message", email: "email" }[contactPref] || "phone call";
-  const subject = `We received your request � Wallace Roofing Co LLC`;
+  const subject = `Your appointment is confirmed — Wallace Roofing Co`;
   const html = `<!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Request Received | Wallace Roofing Co LLC</title></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Appointment Confirmed | Wallace Roofing Co LLC</title></head>
 <body style="margin:0;padding:0;background:#FAF8F3;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:#1C1C1C;">
 <table width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;">
 
   <tr><td style="padding:28px 24px 16px;text-align:center;border-bottom:3px solid #CC2A00;">
     <img src="https://wallaceroofingco.com/images/logo.png" alt="Wallace Roofing Co LLC" width="140" style="width:140px;height:auto;display:block;margin:0 auto;" />
-    <p style="margin:8px 0 0;font-size:12px;color:#555;">Paris, Texas &middot; wallaceroofingco.com &middot; (903) 378-0229</p>
+    <p style="margin:8px 0 0;font-size:12px;color:#888;">Paris, Texas &middot; wallaceroofingco.com &middot; (903) 403-3585</p>
   </td></tr>
 
-  <tr><td style="padding:28px 24px;">
-    <p style="font-size:16px;margin:0 0 16px;color:#1C1C1C;">Hi ${firstName},</p>
-    <p style="font-size:16px;line-height:1.6;margin:0 0 20px;color:#555;">Thank you for reaching out to Wallace Roofing Co LLC. We've received your appointment request for <strong style="color:#1C1C1C;">${apptLabel}</strong>.</p>
-    <p style="font-size:16px;line-height:1.6;margin:0 0 20px;color:#555;">Mister Wallace will reach out within <strong style="color:#1C1C1C;">1 to 5 business days</strong> via ${prefText} to go over the details with you.</p>
-    <div style="background:#FAF8F3;border-left:3px solid #CC2A00;padding:16px 20px;margin:0 0 20px;">
-      <p style="margin:0;font-size:15px;line-height:1.6;color:#555;">Please keep an eye on your inbox, and check your spam or junk folder just in case. If you don't hear from us within 5 business days, feel free to call us at <strong style="color:#1C1C1C;">(903) 378-0229</strong>.</p>
-    </div>
-    <p style="font-size:15px;line-height:1.6;margin:0;color:#555;">We appreciate the opportunity to serve you.</p>
+  <tr><td style="padding:32px 28px 8px;">
+    <p style="font-size:17px;font-weight:600;margin:0 0 6px;color:#1C1C1C;">Hi ${firstName} — you're on the schedule!</p>
+    <p style="font-size:15px;line-height:1.65;margin:0 0 24px;color:#555;">We've received your appointment request and the Wallace Roofing team has been notified. Here's a summary of what you submitted:</p>
+  </td></tr>
+
+  <tr><td style="padding:0 28px 24px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAF8F3;border:1px solid #E8E3D8;border-left:4px solid #CC2A00;border-radius:6px;">
+      <tr><td style="padding:20px 22px;">
+        <p style="margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#CC2A00;">Requested Appointment</p>
+        <p style="margin:0 0 16px;font-size:20px;font-weight:700;color:#1C1C1C;">${apptLabel}</p>
+        <p style="margin:0 0 4px;font-size:13px;color:#888;">Name: <strong style="color:#1C1C1C;">${lead.name}</strong></p>
+        <p style="margin:0 0 4px;font-size:13px;color:#888;">Service: <strong style="color:#1C1C1C;">${lead.service || "Roofing service"}</strong></p>
+        <p style="margin:0;font-size:13px;color:#888;">Preferred contact: <strong style="color:#1C1C1C;">${prefText}</strong></p>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:0 28px 28px;">
+    <p style="font-size:15px;line-height:1.65;margin:0 0 16px;color:#555;">Mr. Wallace will personally reach out to you via <strong style="color:#1C1C1C;">${prefText}</strong> to confirm and go over all the details. He handles every estimate himself, so you'll hear directly from him.</p>
+    <p style="font-size:15px;line-height:1.65;margin:0 0 24px;color:#555;">If you have any questions in the meantime, don't hesitate to reach out.</p>
+    <table cellpadding="0" cellspacing="0"><tr><td style="background:#CC2A00;border-radius:5px;">
+      <a href="tel:9034033585" style="display:inline-block;padding:13px 28px;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:.04em;">Call (903) 403-3585</a>
+    </td></tr></table>
+  </td></tr>
+
+  <tr><td style="padding:20px 28px;border-top:1px solid #E8E3D8;background:#FAFAFA;">
+    <p style="margin:0;font-size:12px;color:#aaa;line-height:1.6;">Wallace Roofing Co LLC &middot; 145 W Neagle Ave, Paris, TX 75460 &middot; <a href="https://wallaceroofingco.com" style="color:#aaa;">wallaceroofingco.com</a></p>
   </td></tr>
 
 </table>
 </body></html>`;
-  const text = `Wallace Roofing Co LLC � Request Received
+  const text = `Hi ${firstName} — you're on the schedule!
 
-Hi ${firstName},
+We've received your appointment request and the Wallace Roofing team has been notified.
 
-Thank you for reaching out to Wallace Roofing Co LLC. We've received your appointment request for ${apptLabel}.
+Requested Appointment: ${apptLabel}
+Name: ${lead.name}
+Service: ${lead.service || "Roofing service"}
+Preferred contact: ${prefText}
 
-Mister Wallace will reach out within 1 to 5 business days via ${prefText} to go over the details with you.
+Mr. Wallace will personally reach out to you via ${prefText} to confirm and go over all the details.
 
-Please keep an eye on your inbox, and check your spam or junk folder just in case. If you don't hear from us within 5 business days, feel free to call us at (903) 378-0229.
+Questions? Call us at (903) 403-3585 or visit wallaceroofingco.com.
 
-We appreciate the opportunity to serve you.`;
+Wallace Roofing Co LLC · 145 W Neagle Ave, Paris, TX 75460`;
 
   const resp = await sendOneEmail(lead.email, subject, html, text, env);
   console.log("Acknowledgment email SENT:", lead.email, "| Resend:", resp);

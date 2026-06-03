@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function FooterSection() {
   return (
     <footer className="border-t border-white/8 py-10 px-6 bg-black/40 backdrop-blur-sm">
@@ -38,6 +40,7 @@ export default function FooterSection() {
           <a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a>
           <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
           <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+          <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
         </div>
 
         {/* Copyright */}

@@ -103,89 +103,71 @@ export async function POST(req: Request) {
         const MAX_ITERATIONS = 8;
 
         for (let i = 0; i < MAX_ITERATIONS; i++) {
-          // Non-final turns: detect tool calls without streaming
-          if (i < MAX_ITERATIONS - 1) {
-            const probe = await client.messages.create({
-              model: "claude-opus-4-6",
-              max_tokens: 4096,
-              system: systemPrompt,
-              tools: ASSISTANT_TOOLS,
-              tool_choice: { type: "auto" },
-              messages: currentMessages,
-            });
+          // Use native streaming so tokens appear in real-time
+          const claudeStream = client.messages.stream({
+            model: "claude-sonnet-4-6",
+            max_tokens: 4096,
+            system: systemPrompt,
+            tools: ASSISTANT_TOOLS,
+            tool_choice: { type: "auto" },
+            messages: currentMessages,
+          });
 
-            // If no tool calls — stream the final answer
-            if (probe.stop_reason === "end_turn") {
-              const fullText = probe.content
-                .filter((b): b is Anthropic.TextBlock => b.type === "text")
-                .map((b) => b.text)
-                .join("");
+          // Forward each text token immediately as Claude generates it
+          claudeStream.on("text", (text) => {
+            send({ type: "text", content: text });
+          });
 
-              // Stream word-by-word for a typewriter effect
-              const words = fullText.split(/(\s+)/);
-              for (const chunk of words) {
-                send({ type: "text", content: chunk });
-                // tiny yield so chunks actually stream
-                await new Promise((r) => setTimeout(r, 0));
-              }
-              break;
-            }
+          // Wait for the full message to inspect the stop reason
+          const finalMessage = await claudeStream.finalMessage();
 
-            // Tool use — emit status, execute, loop
-            if (probe.stop_reason === "tool_use") {
-              const toolBlocks = probe.content.filter(
-                (b): b is Anthropic.ToolUseBlock => b.type === "tool_use"
-              );
-
-              // Emit any text that came alongside tool calls
-              const sideText = probe.content
-                .filter((b): b is Anthropic.TextBlock => b.type === "text")
-                .map((b) => b.text)
-                .join("");
-              if (sideText) send({ type: "text", content: sideText });
-
-              // Signal each tool starting
-              for (const block of toolBlocks) {
-                send({
-                  type: "tool_start",
-                  name: block.name,
-                  label: TOOL_LABELS[block.name] ?? `Using ${block.name}...`,
-                });
-              }
-
-              // Execute tools in parallel
-              const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
-                toolBlocks.map(async (block) => {
-                  const result = await executeTool(
-                    block.name,
-                    block.input as Record<string, string>,
-                    toolContext
-                  );
-                  send({ type: "tool_done", name: block.name });
-                  return {
-                    type: "tool_result" as const,
-                    tool_use_id: block.id,
-                    content: result,
-                  };
-                })
-              );
-
-              currentMessages = [
-                ...currentMessages,
-                { role: "assistant", content: probe.content },
-                { role: "user", content: toolResults },
-              ];
-              continue;
-            }
-
-            // Unexpected stop reason — stream whatever text exists
-            const fallback = probe.content
-              .filter((b): b is Anthropic.TextBlock => b.type === "text")
-              .map((b) => b.text)
-              .join("");
-            if (fallback) send({ type: "text", content: fallback });
+          // Clean end — text was already streamed above
+          if (finalMessage.stop_reason === "end_turn") {
             break;
           }
+
+          // Tool use — execute tools then loop for the follow-up answer
+          if (finalMessage.stop_reason === "tool_use") {
+            const toolBlocks = finalMessage.content.filter(
+              (b): b is Anthropic.ToolUseBlock => b.type === "tool_use"
+            );
+
+            // Signal each tool starting
+            for (const block of toolBlocks) {
+              send({
+                type: "tool_start",
+                name: block.name,
+                label: TOOL_LABELS[block.name] ?? `Using ${block.name}...`,
+              });
+            }
+
+            // Execute tools in parallel
+            const toolResults: Anthropic.ToolResultBlockParam[] = await Promise.all(
+              toolBlocks.map(async (block) => {
+                const result = await executeTool(
+                  block.name,
+                  block.input as Record<string, string>,
+                  toolContext
+                );
+                send({ type: "tool_done", name: block.name });
+                return {
+                  type: "tool_result" as const,
+                  tool_use_id: block.id,
+                  content: result,
+                };
+              })
+            );
+
+            currentMessages = [
+              ...currentMessages,
+              { role: "assistant", content: finalMessage.content },
+              { role: "user", content: toolResults },
+            ];
+            continue;
+          }
+
+          // Unexpected stop reason — break out
+          break;
         }
       } catch (error) {
         const detail = error instanceof Error ? error.message : String(error);

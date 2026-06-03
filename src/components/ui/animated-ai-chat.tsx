@@ -203,6 +203,16 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
     if (!text.trim() || isLoading) return;
     setValue("");
     adjustHeight(true);
+    // Track AI session count in localStorage
+    try {
+      const key = "nuvaxis_ai_sessions";
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+      const raw = localStorage.getItem(key);
+      const stored = raw ? JSON.parse(raw) : {};
+      stored[monthKey] = (stored[monthKey] ?? 0) + 1;
+      localStorage.setItem(key, JSON.stringify(stored));
+    } catch { /* noop */ }
     // Delegate to the store — runs outside React lifecycle
     chatStore.send(text, profile);
   };
@@ -213,10 +223,12 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
       else if (e.key === "ArrowUp") { e.preventDefault(); setActiveSuggestion((p) => Math.max(p - 1, 0)); }
       else if (e.key === "Tab" || e.key === "Enter") { e.preventDefault(); if (activeSuggestion >= 0) selectCommand(activeSuggestion); }
       else if (e.key === "Escape") { e.preventDefault(); setShowCommandPalette(false); }
-    } else if (e.key === "Enter" && !e.shiftKey) {
+    } else if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+      // Ctrl+Enter (Windows/Linux) or Cmd+Enter (Mac) sends the message
       e.preventDefault();
       sendMessage(value);
     }
+    // Plain Enter creates a new line — no accidental sends
   };
 
   const selectCommand = (index: number) => {
@@ -479,7 +491,7 @@ export function AnimatedAIChat({ assistantName = "Nova", profile }: AnimatedAICh
             </div>
 
             <p className="text-center text-[#8e8ea0] text-xs mt-3" style={{ fontFamily: "var(--font-space-grotesk)" }}>
-              {assistantName} has access to your leads, market data, and can send emails on your behalf.
+              {assistantName} has access to your leads, market data, and can send emails on your behalf. Press Ctrl+Enter to send.
             </p>
           </div>
         </div>

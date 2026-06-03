@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/lib/supabase/client";
 import { CosmicParallaxBg } from "@/components/ui/parallax-cosmic-background";
-import { ArrowRight, Loader2, Zap, Building2, Target, Briefcase, Globe, Share2, MapPin, CheckCircle2, Search } from "lucide-react";
+import { ArrowRight, Loader2, Zap, Building2, Target, Briefcase, Globe, Share2, MapPin, CheckCircle2, Search, AlertCircle } from "lucide-react";
 
 const INDUSTRIES = [
   "Real Estate", "E-Commerce", "Restaurant / Food", "Fitness & Wellness",
@@ -52,6 +52,14 @@ export default function SetupPage() {
   const [tiktok, setTiktok] = useState("");
   const [youtube, setYoutube] = useState("");
 
+  // City cap state
+  const [cityStatus, setCityStatus] = useState<{
+    checked: boolean;
+    available: boolean;
+    spotsLeft: number;
+    loading: boolean;
+  }>({ checked: false, available: true, spotsLeft: 30, loading: false });
+
   useEffect(() => {
     // Check auth AND whether setup is already done
     fetch("/api/profile")
@@ -70,6 +78,25 @@ export default function SetupPage() {
       .catch(() => router.push("/login"));
   }, [router]);
 
+  // Debounced city availability check
+  const checkCity = useCallback(async (city: string) => {
+    if (!city.trim() || city.trim().length < 3) return;
+    setCityStatus(s => ({ ...s, loading: true }));
+    try {
+      const res = await fetch(`/api/city/check?city=${encodeURIComponent(city.trim())}`);
+      const data = await res.json() as { available: boolean; spotsLeft: number };
+      setCityStatus({ checked: true, available: data.available, spotsLeft: data.spotsLeft, loading: false });
+    } catch {
+      setCityStatus(s => ({ ...s, loading: false, checked: false }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!location.trim()) { setCityStatus({ checked: false, available: true, spotsLeft: 30, loading: false }); return; }
+    const t = setTimeout(() => checkCity(location), 600);
+    return () => clearTimeout(t);
+  }, [location, checkCity]);
+
   const steps = [
     { id: "intro",    label: "Welcome" },
     { id: "bot",      label: "Your AI" },
@@ -87,6 +114,24 @@ export default function SetupPage() {
     setSaving(true);
     setError("");
     try {
+      // If city entered, claim a slot before saving profile
+      if (location.trim()) {
+        const claimRes = await fetch("/api/city/claim", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ city: location.trim() }),
+        });
+        if (claimRes.status === 409) {
+          setError("Sorry, this city is currently full (30 realtors). Please join the waitlist or try a neighboring city.");
+          setSaving(false);
+          return;
+        }
+        if (!claimRes.ok) {
+          // Non-critical — continue even if claim fails (avoids blocking signup on DB errors)
+          console.warn("City claim failed silently");
+        }
+      }
+
       const res = await fetch("/api/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -393,6 +438,27 @@ export default function SetupPage() {
                       placeholder="e.g. Miami, FL"
                       className="w-full bg-white/[0.05] border border-white/[0.1] rounded-xl px-4 py-3 text-white placeholder-white/20 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
                     />
+                    {/* City availability badge */}
+                    {location.trim().length >= 3 && (
+                      <div className="mt-1.5">
+                        {cityStatus.loading ? (
+                          <span className="flex items-center gap-1.5 text-xs text-white/40">
+                            <Loader2 className="w-3 h-3 animate-spin" /> Checking availability…
+                          </span>
+                        ) : cityStatus.checked && cityStatus.available ? (
+                          <span className="flex items-center gap-1.5 text-xs text-emerald-400">
+                            <CheckCircle2 className="w-3 h-3" />
+                            {cityStatus.spotsLeft <= 5
+                              ? `Only ${cityStatus.spotsLeft} spot${cityStatus.spotsLeft !== 1 ? "s" : ""} left in this city — claim yours now`
+                              : `${cityStatus.spotsLeft} spots available in this city`}
+                          </span>
+                        ) : cityStatus.checked && !cityStatus.available ? (
+                          <span className="flex items-center gap-1.5 text-xs text-red-400">
+                            <AlertCircle className="w-3 h-3" /> This city is full (30/30). Try a nearby city.
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
                   </div>
 
                   <div>

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
@@ -16,9 +17,50 @@ export default function HeroSection() {
         }}
       />
 
-
       {/* Content */}
-      <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6">
+      <div className="relative z-10 text-center max-w-5xl mx-auto px-4 sm:px-6 pt-24 md:pt-20">
+
+        {/* Founder intro — circle photo + what I do */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="flex items-center justify-center gap-4 md:gap-5 mb-8 md:mb-10"
+        >
+          {/* Circular headshot with gradient ring */}
+          <div className="relative flex-shrink-0">
+            <div
+              className="absolute -inset-1 rounded-full opacity-80"
+              style={{
+                background: "conic-gradient(from 0deg, #3b82f6, #6366f1, #60a5fa, #3b82f6)",
+              }}
+            />
+            <Image
+              src="/tiquan-wallace.jpg"
+              alt="Tiquan Wallace — Founder of Nuvaxis AI"
+              width={96}
+              height={96}
+              priority
+              className="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-black"
+            />
+            {/* Online dot */}
+            <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-black" />
+          </div>
+
+          {/* What I do */}
+          <div className="text-left">
+            <p className="text-white font-semibold text-base md:text-lg leading-tight" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+              Tiquan Wallace
+            </p>
+            <p className="text-blue-400 text-xs md:text-sm font-medium mb-1">
+              Founder, Nuvaxis AI
+            </p>
+            <p className="text-gray-300 text-xs md:text-sm max-w-[280px] md:max-w-xs leading-snug">
+              I build AI websites, chatbots &amp; automation that win customers for local businesses.
+            </p>
+          </div>
+        </motion.div>
+
         {/* Headline */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -26,12 +68,10 @@ export default function HeroSection() {
           transition={{ duration: 0.7, delay: 0.15 }}
           className="text-4xl md:text-7xl font-bold text-white leading-tight tracking-tight mb-4 md:mb-6"
         >
-          We Build{" "}
+          Your Business,{" "}
           <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            AI-Powered
+            Powered by AI
           </span>
-          <br />
-          Businesses
         </motion.h1>
 
         {/* Subtext */}
@@ -41,9 +81,9 @@ export default function HeroSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-white text-sm md:text-xl max-w-2xl mx-auto mb-7 md:mb-10 leading-relaxed"
         >
-          Nuvaxis AI helps local businesses compete at the highest level with
-          cutting-edge AI websites, smart automation, and digital growth tools
-          built for 2026 and beyond.
+          Custom AI websites, 24/7 chatbots, online ordering, and ad campaigns
+          — everything your business needs to compete at the highest level,
+          built and managed for you.
         </motion.p>
 
         {/* CTAs */}
@@ -54,20 +94,20 @@ export default function HeroSection() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
           <a
-            href="/signup"
+            href="#contact"
             className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition-all text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base shadow-lg shadow-blue-900/40"
           >
-            Get Started Free
+            Contact Us Now
             <ArrowRight
               size={18}
               className="group-hover:translate-x-1 transition-transform"
             />
           </a>
           <a
-            href="#how-it-works"
+            href="#pricing"
             className="flex items-center gap-2 border border-white/20 hover:border-white/40 transition-colors text-white font-medium px-6 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base"
           >
-            How It Works
+            See Pricing
           </a>
         </motion.div>
 

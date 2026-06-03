@@ -159,11 +159,7 @@ function timeAgo(date: Date): string {
   return `${Math.floor(h / 24)}d ago`;
 }
 
-const stats = [
-  { label: "Social Reach",  value: "12.4K", delta: "+18% this month",    icon: BarChart3, color: "blue"    },
-  { label: "AI Sessions",   value: "47",    delta: "sessions this month", icon: Sparkles,  color: "violet"  },
-  { label: "Active Leads",  value: "23",    delta: "+5 this week",        icon: Target,    color: "emerald" },
-];
+// stats moved to dynamic fetch inside DashboardContent
 
 const marketingTips = [
   {
@@ -872,6 +868,36 @@ function SettingsPage({
   const [saved, setSaved] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<string>("");
   const [businessSearch, setBusinessSearch] = useState("");
+
+  // OAuth platform connection status
+  const [oauthStatus, setOauthStatus] = useState<{
+    connected: Record<string, { username: string; connectedAt: string }>;
+    configured: { facebook: boolean; twitter: boolean; tiktok: boolean };
+  }>({ connected: {}, configured: { facebook: false, twitter: false, tiktok: false } });
+  const [oauthLoading, setOauthLoading] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/auth/status")
+      .then(r => r.json())
+      .then(data => { if (data.connected) setOauthStatus(data); })
+      .catch(() => {});
+  }, []);
+
+  const disconnectPlatform = async (platform: string) => {
+    setOauthLoading(true);
+    await fetch("/api/auth/status", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ platform }),
+    });
+    setOauthStatus(prev => {
+      const next = { ...prev.connected };
+      delete next[platform];
+      if (platform === "facebook") delete next["instagram"];
+      return { ...prev, connected: next };
+    });
+    setOauthLoading(false);
+  };
   const [bizConfirm, setBizConfirm] = useState<string>(() =>
     profile.industry ? businessConfirmMessage(profile.industry, profile.niche) : ""
   );
@@ -977,32 +1003,46 @@ function SettingsPage({
   const plans = [
     {
       name: "Starter",
-      price: "$29",
+      planId: "starter",
+      price: "$75",
       period: "/mo",
       color: profile.subscriptionStatus === "starter" ? "border-blue-500/40" : "border-white/[0.08]",
       badge: profile.subscriptionStatus === "starter" ? "Current Plan" : null,
       badgeColor: "text-blue-400 bg-blue-500/10 border-blue-500/20",
-      features: ["AI Assistant (unlimited chat)", "Lead Generator", "Ad Campaign Builder", "Basic market reports", "Email support"],
+      features: ["AI Assistant", "Lead Generator", "Ad Campaigns", "Email support"],
       current: profile.subscriptionStatus === "starter",
     },
     {
-      name: "Pro",
-      price: "$79",
+      name: "Solo Pro",
+      planId: "solo-pro",
+      price: "$149",
+      period: "/mo",
+      color: profile.subscriptionStatus === "starter" ? "border-white/[0.08]" : "border-white/[0.08]",
+      badge: null,
+      badgeColor: "",
+      features: ["Everything in Starter", "Priority AI responses", "Social media scan", "Trending video feed"],
+      current: false,
+    },
+    {
+      name: "Business",
+      planId: "business",
+      price: "$249",
       period: "/mo",
       color: profile.subscriptionStatus === "pro" ? "border-blue-500/40" : "border-white/[0.08]",
       badge: profile.subscriptionStatus === "pro" ? "Current Plan" : "Most Popular",
       badgeColor: profile.subscriptionStatus === "pro" ? "text-blue-400 bg-blue-500/10 border-blue-500/20" : "text-violet-400 bg-violet-500/10 border-violet-500/20",
-      features: ["Everything in Starter", "Unlimited AI sessions", "Real-time social scan", "Trending video feed", "Lead notifications", "Priority support"],
+      features: ["Everything in Solo Pro", "Unlimited AI sessions", "Lead notifications", "Priority support"],
       current: profile.subscriptionStatus === "pro",
     },
     {
-      name: "Agency",
-      price: "$199",
+      name: "Premium",
+      planId: "premium",
+      price: "$449",
       period: "/mo",
       color: profile.subscriptionStatus === "agency" ? "border-violet-500/40" : "border-violet-500/30",
       badge: profile.subscriptionStatus === "agency" ? "Current Plan" : "Best Value",
       badgeColor: "text-violet-400 bg-violet-500/10 border-violet-500/20",
-      features: ["Everything in Pro", "Up to 10 team members", "White-label dashboard", "Custom AI training", "Dedicated manager"],
+      features: ["Everything in Business", "Up to 10 members", "White-label dashboard", "Dedicated manager"],
       current: profile.subscriptionStatus === "agency",
     },
   ];
@@ -1011,17 +1051,38 @@ function SettingsPage({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="px-4 md:px-6 py-5 max-w-[900px] mx-auto">
+      <div className="px-4 md:px-6 py-5 pb-8 md:pb-6 max-w-[900px] mx-auto">
 
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
-          <h1 className="text-white text-2xl font-bold" style={{ fontFamily: F }}>Settings</h1>
-          <p className="text-white/30 text-sm mt-1" style={{ fontFamily: F }}>Manage your account, business, and subscription.</p>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-5">
+          <h1 className="text-white text-xl md:text-2xl font-bold" style={{ fontFamily: F }}>Settings</h1>
+          <p className="text-white/30 text-xs md:text-sm mt-0.5" style={{ fontFamily: F }}>Manage your account, business, and subscription.</p>
         </motion.div>
+
+        {/* Mobile section tabs — full-width 4-column grid, no scroll */}
+        <div className="md:hidden grid grid-cols-4 gap-1.5 mb-5">
+          {sections.map((s) => {
+            const Icon = s.icon;
+            const active = activeSection === s.id;
+            return (
+              <button
+                key={s.id}
+                onClick={() => setActiveSection(s.id)}
+                className={`flex flex-col items-center gap-1 py-3 rounded-2xl transition-all border ${
+                  active ? "bg-blue-600/15 text-blue-400 border-blue-500/25" : "text-white/40 border-white/[0.06] bg-white/[0.02]"
+                }`}
+                style={{ fontFamily: F }}
+              >
+                <Icon size={18} />
+                <span className="text-[9px] font-semibold leading-none">{s.id === "billing" ? "Billing" : s.label}</span>
+              </button>
+            );
+          })}
+        </div>
 
         <div className="flex gap-5">
 
-          {/* Section nav */}
+          {/* Section nav — desktop only */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
@@ -1048,27 +1109,6 @@ function SettingsPage({
               );
             })}
           </motion.div>
-
-          {/* Mobile section tabs */}
-          <div className="md:hidden flex gap-1.5 overflow-x-auto pb-1 mb-4 w-full" style={{ scrollbarWidth: "none" }}>
-            {sections.map((s) => {
-              const Icon = s.icon;
-              const active = activeSection === s.id;
-              return (
-                <button
-                  key={s.id}
-                  onClick={() => setActiveSection(s.id)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-all border flex-shrink-0 ${
-                    active ? "bg-blue-600/15 text-blue-400 border-blue-500/20" : "text-white/35 border-white/[0.06]"
-                  }`}
-                  style={{ fontFamily: F }}
-                >
-                  <Icon size={12} />
-                  {s.label}
-                </button>
-              );
-            })}
-          </div>
 
           {/* Content panel */}
           <motion.div
@@ -1101,14 +1141,14 @@ function SettingsPage({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[
-                      { label: "First Name",    field: "firstName", icon: User  },
-                      { label: "Last Name",     field: "lastName",  icon: User  },
-                      { label: "Email Address", field: "email",     icon: Mail,  full: true },
-                      { label: "Phone Number",  field: "phone",     icon: Phone },
+                      { label: "First Name",    field: "firstName", icon: User,  full: false },
+                      { label: "Last Name",     field: "lastName",  icon: User,  full: false },
+                      { label: "Email Address", field: "email",     icon: Mail,  full: true  },
+                      { label: "Phone Number",  field: "phone",     icon: Phone, full: true  },
                     ].map(({ label, field, icon: Icon, full }) => (
-                      <div key={field} className={full ? "col-span-2" : ""}>
+                      <div key={field} className={full ? "sm:col-span-2" : ""}>
                         <label className="block text-[11px] text-white/30 font-medium mb-1.5 uppercase tracking-wide" style={{ fontFamily: F }}>{label}</label>
                         <div className="relative">
                           <Icon className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
@@ -1116,7 +1156,7 @@ function SettingsPage({
                             type="text"
                             value={form[field as keyof typeof form]}
                             onChange={(e) => handleChange(field, e.target.value)}
-                            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-2.5 text-white text-sm outline-none focus:border-blue-500/50 focus:bg-white/[0.06] transition-all"
+                            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-3 text-white text-sm outline-none focus:border-blue-500/50 focus:bg-white/[0.06] transition-all"
                             style={{ fontFamily: F }}
                           />
                         </div>
@@ -1125,19 +1165,17 @@ function SettingsPage({
                   </div>
                 </div>
 
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleSave}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                      saved
-                        ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-400"
-                        : "bg-blue-600 hover:bg-blue-500 text-white"
-                    }`}
-                    style={{ fontFamily: F }}
-                  >
-                    {saved ? <><Check className="w-4 h-4" /> Saved!</> : "Save Changes"}
-                  </button>
-                </div>
+                <button
+                  onClick={handleSave}
+                  className={`w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all ${
+                    saved
+                      ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-400"
+                      : "bg-blue-600 hover:bg-blue-500 text-white"
+                  }`}
+                  style={{ fontFamily: F }}
+                >
+                  {saved ? <><Check className="w-4 h-4" /> Saved!</> : "Save Changes"}
+                </button>
               </>
             )}
 
@@ -1267,7 +1305,7 @@ function SettingsPage({
                             type="text"
                             value={form[field as keyof typeof form]}
                             onChange={(e) => handleChange(field, e.target.value)}
-                            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-2.5 text-white text-sm outline-none focus:border-violet-500/50 focus:bg-white/[0.06] transition-all"
+                            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-3 text-white text-sm outline-none focus:border-violet-500/50 focus:bg-white/[0.06] transition-all"
                             style={{ fontFamily: F }}
                           />
                         </div>
@@ -1334,14 +1372,14 @@ function SettingsPage({
 
                           {/* Handle input + connect/disconnect */}
                           <div className="px-4 pb-4 space-y-2.5">
-                            <div className="flex gap-2">
+                            <div className="flex flex-col sm:flex-row gap-2">
                               <input
                                 type="text"
                                 value={handleVal}
                                 onChange={(e) => handleChange(handleKey, e.target.value)}
                                 placeholder={placeholder}
                                 disabled={isConnected}
-                                className={`flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2 text-sm outline-none transition-all ${
+                                className={`flex-1 bg-white/[0.04] border border-white/[0.08] rounded-xl px-3 py-2.5 text-sm outline-none transition-all ${
                                   isConnected
                                     ? "text-white/35 cursor-not-allowed"
                                     : "text-white focus:border-blue-500/40 focus:bg-white/[0.06]"
@@ -1358,7 +1396,7 @@ function SettingsPage({
                                   }
                                 }}
                                 disabled={!isConnected && !handleVal.trim()}
-                                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap disabled:opacity-30 disabled:cursor-not-allowed ${
+                                className={`flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all whitespace-nowrap disabled:opacity-30 disabled:cursor-not-allowed ${
                                   isConnected
                                     ? "border border-white/[0.1] text-white/30 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/[0.06]"
                                     : "bg-blue-600 hover:bg-blue-500 text-white"
@@ -1419,19 +1457,195 @@ function SettingsPage({
                   </div>
                 </div>
 
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleSave}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                      saved
-                        ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-400"
-                        : "bg-blue-600 hover:bg-blue-500 text-white"
-                    }`}
-                    style={{ fontFamily: F }}
-                  >
-                    {saved ? <><Check className="w-4 h-4" /> Saved!</> : "Save Changes"}
-                  </button>
+                {/* ── LIVE MESSAGE CONNECTIONS (OAuth) ── */}
+                <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-5">
+                  <div className="flex items-center gap-2.5 mb-1.5">
+                    <Megaphone className="w-4 h-4 text-violet-400" />
+                    <h2 className="text-white text-sm font-semibold" style={{ fontFamily: F }}>Live Message Inbox</h2>
+                    <span className="ml-auto text-[10px] text-violet-400 bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded-full font-medium" style={{ fontFamily: F }}>
+                      AI-Powered
+                    </span>
+                  </div>
+                  <p className="text-white/30 text-xs mb-4 leading-relaxed" style={{ fontFamily: F }}>
+                    Connect your accounts below. Once connected, the AI automatically receives your DMs and messages from each platform — no manual checking needed.
+                  </p>
+
+                  <div className="space-y-3">
+                    {/* Facebook + Instagram (one OAuth flow covers both) */}
+                    {(() => {
+                      const fbConn = oauthStatus.connected["facebook"];
+                      const igConn = oauthStatus.connected["instagram"];
+                      const configured = oauthStatus.configured.facebook;
+                      return (
+                        <div className={`rounded-2xl border transition-all ${fbConn ? "border-blue-500/30 bg-blue-500/[0.05]" : "border-white/[0.07] bg-white/[0.02]"}`}>
+                          <div className="flex items-center gap-3 px-4 py-3.5">
+                            <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
+                              <ExternalLink className="w-4 h-4 text-blue-400" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm font-bold ${fbConn ? "text-blue-400" : "text-white/50"}`} style={{ fontFamily: F }}>Facebook + Instagram</p>
+                              {fbConn ? (
+                                <p className="text-[11px] text-white/40 truncate" style={{ fontFamily: F }}>
+                                  {fbConn.username}{igConn ? ` · @${igConn.username}` : ""}
+                                </p>
+                              ) : (
+                                <p className="text-[11px] text-white/30" style={{ fontFamily: F }}>Messenger DMs + Instagram DMs in one click</p>
+                              )}
+                            </div>
+                            {fbConn ? (
+                              <button
+                                onClick={() => disconnectPlatform("facebook")}
+                                disabled={oauthLoading}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs border border-white/[0.1] text-white/30 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/[0.06] transition-all"
+                                style={{ fontFamily: F }}
+                              >
+                                <Link2Off className="w-3 h-3" /> Disconnect
+                              </button>
+                            ) : configured ? (
+                              <a
+                                href="/api/auth/facebook"
+                                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white transition-all"
+                                style={{ fontFamily: F }}
+                              >
+                                <Link2 className="w-3 h-3" /> Connect
+                              </a>
+                            ) : (
+                              <span className="text-[10px] text-white/20 border border-white/[0.06] px-2 py-1 rounded-lg" style={{ fontFamily: F }}>Setup required</span>
+                            )}
+                          </div>
+                          {fbConn && (
+                            <div className="px-4 pb-3">
+                              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/[0.08] border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium" style={{ fontFamily: F }}>
+                                <Check className="w-2.5 h-2.5" /> AI receiving messages automatically
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* Twitter / X */}
+                    {(() => {
+                      const conn = oauthStatus.connected["twitter"];
+                      const configured = oauthStatus.configured.twitter;
+                      return (
+                        <div className={`rounded-2xl border transition-all ${conn ? "border-white/20 bg-white/[0.04]" : "border-white/[0.07] bg-white/[0.02]"}`}>
+                          <div className="flex items-center gap-3 px-4 py-3.5">
+                            <div className="w-8 h-8 rounded-xl bg-white/[0.07] border border-white/[0.15] flex items-center justify-center flex-shrink-0">
+                              <Zap className="w-4 h-4 text-white/70" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm font-bold ${conn ? "text-white" : "text-white/50"}`} style={{ fontFamily: F }}>Twitter / X</p>
+                              {conn ? (
+                                <p className="text-[11px] text-white/40 truncate" style={{ fontFamily: F }}>{conn.username}</p>
+                              ) : (
+                                <p className="text-[11px] text-white/30" style={{ fontFamily: F }}>X DMs received automatically</p>
+                              )}
+                            </div>
+                            {conn ? (
+                              <button
+                                onClick={() => disconnectPlatform("twitter")}
+                                disabled={oauthLoading}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs border border-white/[0.1] text-white/30 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/[0.06] transition-all"
+                                style={{ fontFamily: F }}
+                              >
+                                <Link2Off className="w-3 h-3" /> Disconnect
+                              </button>
+                            ) : configured ? (
+                              <a
+                                href="/api/auth/twitter"
+                                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                                style={{ fontFamily: F }}
+                              >
+                                <Link2 className="w-3 h-3" /> Connect
+                              </a>
+                            ) : (
+                              <span className="text-[10px] text-white/20 border border-white/[0.06] px-2 py-1 rounded-lg" style={{ fontFamily: F }}>Setup required</span>
+                            )}
+                          </div>
+                          {conn && (
+                            <div className="px-4 pb-3">
+                              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/[0.08] border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium" style={{ fontFamily: F }}>
+                                <Check className="w-2.5 h-2.5" /> AI receiving messages automatically
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+
+                    {/* TikTok */}
+                    {(() => {
+                      const conn = oauthStatus.connected["tiktok"];
+                      const configured = oauthStatus.configured.tiktok;
+                      return (
+                        <div className={`rounded-2xl border transition-all ${conn ? "border-pink-500/30 bg-pink-500/[0.04]" : "border-white/[0.07] bg-white/[0.02]"}`}>
+                          <div className="flex items-center gap-3 px-4 py-3.5">
+                            <div className="w-8 h-8 rounded-xl bg-white/[0.05] border border-white/[0.12] flex items-center justify-center flex-shrink-0">
+                              <Flame className="w-4 h-4 text-white/60" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className={`text-sm font-bold ${conn ? "text-white" : "text-white/50"}`} style={{ fontFamily: F }}>TikTok</p>
+                              {conn ? (
+                                <p className="text-[11px] text-white/40 truncate" style={{ fontFamily: F }}>{conn.username}</p>
+                              ) : (
+                                <p className="text-[11px] text-white/30" style={{ fontFamily: F }}>TikTok profile + content access</p>
+                              )}
+                            </div>
+                            {conn ? (
+                              <button
+                                onClick={() => disconnectPlatform("tiktok")}
+                                disabled={oauthLoading}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs border border-white/[0.1] text-white/30 hover:text-red-400 hover:border-red-500/30 hover:bg-red-500/[0.06] transition-all"
+                                style={{ fontFamily: F }}
+                              >
+                                <Link2Off className="w-3 h-3" /> Disconnect
+                              </button>
+                            ) : configured ? (
+                              <a
+                                href="/api/auth/tiktok"
+                                className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all"
+                                style={{ fontFamily: F }}
+                              >
+                                <Link2 className="w-3 h-3" /> Connect
+                              </a>
+                            ) : (
+                              <span className="text-[10px] text-white/20 border border-white/[0.06] px-2 py-1 rounded-lg" style={{ fontFamily: F }}>Setup required</span>
+                            )}
+                          </div>
+                          {conn && (
+                            <div className="px-4 pb-3">
+                              <span className="inline-flex items-center gap-1 text-[10px] text-emerald-400 bg-emerald-500/[0.08] border border-emerald-500/20 px-2 py-0.5 rounded-full font-medium" style={{ fontFamily: F }}>
+                                <Check className="w-2.5 h-2.5" /> AI receiving messages automatically
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Setup instructions if no apps configured yet */}
+                  {!oauthStatus.configured.facebook && !oauthStatus.configured.twitter && !oauthStatus.configured.tiktok && (
+                    <div className="mt-4 bg-amber-500/[0.06] border border-amber-500/20 rounded-xl p-4">
+                      <p className="text-amber-400/80 text-xs leading-relaxed" style={{ fontFamily: F }}>
+                        <strong className="text-amber-400">One-time admin setup required.</strong> Add your app credentials to <code className="bg-white/[0.06] px-1 rounded">.env.local</code> — see <strong>CHANGES.md</strong> in the project root for step-by-step instructions.
+                      </p>
+                    </div>
+                  )}
                 </div>
+
+                <button
+                  onClick={handleSave}
+                  className={`w-full sm:w-auto sm:ml-auto flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all ${
+                    saved
+                      ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-400"
+                      : "bg-blue-600 hover:bg-blue-500 text-white"
+                  }`}
+                  style={{ fontFamily: F }}
+                >
+                  {saved ? <><Check className="w-4 h-4" /> Saved!</> : "Save Changes"}
+                </button>
               </>
             )}
 
@@ -1452,7 +1666,7 @@ function SettingsPage({
                     <p className="text-white/35 text-xs mb-3" style={{ fontFamily: F }}>Manage billing at your payment provider</p>
                     <div className="flex items-end gap-1">
                       <span className="text-white text-3xl font-bold" style={{ fontFamily: F }}>
-                        {profile.subscriptionStatus === "starter" ? "$29" : profile.subscriptionStatus === "agency" ? "$199" : "$79"}
+                        {profile.subscriptionStatus === "starter" ? "$75" : profile.subscriptionStatus === "pro" ? "$249" : profile.subscriptionStatus === "agency" ? "$449" : "$149"}
                       </span>
                       <span className="text-white/30 text-sm mb-1">/month</span>
                     </div>
@@ -1508,40 +1722,49 @@ function SettingsPage({
                     <TrendingUp className="w-4 h-4 text-yellow-400" />
                     <h2 className="text-white text-sm font-semibold" style={{ fontFamily: F }}>Plans</h2>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {plans.map((plan) => (
                       <div
                         key={plan.name}
                         className={`relative p-4 rounded-2xl border transition-all ${plan.color} ${plan.current ? "bg-blue-500/[0.05]" : "bg-white/[0.02] hover:bg-white/[0.04]"}`}
                       >
                         {plan.badge && (
-                          <span className={`absolute -top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border whitespace-nowrap ${plan.badgeColor}`} style={{ fontFamily: F }}>
+                          <span className={`absolute -top-2.5 left-4 text-[10px] font-semibold px-2.5 py-0.5 rounded-full border whitespace-nowrap ${plan.badgeColor}`} style={{ fontFamily: F }}>
                             {plan.badge}
                           </span>
                         )}
-                        <p className="text-white font-bold text-sm mb-1 mt-1" style={{ fontFamily: F }}>{plan.name}</p>
-                        <div className="flex items-end gap-0.5 mb-3">
-                          <span className="text-white text-2xl font-bold" style={{ fontFamily: F }}>{plan.price}</span>
-                          <span className="text-white/30 text-xs mb-1">{plan.period}</span>
+                        <div className="flex items-start justify-between mt-1 mb-3">
+                          <div>
+                            <p className="text-white font-bold text-sm mb-1" style={{ fontFamily: F }}>{plan.name}</p>
+                            <div className="flex items-end gap-0.5">
+                              <span className="text-white text-2xl font-bold" style={{ fontFamily: F }}>{plan.price}</span>
+                              <span className="text-white/30 text-xs mb-1">{plan.period}</span>
+                            </div>
+                          </div>
+                          {plan.current && (
+                            <span className="text-[10px] text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full mt-1" style={{ fontFamily: F }}>Active</span>
+                          )}
                         </div>
-                        <ul className="space-y-1.5 mb-4">
+                        <ul className="space-y-2 mb-4">
                           {plan.features.map((f, i) => (
-                            <li key={i} className="flex items-center gap-1.5 text-white/50 text-[11px]" style={{ fontFamily: F }}>
+                            <li key={i} className="flex items-center gap-2 text-white/50 text-xs" style={{ fontFamily: F }}>
                               <Check className="w-3 h-3 text-emerald-400 flex-shrink-0" />{f}
                             </li>
                           ))}
                         </ul>
-                        <button
-                          className={`w-full py-2 rounded-xl text-xs font-semibold transition-all ${
-                            plan.current
-                              ? "bg-blue-600/20 text-blue-400 border border-blue-500/20 cursor-default"
-                              : "bg-white/[0.06] hover:bg-white/[0.1] text-white/70 border border-white/[0.08]"
-                          }`}
-                          style={{ fontFamily: F }}
-                          disabled={plan.current}
-                        >
-                          {plan.current ? "Current Plan" : `Switch to ${plan.name}`}
-                        </button>
+                        {plan.current ? (
+                          <div className="w-full py-2.5 rounded-xl text-xs font-semibold text-center bg-blue-600/20 text-blue-400 border border-blue-500/20" style={{ fontFamily: F }}>
+                            Current Plan
+                          </div>
+                        ) : (
+                          <a
+                            href={`/checkout?plan=${plan.planId}`}
+                            className="block w-full py-2.5 rounded-xl text-xs font-semibold text-center transition-all bg-white/[0.06] hover:bg-white/[0.1] text-white/70 border border-white/[0.08]"
+                            style={{ fontFamily: F }}
+                          >
+                            Upgrade →
+                          </a>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -1550,22 +1773,20 @@ function SettingsPage({
                 {/* Billing history */}
                 <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-5">
                   <h2 className="text-white text-sm font-semibold mb-4" style={{ fontFamily: F }}>Billing History</h2>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {[
-                      { date: "Apr 8, 2026",  amount: "$79.00", status: "Paid" },
-                      { date: "Mar 8, 2026",  amount: "$79.00", status: "Paid" },
-                      { date: "Feb 8, 2026",  amount: "$79.00", status: "Paid" },
+                      { date: "Apr 8, 2026",  amount: "$249.00", status: "Paid" },
+                      { date: "Mar 8, 2026",  amount: "$249.00", status: "Paid" },
+                      { date: "Feb 8, 2026",  amount: "$249.00", status: "Paid" },
                     ].map((inv, i) => (
-                      <div key={i} className="flex items-center justify-between py-2.5 border-b border-white/[0.04] last:border-0">
-                        <div>
+                      <div key={i} className="flex items-center py-3 border-b border-white/[0.04] last:border-0 gap-3">
+                        <div className="flex-1 min-w-0">
                           <p className="text-white/70 text-xs font-medium" style={{ fontFamily: F }}>{inv.date}</p>
-                          <p className="text-white/25 text-[10px]">Pro Plan · Monthly</p>
+                          <p className="text-white/25 text-[10px]">Business Plan · Monthly</p>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-emerald-400 text-xs font-medium" style={{ fontFamily: F }}>{inv.status}</span>
-                          <span className="text-white/60 text-xs font-semibold" style={{ fontFamily: F }}>{inv.amount}</span>
-                          <button className="text-[10px] text-white/20 hover:text-blue-400 transition-colors" style={{ fontFamily: F }}>PDF</button>
-                        </div>
+                        <span className="text-emerald-400 text-xs font-medium flex-shrink-0" style={{ fontFamily: F }}>{inv.status}</span>
+                        <span className="text-white/60 text-xs font-semibold flex-shrink-0" style={{ fontFamily: F }}>{inv.amount}</span>
+                        <button className="text-[10px] text-white/25 hover:text-blue-400 transition-colors border border-white/[0.06] px-2 py-1 rounded-lg flex-shrink-0" style={{ fontFamily: F }}>PDF</button>
                       </div>
                     ))}
                   </div>
@@ -1594,23 +1815,23 @@ function SettingsPage({
                       </div>
                     ))}
                   </div>
-                  <button className="mt-4 px-5 py-2.5 bg-emerald-600/80 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors" style={{ fontFamily: F }}>
+                  <button className="mt-4 w-full sm:w-auto px-6 py-3 bg-emerald-600/80 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-colors" style={{ fontFamily: F }}>
                     Update Password
                   </button>
                 </div>
 
                 <div className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-5">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2.5">
                       <Shield className="w-4 h-4 text-blue-400" />
-                      <h2 className="text-white text-sm font-semibold" style={{ fontFamily: F }}>Two-Factor Authentication</h2>
+                      <h2 className="text-white text-sm font-semibold" style={{ fontFamily: F }}>Two-Factor Auth</h2>
                     </div>
                     <span className="text-[10px] text-red-400 bg-red-400/10 border border-red-400/20 px-2 py-0.5 rounded-full">Off</span>
                   </div>
                   <p className="text-white/30 text-xs leading-relaxed mb-4" style={{ fontFamily: F }}>
-                    Add an extra layer of security to your account. We&apos;ll ask for a code whenever you sign in from a new device.
+                    Add an extra layer of security. We&apos;ll ask for a code whenever you sign in from a new device.
                   </p>
-                  <button className="px-5 py-2.5 bg-blue-600/80 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-colors" style={{ fontFamily: F }}>
+                  <button className="w-full sm:w-auto px-6 py-3 bg-blue-600/80 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-colors" style={{ fontFamily: F }}>
                     Enable 2FA
                   </button>
                 </div>
@@ -1620,7 +1841,7 @@ function SettingsPage({
                   <p className="text-white/30 text-xs mb-4 leading-relaxed" style={{ fontFamily: F }}>
                     Permanently delete your account and all associated data. This action cannot be undone.
                   </p>
-                  <button className="px-5 py-2.5 border border-red-500/30 text-red-400/70 hover:bg-red-500/10 hover:text-red-400 text-sm font-medium rounded-xl transition-colors" style={{ fontFamily: F }}>
+                  <button className="w-full sm:w-auto px-6 py-3 border border-red-500/30 text-red-400/70 hover:bg-red-500/10 hover:text-red-400 text-sm font-medium rounded-xl transition-colors" style={{ fontFamily: F }}>
                     Delete Account
                   </button>
                 </div>
@@ -1637,6 +1858,88 @@ function SettingsPage({
 // ── Dashboard content view ─────────────────────────────────────────────────────
 function DashboardContent({ profile, onGoToLeads }: { profile: ProfileState; onGoToLeads: () => void }) {
   const leadState = useLeadStore();
+  const F = "var(--font-space-grotesk)";
+
+  // ── Live stats state ──────────────────────────────────────────────────────
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [socialReach, setSocialReach] = useState<{ value: string; delta: string; platforms: { name: string; handle: string; formatted: string }[] } | null>(null);
+  const [aiSessions, setAiSessions] = useState(0);
+
+  // Read AI session count from localStorage (written by animated-ai-chat on every send)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("nuvaxis_ai_sessions");
+      if (raw) {
+        const stored = JSON.parse(raw) as Record<string, number>;
+        const now = new Date();
+        const monthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+        setAiSessions(stored[monthKey] ?? 0);
+      }
+    } catch { /* noop */ }
+  }, []);
+
+  // Fetch social reach from the stats API whenever profile social accounts change
+  useEffect(() => {
+    const ig = profile.socialAccounts?.instagram ?? "";
+    const tt = profile.socialAccounts?.tiktok ?? "";
+    const yt = profile.socialAccounts?.youtube ?? "";
+    const ws = profile.website ?? "";
+    if (!ig && !tt && !yt && !ws) {
+      setSocialReach({ value: "0", delta: "Connect social accounts to track reach", platforms: [] });
+      setStatsLoading(false);
+      return;
+    }
+    setStatsLoading(true);
+    fetch("/api/dashboard/stats", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ instagram: ig, tiktok: tt, youtube: yt, website: ws, businessName: profile.businessName }),
+    })
+      .then(r => r.json())
+      .then((data: { socialReach: { value: string; delta: string; platforms: { name: string; handle: string; formatted: string }[] } }) => {
+        setSocialReach(data.socialReach);
+      })
+      .catch(() => {
+        setSocialReach({ value: "—", delta: "Unable to fetch reach data", platforms: [] });
+      })
+      .finally(() => setStatsLoading(false));
+  }, [
+    profile.socialAccounts?.instagram,
+    profile.socialAccounts?.tiktok,
+    profile.socialAccounts?.youtube,
+    profile.website,
+    profile.businessName,
+  ]);
+
+  const activeLeadCount = leadState.leads.length;
+  const hotLeads = leadState.leads.filter(l => l.status === "Hot").length;
+
+  const dynamicStats = [
+    {
+      label: "Social Reach",
+      value: statsLoading ? "…" : (socialReach?.value ?? "0"),
+      delta: statsLoading ? "Fetching live data…" : (socialReach?.delta ?? "No accounts linked"),
+      subItems: socialReach?.platforms ?? [],
+      icon: BarChart3,
+      color: "blue",
+    },
+    {
+      label: "AI Sessions",
+      value: aiSessions > 0 ? aiSessions.toString() : "0",
+      delta: aiSessions > 0 ? "messages this month" : "Start chatting with Nova",
+      subItems: [],
+      icon: Sparkles,
+      color: "violet",
+    },
+    {
+      label: "Active Leads",
+      value: activeLeadCount > 0 ? activeLeadCount.toString() : leadState.loading ? "…" : "0",
+      delta: activeLeadCount > 0 ? `${hotLeads} hot lead${hotLeads !== 1 ? "s" : ""} this week` : leadState.loading ? "Scanning for leads…" : "Run a lead search",
+      subItems: [],
+      icon: Target,
+      color: "emerald",
+    },
+  ];
 
   return (
     <div className="h-full overflow-y-auto">
@@ -1650,10 +1953,10 @@ function DashboardContent({ profile, onGoToLeads }: { profile: ProfileState; onG
           className="flex items-center justify-between gap-3"
         >
           <div className="min-w-0">
-            <p className="text-white/35 text-xs md:text-sm mb-0.5" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+            <p className="text-white/35 text-xs md:text-sm mb-0.5" style={{ fontFamily: F }}>
               {getGreeting()},
             </p>
-            <h1 className="text-white text-xl md:text-[2rem] font-bold leading-tight" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+            <h1 className="text-white text-xl md:text-[2rem] font-bold leading-tight" style={{ fontFamily: F }}>
               Welcome back,{" "}
               <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
                 {profile.name}
@@ -1663,7 +1966,7 @@ function DashboardContent({ profile, onGoToLeads }: { profile: ProfileState; onG
           </div>
           <div className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-            <span className="text-blue-300 text-xs font-medium hidden sm:inline" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+            <span className="text-blue-300 text-xs font-medium hidden sm:inline" style={{ fontFamily: F }}>
               {profile.industry}
             </span>
           </div>
@@ -1676,7 +1979,7 @@ function DashboardContent({ profile, onGoToLeads }: { profile: ProfileState; onG
           transition={{ delay: 0.18 }}
           className="grid grid-cols-3 gap-2 md:gap-4"
         >
-          {stats.map((s, i) => {
+          {dynamicStats.map((s, i) => {
             const Icon = s.icon;
             return (
               <div
@@ -1686,20 +1989,31 @@ function DashboardContent({ profile, onGoToLeads }: { profile: ProfileState; onG
                 <div className={`absolute inset-0 bg-gradient-to-br ${glowStyle[s.color]} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 <div className="relative">
                   <div className="flex items-center justify-between mb-2 md:mb-4">
-                    <p className="text-white/40 text-[9px] md:text-[11px] font-medium tracking-widest uppercase hidden md:block" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                    <p className="text-white/40 text-[9px] md:text-[11px] font-medium tracking-widest uppercase hidden md:block" style={{ fontFamily: F }}>
                       {s.label}
                     </p>
                     <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg md:rounded-xl border flex items-center justify-center ${iconStyle[s.color]}`}>
-                      <Icon className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                      {statsLoading && i === 0
+                        ? <RefreshCw className="w-3 h-3 animate-spin opacity-50" />
+                        : <Icon className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                      }
                     </div>
                   </div>
-                  <p className="text-white text-lg md:text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-space-grotesk)" }}>
+                  <p className="text-white text-lg md:text-3xl font-bold tracking-tight" style={{ fontFamily: F }}>
                     {s.value}
                   </p>
                   <p className="text-white/35 text-[9px] leading-tight mt-0.5 md:hidden">{s.label}</p>
-                  <div className="hidden md:flex items-center gap-1 mt-2">
-                    <ArrowUpRight className="w-3 h-3 text-emerald-400" />
-                    <p className="text-emerald-400 text-xs">{s.delta}</p>
+                  <div className="hidden md:block mt-2">
+                    {s.subItems.length > 0 ? (
+                      <p className="text-white/30 text-[10px] leading-relaxed truncate" style={{ fontFamily: F }}>
+                        {s.subItems.map(p => `${p.name} ${p.formatted}`).join(" · ")}
+                      </p>
+                    ) : (
+                      <div className="flex items-center gap-1">
+                        <ArrowUpRight className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                        <p className="text-emerald-400 text-xs truncate" style={{ fontFamily: F }}>{s.delta}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1901,6 +2215,41 @@ export default function DashboardPage() {
   const isPro = profile.subscriptionStatus !== "free";
 
   const gatedViews: ActiveView[] = ["leads", "ads"];
+
+  // Detect ?plan=X&welcome=1 after Stripe checkout and upgrade subscription status
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const planParam = params.get("plan");
+    const isWelcome = params.get("welcome") === "1";
+    if (!planParam || !isWelcome) return;
+
+    const planToStatus: Record<string, ProfileState["subscriptionStatus"]> = {
+      "starter":  "starter",
+      "solo-pro": "starter",
+      "business": "pro",
+      "premium":  "agency",
+    };
+    const status = planToStatus[planParam];
+    if (!status) return;
+
+    setProfile(prev => {
+      const updated = { ...prev, subscriptionStatus: status };
+      try { localStorage.setItem(PROFILE_KEY, JSON.stringify(updated)); } catch { /* noop */ }
+      return updated;
+    });
+
+    // Persist to DB via profile API
+    fetch("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ subscription_status: status }),
+    }).catch(() => {});
+
+    // Clean the URL so refreshing doesn't re-trigger
+    window.history.replaceState({}, "", "/dashboard");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const navigateTo = (view: ActiveView) => {
     if (!isPro && gatedViews.includes(view)) {

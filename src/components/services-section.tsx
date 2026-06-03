@@ -15,9 +15,11 @@ const services = [
     title: "AI Website Design",
     description:
       "Custom, blazing-fast websites built with AI-powered tools. Modern design that converts visitors into paying customers.",
-    color: "from-blue-500/20 to-blue-600/5",
-    border: "border-blue-500/20",
-    iconColor: "text-blue-400",
+    color: "from-blue-900/80 to-blue-950/60",
+    border: "border-blue-500/40",
+    iconBg: "bg-blue-500/20 border-blue-500/40",
+    iconColor: "text-blue-300",
+    glow: "shadow-[0_0_40px_-8px_rgba(59,130,246,0.4)]",
     href: "/services/ai-website-design",
   },
   {
@@ -25,9 +27,11 @@ const services = [
     title: "Nova AI Chat Widget",
     description:
       "24/7 AI assistant that answers customer questions, takes reservations, and drives sales — even while you sleep.",
-    color: "from-purple-500/20 to-purple-600/5",
-    border: "border-purple-500/20",
-    iconColor: "text-purple-400",
+    color: "from-purple-900/80 to-purple-950/60",
+    border: "border-purple-500/40",
+    iconBg: "bg-purple-500/20 border-purple-500/40",
+    iconColor: "text-purple-300",
+    glow: "shadow-[0_0_40px_-8px_rgba(168,85,247,0.4)]",
     href: "/services/nova-ai-chat",
   },
   {
@@ -35,9 +39,11 @@ const services = [
     title: "Online Ordering Systems",
     description:
       "Seamlessly integrated online ordering for restaurants and retail. Delivery, pickup, and dine-in all in one place.",
-    color: "from-green-500/20 to-green-600/5",
-    border: "border-green-500/20",
-    iconColor: "text-green-400",
+    color: "from-emerald-900/80 to-emerald-950/60",
+    border: "border-emerald-500/40",
+    iconBg: "bg-emerald-500/20 border-emerald-500/40",
+    iconColor: "text-emerald-300",
+    glow: "shadow-[0_0_40px_-8px_rgba(16,185,129,0.4)]",
     href: "/services/online-ordering",
   },
   {
@@ -45,9 +51,11 @@ const services = [
     title: "Social Media Content",
     description:
       "AI-generated content strategy for TikTok, Instagram, and YouTube Shorts. Go viral, grow your audience, win.",
-    color: "from-pink-500/20 to-pink-600/5",
-    border: "border-pink-500/20",
-    iconColor: "text-pink-400",
+    color: "from-pink-900/80 to-pink-950/60",
+    border: "border-pink-500/40",
+    iconBg: "bg-pink-500/20 border-pink-500/40",
+    iconColor: "text-pink-300",
+    glow: "shadow-[0_0_40px_-8px_rgba(236,72,153,0.4)]",
     href: "/services/social-media-content",
   },
   {
@@ -55,9 +63,11 @@ const services = [
     title: "Ad Campaign Management",
     description:
       "Facebook, Instagram, TikTok, and YouTube ads built and managed for maximum ROI. Your brand in front of everyone.",
-    color: "from-orange-500/20 to-orange-600/5",
-    border: "border-orange-500/20",
-    iconColor: "text-orange-400",
+    color: "from-orange-900/80 to-orange-950/60",
+    border: "border-orange-500/40",
+    iconBg: "bg-orange-500/20 border-orange-500/40",
+    iconColor: "text-orange-300",
+    glow: "shadow-[0_0_40px_-8px_rgba(249,115,22,0.4)]",
     href: "/services/ad-campaigns",
   },
 ];
@@ -122,17 +132,17 @@ export default function ServicesSection() {
                 key={service.title}
                 href={service.href}
                 variants={cardVariants}
-                className={`group relative bg-gradient-to-b ${service.color} border ${service.border} rounded-2xl p-4 md:p-6 hover:scale-[1.02] transition-transform duration-300 cursor-pointer block`}
+                className={`group relative bg-gradient-to-b ${service.color} border ${service.border} ${service.glow} rounded-2xl p-4 md:p-6 hover:scale-[1.02] hover:brightness-110 transition-all duration-300 cursor-pointer block`}
               >
                 <div
-                  className={`w-11 h-11 rounded-xl bg-neutral-900 border ${service.border} flex items-center justify-center mb-4`}
+                  className={`w-11 h-11 rounded-xl border ${service.iconBg} flex items-center justify-center mb-4`}
                 >
                   <Icon size={20} className={service.iconColor} />
                 </div>
                 <h3 className="text-white font-semibold text-base md:text-lg mb-1 md:mb-2">
                   {service.title}
                 </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
+                <p className="text-gray-300 text-sm leading-relaxed">
                   {service.description}
                 </p>
                 <span className={`mt-3 inline-block text-xs font-medium ${service.iconColor} opacity-0 group-hover:opacity-100 transition-opacity`}>

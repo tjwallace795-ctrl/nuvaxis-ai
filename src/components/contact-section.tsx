@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { Mail, MapPin, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 export default function ContactSection() {
@@ -68,11 +68,13 @@ export default function ContactSection() {
 
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
-                <Phone size={18} className="text-blue-400" />
+                <Mail size={18} className="text-blue-400" />
               </div>
               <div>
-                <p className="text-white font-medium">Call or Text</p>
-                <p className="text-gray-400 text-sm">(915) 000-0000</p>
+                <p className="text-white font-medium">Support</p>
+                <a href="mailto:Support.Navaxisai@gmail.com" className="text-gray-400 text-sm hover:text-blue-400 transition-colors">
+                  Support.Navaxisai@gmail.com
+                </a>
               </div>
             </div>
 

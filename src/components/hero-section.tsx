@@ -8,11 +8,11 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-      {/* Blue glow orb */}
+      {/* Purple glow orb */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(circle, #1d4ed860 0%, transparent 70%)",
+          background: "radial-gradient(circle, #7c3aed50 0%, #3b82f620 45%, transparent 70%)",
           filter: "blur(60px)",
         }}
       />
@@ -32,7 +32,7 @@ export default function HeroSection() {
             <div
               className="absolute -inset-1 rounded-full opacity-80"
               style={{
-                background: "conic-gradient(from 0deg, #3b82f6, #6366f1, #60a5fa, #3b82f6)",
+                background: "conic-gradient(from 0deg, #38bdf8, #3b82f6, #a855f7, #d946ef, #38bdf8)",
               }}
             />
             <Image
@@ -41,10 +41,10 @@ export default function HeroSection() {
               width={96}
               height={96}
               priority
-              className="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-black"
+              className="relative w-20 h-20 md:w-24 md:h-24 rounded-full object-cover border-2 border-[#0d0620]"
             />
             {/* Online dot */}
-            <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-black" />
+            <span className="absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0d0620]" />
           </div>
 
           {/* What I do */}
@@ -52,7 +52,7 @@ export default function HeroSection() {
             <p className="text-white font-semibold text-base md:text-lg leading-tight" style={{ fontFamily: "var(--font-space-grotesk)" }}>
               Tiquan Wallace
             </p>
-            <p className="text-blue-400 text-xs md:text-sm font-medium mb-1">
+            <p className="text-purple-400 text-xs md:text-sm font-medium mb-1">
               Founder, Nuvaxis AI
             </p>
             <p className="text-gray-300 text-xs md:text-sm max-w-[280px] md:max-w-xs leading-snug">
@@ -69,7 +69,7 @@ export default function HeroSection() {
           className="text-4xl md:text-7xl font-bold text-white leading-tight tracking-tight mb-4 md:mb-6"
         >
           Your Business,{" "}
-          <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">
             Powered by AI
           </span>
         </motion.h1>
@@ -95,7 +95,7 @@ export default function HeroSection() {
         >
           <a
             href="#contact"
-            className="group flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition-all text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base shadow-lg shadow-blue-900/40"
+            className="group flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full text-sm md:text-base shadow-lg shadow-purple-900/40"
           >
             Contact Us Now
             <ArrowRight

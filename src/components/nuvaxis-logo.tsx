@@ -1,9 +1,12 @@
 "use client";
 
+import { motion } from "framer-motion";
+
 /**
  * Official Nuvaxis AI logo — matches the business card:
  * infinity mark (blue ring + purple ring, white core dot)
  * with serif-italic "Nuvaxis" and gradient "AI" wordmark.
+ * Animated: light pulses orbit each ring, core dot breathes.
  */
 export default function NuvaxisLogo({
   markHeight = 30,
@@ -36,18 +39,51 @@ export default function NuvaxisLogo({
             <stop offset="0%" stopColor="#a855f7" />
             <stop offset="100%" stopColor="#d946ef" />
           </linearGradient>
-          <linearGradient id="nvxAI" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#818cf8" />
-            <stop offset="100%" stopColor="#a855f7" />
-          </linearGradient>
         </defs>
+
         {/* Left ring (blue) */}
         <circle cx="20" cy="18" r="12" stroke="url(#nvxLeft)" strokeWidth="6.5" />
         {/* Right ring (purple) */}
         <circle cx="44" cy="18" r="12" stroke="url(#nvxRight)" strokeWidth="6.5" />
-        {/* Core dot where the rings meet */}
+
+        {/* Orbiting light pulse — left ring (clockwise) */}
+        <motion.g
+          style={{ transformOrigin: "20px 18px" }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+        >
+          <circle
+            cx="20" cy="18" r="12"
+            stroke="rgba(255,255,255,0.85)"
+            strokeWidth="3"
+            strokeDasharray="10 65.4"
+            strokeLinecap="round"
+          />
+        </motion.g>
+
+        {/* Orbiting light pulse — right ring (counter-clockwise) */}
+        <motion.g
+          style={{ transformOrigin: "44px 18px" }}
+          animate={{ rotate: -360 }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "linear" }}
+        >
+          <circle
+            cx="44" cy="18" r="12"
+            stroke="rgba(255,255,255,0.85)"
+            strokeWidth="3"
+            strokeDasharray="10 65.4"
+            strokeLinecap="round"
+          />
+        </motion.g>
+
+        {/* Core dot where the rings meet — breathing */}
         <circle cx="32" cy="18" r="5.5" fill="#0d0620" />
-        <circle cx="32" cy="18" r="3.5" fill="white" />
+        <motion.circle
+          cx="32" cy="18" r="3.5" fill="white"
+          style={{ transformOrigin: "32px 18px" }}
+          animate={{ scale: [1, 1.3, 1], opacity: [1, 0.75, 1] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        />
       </svg>
 
       {/* Wordmark */}

@@ -84,7 +84,7 @@ export default function ContactSection() {
               </div>
               <div>
                 <p className="text-white font-medium">Based In</p>
-                <p className="text-gray-400 text-sm">El Paso, TX — Serving Nationwide</p>
+                <p className="text-gray-400 text-sm">El Paso, TX. Serving Nationwide</p>
               </div>
             </div>
 

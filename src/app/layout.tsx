@@ -30,7 +30,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#0d0620",
+  themeColor: "#0f172a",
   viewportFit: "cover",
 };
 
@@ -47,7 +47,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${playfair.variable} h-full antialiased overflow-x-hidden bg-[#0d0620]`}
+      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} ${playfair.variable} h-full antialiased overflow-x-hidden bg-black`}
     >
       <body className="min-h-full flex flex-col overflow-x-hidden" style={{ background: "transparent" }}>
         <MouseGlow />

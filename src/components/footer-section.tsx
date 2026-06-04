@@ -3,7 +3,7 @@ import NuvaxisLogo from "@/components/nuvaxis-logo";
 
 export default function FooterSection() {
   return (
-    <footer className="border-t border-white/8 py-10 px-6 bg-[#080414]/60 backdrop-blur-sm">
+    <footer className="border-t border-white/8 py-10 px-6 bg-black/40 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         {/* Logo */}
         <NuvaxisLogo markHeight={22} textSize="text-lg" />

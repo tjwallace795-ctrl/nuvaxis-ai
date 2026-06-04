@@ -77,7 +77,7 @@ export default function NuvaxisLogo({
         </motion.g>
 
         {/* Core dot where the rings meet — breathing */}
-        <circle cx="32" cy="18" r="5.5" fill="#0d0620" />
+        <circle cx="32" cy="18" r="5.5" fill="#0f172a" />
         <motion.circle
           cx="32" cy="18" r="3.5" fill="white"
           style={{ transformOrigin: "32px 18px" }}

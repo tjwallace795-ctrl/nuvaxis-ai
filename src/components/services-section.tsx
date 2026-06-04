@@ -26,7 +26,7 @@ const services = [
     icon: Bot,
     title: "Nova AI Chat Widget",
     description:
-      "24/7 AI assistant that answers customer questions, takes reservations, and drives sales — even while you sleep.",
+      "24/7 AI assistant that answers customer questions, takes reservations, and drives sales even while you sleep.",
     color: "from-purple-900/80 to-purple-950/60",
     border: "border-purple-500/40",
     iconBg: "bg-purple-500/20 border-purple-500/40",
@@ -112,7 +112,7 @@ export default function ServicesSection() {
             </span>
           </h2>
           <p className="text-gray-400 text-sm md:text-lg max-w-2xl mx-auto">
-            From your first website to full AI automation — Nuvaxis AI delivers
+            From your first website to full AI automation, Nuvaxis AI delivers
             the complete digital stack for modern businesses.
           </p>
         </motion.div>

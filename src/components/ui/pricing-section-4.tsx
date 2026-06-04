@@ -17,7 +17,7 @@ const SOLO_PLANS: Array<{
     planId: "starter",
     subtitle: "Web Presence",
     description:
-      "A clean, professional website that actually shows up on Google — built in under 2 weeks.",
+      "A clean, professional website that actually shows up on Google, built in under 2 weeks.",
     price: 75,
     buildFee: 200,
     popular: false,
@@ -87,7 +87,7 @@ const BUSINESS_PLANS: Array<{
     planId: "premium",
     subtitle: "Growth Partner",
     description:
-      "For companies that want the full package — web, AI tools, and a dedicated partner in their corner.",
+      "For companies that want the full package: web, AI tools, and a dedicated partner in their corner.",
     price: 449,
     buildFee: 999,
     popular: false,
@@ -100,7 +100,7 @@ const BUSINESS_PLANS: Array<{
       { label: "Social media chatbot (FB + IG DMs)" },
       { label: "Bi-weekly strategy calls" },
       { label: "Priority same-day support" },
-      { label: "Lead generator — early access", soon: true },
+      { label: "Lead generator (early access)", soon: true },
     ],
   },
 ];
@@ -135,7 +135,7 @@ const ADD_ONS = [
   {
     label: "Lead generator",
     price: "Coming soon",
-    note: "Salem Leads pipeline — add-on once the members portal launches.",
+    note: "Salem Leads pipeline, an add-on once the members portal launches.",
     soon: true,
   },
 ];
@@ -186,7 +186,7 @@ function PlanCard({ plan }: { plan: (typeof SOLO_PLANS)[0] }) {
         </p>
         <p className="text-xs text-emerald-400/80 font-medium mb-5 flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-          7-day free trial — $0 today
+          7-day free trial, $0 today
         </p>
 
         {/* CTA */}
@@ -302,7 +302,7 @@ export default function PricingSection4() {
           customVariants={revealVariants}
         >
           <h2 className="text-2xl md:text-4xl font-semibold text-white">
-            Nuvaxis AI — Services &amp; Pricing
+            Nuvaxis AI Services &amp; Pricing
           </h2>
         </TimelineContent>
         <TimelineContent
@@ -312,7 +312,7 @@ export default function PricingSection4() {
           customVariants={revealVariants}
           className="text-gray-400 text-sm md:text-base"
         >
-          Built for El Paso businesses. No fluff, no bloated retainers — just real work at fair prices.
+          Built for El Paso businesses. No fluff, no bloated retainers, just real work at fair prices.
         </TimelineContent>
       </article>
 
@@ -402,11 +402,11 @@ export default function PricingSection4() {
           <div className="border-t border-white/[0.07] pt-6 space-y-2">
             {[
               "All plans include hosting, SSL, and maintenance. Build fees are waived on annual billing.",
-              "Ad spend goes directly to your platform — Nuvaxis AI never touches your ad budget.",
+              "Ad spend goes directly to your platform. Nuvaxis AI never touches your ad budget.",
               "Clients anywhere get a free 30-min consultation before signing.",
             ].map((note) => (
               <p key={note} className="text-xs text-gray-500 flex items-start gap-2">
-                <span className="text-gray-600 mt-0.5 flex-shrink-0">—</span>
+                <span className="text-gray-600 mt-0.5 flex-shrink-0">•</span>
                 {note}
               </p>
             ))}

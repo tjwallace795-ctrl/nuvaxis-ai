@@ -22,13 +22,13 @@ export default function Home() {
         <HeroLanding
           showHeader={false}
           announcementBanner={{
-            text: "✦ Now booking new clients —",
-            linkText: "get a free demo",
+            text: "✦ Now booking new clients.",
+            linkText: "Get a free demo",
             linkHref: "#contact",
           }}
-          title="Your Business,"
-          highlight="Powered by AI"
-          description="Custom AI websites, 24/7 chatbots, online ordering, and ad campaigns — everything your business needs to compete at the highest level, built and managed for you."
+          title="Websites That Work."
+          highlight="Leads That Convert."
+          description="AI-integrated websites and targeted ad campaigns engineered to generate real leads for your business. Built hands-on. Managed for you."
           callToActions={[
             { text: "Contact Us Now", href: "#contact", variant: "primary" },
             { text: "See Pricing", href: "#pricing", variant: "secondary" },

@@ -31,7 +31,7 @@ export default function MouseGlow() {
         height: 220,
         borderRadius: "50%",
         background:
-          "radial-gradient(circle, rgba(59,130,246,0.35) 0%, rgba(37,99,235,0.15) 40%, transparent 70%)",
+          "radial-gradient(circle, rgba(156,163,175,0.10) 0%, rgba(107,114,128,0.06) 40%, transparent 70%)",
       }}
     />
   );

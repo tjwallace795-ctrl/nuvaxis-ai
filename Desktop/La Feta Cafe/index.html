@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="La Feta Cafe — a family-run Mediterranean kitchen. Mezze, wood-grilled plates, fresh salads, and proper Greek coffee. Dine in, take out, reserve a table." />
+<meta name="theme-color" content="#20342B" />
+<title>La Feta Cafe · Mediterranean Kitchen</title>
+
+<meta property="og:title" content="La Feta Cafe" />
+<meta property="og:description" content="A family-run Mediterranean kitchen. Mezze, wood-grilled plates, and proper Greek coffee. Reserve a table." />
+<meta property="og:type" content="restaurant" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=DM+Sans:opsz,wght@9..40,300..600&display=swap" rel="stylesheet" />
+
+<style>
+:root {
+  --olive:      #20342B;
+  --olive-deep: #16241D;
+  --terra:      #C4562F;
+  --terra-soft: #E08B5A;
+  --gold:       #C99A3F;
+  --cream:      #FBF6EC;
+  --cream-2:    #F3EAD8;
+  --ink:        #23261F;
+  --ink-soft:   #5C5A50;
+  --line:       rgba(35, 38, 31, 0.10);
+  --line-dark:  rgba(251, 246, 236, 0.12);
+
+  --elena:      #B0603F;
+  --elena-deep: #8A4529;
+  --elena-soft: #F6E9E0;
+
+  --display: 'Fraunces', 'Times New Roman', serif;
+  --body: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  --container: 1240px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--cream);
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terra);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: "";
+  width: 24px;
+  height: 1px;
+  background: var(--terra);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+h1 { font-size: clamp(2.5rem, 5.5vw, 4.75rem); font-weight: 350; }
+h2 { font-size: clamp(2rem, 3.8vw, 3rem); }
+h3 { font-size: clamp(1.25rem, 2vw, 1.625rem); }
+h4 { font-size: 1.125rem; line-height: 1.3; }
+
+p { font-size: 1rem; line-height: 1.65; color: var(--ink-soft); }
+
+.container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+section { padding: clamp(70px, 9vw, 110px) 0; }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 26px;
+  font-family: var(--body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.btn-primary { background: var(--terra); color: #fff; }
+.btn-primary:hover {
+  background: #B14624;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px -8px rgba(196, 86, 47, 0.5);
+}
+.btn-dark { background: var(--olive); color: var(--cream); }
+.btn-dark:hover { background: var(--olive-deep); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--cream); border-color: rgba(251,246,236,0.4); }
+.btn-outline:hover { border-color: var(--cream); background: rgba(251,246,236,0.08); }
+.arrow { transition: transform 0.3s var(--ease); }
+.btn:hover .arrow { transform: translateX(4px); }
+
+/* NAV */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  transition: all 0.4s var(--ease);
+}
+.nav-inner {
+  max-width: var(--container); margin: 0 auto;
+  padding: 22px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.4s var(--ease);
+}
+.nav.scrolled { background: rgba(251,246,236,0.92); backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--line); }
+.nav.scrolled .nav-inner { padding: 14px 24px; }
+.nav.scrolled .nav-links a, .nav.scrolled .nav-brand, .nav.scrolled .nav-phone { color: var(--ink); }
+.nav-brand {
+  font-family: var(--display); font-size: 1.4rem; font-weight: 500;
+  color: var(--cream); letter-spacing: -0.01em; display: flex; align-items: baseline; gap: 8px;
+}
+.nav-brand .mark { color: var(--gold); }
+.nav-links { display: flex; gap: 34px; list-style: none; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; letter-spacing: 0.02em; color: var(--cream);
+  position: relative; transition: color 0.25s;
+}
+.nav-links a::after {
+  content: ""; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
+  background: var(--terra); transition: width 0.3s var(--ease);
+}
+.nav-links a:hover::after { width: 100%; }
+.nav-cta { display: flex; align-items: center; gap: 18px; }
+.nav-phone {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 600; color: var(--cream);
+}
+.nav-toggle { display: none; background: none; border: none; cursor: pointer; flex-direction: column; gap: 5px; padding: 6px; }
+.nav-toggle span { width: 24px; height: 2px; background: var(--cream); transition: all 0.3s; }
+.nav.scrolled .nav-toggle span { background: var(--ink); }
+
+/* HERO */
+.hero {
+  position: relative; min-height: 100vh; display: flex; align-items: flex-end;
+  padding: 0 0 clamp(48px, 7vw, 90px); overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: -2;
+  background:
+    radial-gradient(120% 90% at 80% 10%, rgba(201,154,63,0.20), transparent 55%),
+    radial-gradient(90% 80% at 10% 90%, rgba(196,86,47,0.28), transparent 60%),
+    linear-gradient(160deg, #24382E 0%, #16241D 60%, #101a15 100%);
+}
+.hero-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 25%, rgba(255,255,255,0.05) 0 2px, transparent 2px),
+    radial-gradient(circle at 65% 60%, rgba(255,255,255,0.04) 0 2px, transparent 2px),
+    radial-gradient(circle at 40% 85%, rgba(255,255,255,0.04) 0 2px, transparent 2px);
+  background-size: 340px 340px, 260px 260px, 300px 300px;
+  opacity: 0.7;
+}
+/* olive-branch flourish */
+.hero-flourish {
+  position: absolute; top: 12%; right: -60px; z-index: -1; width: 520px; max-width: 55vw;
+  color: rgba(201,154,63,0.16); transform: rotate(8deg);
+}
+.hero-content {
+  max-width: var(--container); margin: 0 auto; padding: 0 24px; width: 100%;
+  display: grid; gap: 48px;
+}
+.hero-headline { max-width: 760px; }
+.hero-headline .eyebrow { color: var(--terra-soft); }
+.hero-headline .eyebrow::before { background: var(--terra-soft); }
+.hero h1 { color: var(--cream); margin: 20px 0 22px; }
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero-headline p { color: rgba(251,246,236,0.82); font-size: 1.125rem; max-width: 540px; }
+.hero-actions { display: flex; gap: 14px; margin-top: 34px; flex-wrap: wrap; }
+.hero-meta {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--line-dark); border: 1px solid var(--line-dark); border-radius: 6px; overflow: hidden;
+}
+.hero-meta-item { background: rgba(16,26,21,0.35); padding: 22px 24px; display: flex; flex-direction: column; gap: 6px; }
+.hero-meta-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(251,246,236,0.55); }
+.hero-meta-value { font-family: var(--display); font-size: 1.5rem; color: var(--cream); }
+.hero-rating .stars { color: var(--gold); letter-spacing: 1px; }
+
+/* TRUST STRIP */
+.trust-strip { background: var(--olive-deep); border-top: 1px solid var(--line-dark); }
+.trust-strip-inner {
+  max-width: var(--container); margin: 0 auto; padding: 20px 24px;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px 40px;
+}
+.trust-item { display: flex; align-items: center; gap: 10px; color: rgba(251,246,236,0.78); font-size: 14px; }
+.trust-item svg { color: var(--gold); flex-shrink: 0; }
+.trust-item strong { color: var(--cream); font-weight: 600; }
+
+/* SECTION HEADER */
+.section-header { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: end; margin-bottom: 56px; }
+.section-header h2 { margin-top: 14px; }
+
+/* MENU */
+#menu { background: var(--cream); }
+.menu-tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 44px; }
+.menu-tab {
+  padding: 10px 20px; border-radius: 40px; border: 1px solid var(--line);
+  background: transparent; font-family: var(--body); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.04em; color: var(--ink-soft); cursor: pointer; transition: all 0.25s var(--ease);
+}
+.menu-tab:hover { border-color: var(--terra); color: var(--terra); }
+.menu-tab.active { background: var(--olive); color: var(--cream); border-color: var(--olive); }
+.menu-panel { display: none; }
+.menu-panel.active { display: block; animation: fadeUp 0.5s var(--ease); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 56px; }
+.menu-item {
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; align-items: baseline;
+  padding: 20px 0; border-bottom: 1px solid var(--line);
+}
+.menu-item h4 { display: flex; align-items: center; gap: 9px; }
+.menu-item .tag {
+  font-family: var(--body); font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--olive); background: var(--cream-2);
+  padding: 3px 7px; border-radius: 4px;
+}
+.menu-item .tag.veg { color: #3f7a3a; background: #e7f0e2; }
+.menu-item .tag.hot { color: var(--terra); background: #f7e5db; }
+.menu-item .price { font-family: var(--display); font-size: 1.125rem; color: var(--terra); white-space: nowrap; }
+.menu-item p { grid-column: 1 / -1; font-size: 0.9rem; margin-top: 4px; }
+.menu-note {
+  margin-top: 40px; padding: 22px 26px; border-radius: 8px; background: var(--cream-2);
+  display: flex; align-items: center; gap: 16px; font-size: 0.92rem; color: var(--ink-soft);
+}
+.menu-note svg { color: var(--terra); flex-shrink: 0; }
+
+/* STORY */
+#story { background: var(--olive); color: var(--cream); }
+.story-grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(40px, 6vw, 80px); align-items: center; }
+#story .eyebrow { color: var(--terra-soft); }
+#story .eyebrow::before { background: var(--terra-soft); }
+#story h2 { color: var(--cream); margin: 16px 0 20px; }
+#story p { color: rgba(251,246,236,0.78); }
+.story-values { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 32px; margin-top: 36px; }
+.story-value h4 { color: var(--cream); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.story-value h4 svg { color: var(--gold); }
+.story-value p { font-size: 0.9rem; }
+.story-visual {
+  position: relative; aspect-ratio: 4/5; border-radius: 10px; overflow: hidden;
+  background:
+    radial-gradient(80% 70% at 30% 20%, rgba(201,154,63,0.35), transparent 60%),
+    linear-gradient(150deg, #2c4436, #16241D);
+  border: 1px solid var(--line-dark);
+  display: flex; align-items: flex-end; padding: 30px;
+}
+.story-visual .plate {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: rgba(251,246,236,0.10);
+}
+.story-badge {
+  position: relative; z-index: 2; background: var(--cream); color: var(--ink);
+  border-radius: 8px; padding: 18px 22px; box-shadow: 0 16px 40px -18px rgba(0,0,0,0.6);
+}
+.story-badge .n { font-family: var(--display); font-size: 2.4rem; color: var(--terra); line-height: 1; }
+.story-badge small { display: block; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-soft); margin-top: 6px; }
+
+/* REVIEWS */
+#reviews { background: var(--cream-2); }
+.reviews-header { text-align: center; margin-bottom: 52px; }
+.reviews-header h2 { margin: 14px 0 20px; }
+.reviews-rating-large { display: inline-flex; align-items: center; gap: 14px; }
+.reviews-rating-large .num { font-family: var(--display); font-size: 2.4rem; color: var(--terra); }
+.reviews-rating-large .stars { color: var(--gold); font-size: 1.4rem; letter-spacing: 2px; }
+.reviews-rating-large small { color: var(--ink-soft); font-size: 13px; }
+.reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.review-card {
+  background: var(--cream); border: 1px solid var(--line); border-radius: 10px; padding: 30px;
+  display: flex; flex-direction: column; gap: 16px; transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+.review-card:hover { transform: translateY(-4px); box-shadow: 0 20px 44px -24px rgba(0,0,0,0.28); }
+.review-top-row { display: flex; align-items: center; gap: 14px; }
+.review-avatar {
+  width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-family: var(--display); font-size: 1.2rem; color: #fff; flex-shrink: 0;
+}
+.av-1 { background: #7A5AA3; } .av-2 { background: #3f7a3a; } .av-3 { background: var(--terra); }
+.review-name { font-weight: 600; font-size: 15px; color: var(--ink); }
+.review-reviewer-info { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.review-reviewer-info svg { color: #4285F4; }
+.review-stars { color: var(--gold); letter-spacing: 1px; }
+.review-text { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6; }
+.review-date { font-size: 12px; color: #9a978c; margin-top: auto; }
+
+/* GALLERY */
+#gallery { background: var(--cream); }
+.gallery-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 200px; gap: 14px;
+}
+.gallery-tile {
+  border-radius: 8px; overflow: hidden; position: relative; cursor: pointer;
+  display: flex; align-items: flex-end; padding: 18px; color: #fff;
+  border: 1px solid var(--line);
+}
+.gallery-tile span { position: relative; z-index: 2; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; opacity: 0; transform: translateY(8px); transition: all 0.35s var(--ease); }
+.gallery-tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5), transparent 60%); opacity: 0; transition: opacity 0.35s; }
+.gallery-tile:hover::after { opacity: 1; }
+.gallery-tile:hover span { opacity: 1; transform: none; }
+.gallery-tile .art { position: absolute; inset: 0; z-index: 1; transition: transform 0.6s var(--ease); }
+.gallery-tile:hover .art { transform: scale(1.06); }
+.g-wide { grid-column: span 2; }
+.g-tall { grid-row: span 2; }
+
+/* RESERVE / CONTACT */
+#reserve { background: var(--olive); color: var(--cream); }
+.reserve-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(40px, 5vw, 72px); }
+#reserve .eyebrow { color: var(--terra-soft); }
+#reserve .eyebrow::before { background: var(--terra-soft); }
+#reserve h2 { color: var(--cream); margin: 16px 0 18px; }
+#reserve .reserve-intro { color: rgba(251,246,236,0.78); max-width: 420px; }
+.reserve-info { margin-top: 36px; display: grid; gap: 22px; }
+.reserve-info-item { display: flex; gap: 14px; align-items: flex-start; }
+.reserve-info-item svg { color: var(--gold); flex-shrink: 0; margin-top: 3px; }
+.reserve-info-item .k { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(251,246,236,0.55); margin-bottom: 3px; }
+.reserve-info-item .v { color: var(--cream); font-weight: 500; }
+.reserve-info-item .v a { border-bottom: 1px solid rgba(201,154,63,0.5); }
+.form-card { background: var(--cream); border-radius: 12px; padding: clamp(26px, 3vw, 38px); color: var(--ink); }
+.form-card h3 { margin-bottom: 6px; }
+.form-card > p { font-size: 0.9rem; margin-bottom: 24px; }
+.field { margin-bottom: 18px; }
+.field label { display: block; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 13px 15px; font-family: var(--body); font-size: 15px; color: var(--ink);
+  background: var(--cream); border: 1px solid var(--line); border-radius: 6px; transition: border-color 0.25s, box-shadow 0.25s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--terra); box-shadow: 0 0 0 3px rgba(196,86,47,0.12);
+}
+.field textarea { resize: vertical; min-height: 84px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.form-card .btn { width: 100%; justify-content: center; margin-top: 8px; }
+.form-note { font-size: 12px; color: var(--ink-soft); text-align: center; margin-top: 14px; }
+.form-success {
+  display: none; text-align: center; padding: 30px 10px;
+}
+.form-success.show { display: block; animation: fadeUp 0.5s var(--ease); }
+.form-success .check { width: 58px; height: 58px; border-radius: 50%; background: #e7f0e2; color: #3f7a3a; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+.form-success h3 { margin-bottom: 10px; }
+.form-success p { font-size: 0.95rem; }
+
+/* FOOTER */
+footer { background: var(--olive-deep); color: rgba(251,246,236,0.7); padding: 70px 0 30px; }
+.footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr; gap: 40px; padding-bottom: 46px; border-bottom: 1px solid var(--line-dark); }
+.footer-brand { font-family: var(--display); font-size: 1.6rem; color: var(--cream); }
+.footer-brand .mark { color: var(--gold); }
+.footer-brand small { display: block; font-family: var(--body); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(251,246,236,0.5); margin-top: 4px; }
+.footer-tagline { font-size: 0.92rem; margin: 16px 0 20px; max-width: 320px; }
+.footer-social { display: flex; gap: 12px; }
+.footer-social a { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line-dark); display: flex; align-items: center; justify-content: center; color: rgba(251,246,236,0.7); transition: all 0.25s; }
+.footer-social a:hover { background: var(--terra); border-color: var(--terra); color: #fff; transform: translateY(-2px); }
+.footer-col h5 { font-family: var(--body); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream); margin-bottom: 18px; }
+.footer-col ul { list-style: none; display: grid; gap: 11px; }
+.footer-col a, .footer-col li { font-size: 14px; color: rgba(251,246,236,0.7); transition: color 0.2s; }
+.footer-col a:hover { color: var(--terra-soft); }
+.footer-bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 26px; font-size: 12px; color: rgba(251,246,236,0.5); }
+
+/* CHAT WIDGET */
+#chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 200; }
+#chat-toggle {
+  width: 60px; height: 60px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--elena); color: #fff; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 12px 30px -8px rgba(138,69,41,0.6); transition: transform 0.3s var(--ease); position: relative;
+}
+#chat-toggle:hover { transform: scale(1.06); }
+#chat-toggle .badge {
+  position: absolute; top: -2px; right: -2px; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--terra); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--cream);
+}
+#chat-panel {
+  position: absolute; bottom: 74px; right: 0; width: 360px; max-width: calc(100vw - 48px);
+  background: var(--cream); border-radius: 16px; overflow: hidden; box-shadow: 0 24px 60px -18px rgba(0,0,0,0.4);
+  opacity: 0; transform: translateY(14px) scale(0.98); pointer-events: none; transition: all 0.3s var(--ease);
+  display: flex; flex-direction: column; max-height: min(560px, calc(100vh - 120px));
+}
+#chat-widget.open #chat-panel { opacity: 1; transform: none; pointer-events: auto; }
+.chat-header { background: linear-gradient(135deg, var(--elena), var(--elena-deep)); color: #fff; padding: 18px 20px; display: flex; align-items: center; gap: 12px; }
+.chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 1.2rem; }
+.chat-title { font-weight: 600; font-size: 15px; }
+.chat-status { font-size: 11px; opacity: 0.85; display: flex; align-items: center; gap: 6px; }
+.chat-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #6fe08a; }
+.chat-close { margin-left: auto; background: none; border: none; color: #fff; font-size: 26px; line-height: 1; cursor: pointer; opacity: 0.85; }
+#chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.msg { max-width: 82%; padding: 11px 15px; border-radius: 14px; font-size: 14px; line-height: 1.5; }
+.msg.bot { background: var(--cream-2); color: var(--ink); align-self: flex-start; border-bottom-left-radius: 4px; }
+.msg.user { background: var(--elena); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.msg.typing { display: flex; gap: 4px; align-self: flex-start; }
+.msg.typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-soft); opacity: 0.5; animation: blink 1.2s infinite; }
+.msg.typing span:nth-child(2) { animation-delay: 0.2s; } .msg.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%, 60%, 100% { opacity: 0.3; } 30% { opacity: 1; } }
+.chat-quick-replies { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 20px 12px; }
+.chat-quick-replies button {
+  font-family: var(--body); font-size: 12px; padding: 7px 12px; border-radius: 30px;
+  border: 1px solid var(--line); background: var(--cream); color: var(--elena-deep); cursor: pointer; transition: all 0.2s;
+}
+.chat-quick-replies button:hover { background: var(--elena-soft); border-color: var(--elena); }
+#chat-form { display: flex; gap: 8px; padding: 14px 16px; border-top: 1px solid var(--line); }
+#chat-input { flex: 1; padding: 11px 14px; border: 1px solid var(--line); border-radius: 30px; font-family: var(--body); font-size: 14px; }
+#chat-input:focus { outline: none; border-color: var(--elena); }
+#chat-form button { width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--elena); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.chat-footer-note { padding: 0 16px 14px; font-size: 11px; text-align: center; color: var(--ink-soft); }
+.chat-footer-note a { color: var(--elena-deep); font-weight: 600; }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .nav-links, .nav-phone { display: none; }
+  .nav-toggle { display: flex; }
+  .nav-links.mobile-open {
+    display: flex; position: fixed; top: 0; right: 0; bottom: 0; width: 280px; max-width: 80vw;
+    flex-direction: column; gap: 8px; background: var(--olive); padding: 90px 30px; z-index: 99;
+    box-shadow: -20px 0 60px -20px rgba(0,0,0,0.5);
+  }
+  .nav-links.mobile-open a { color: var(--cream); font-size: 18px; padding: 10px 0; }
+  .hero-meta { grid-template-columns: 1fr 1fr; }
+  .section-header { grid-template-columns: 1fr; }
+  .story-grid, .reserve-grid { grid-template-columns: 1fr; }
+  .story-visual { max-width: 420px; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .menu-grid { grid-template-columns: 1fr; gap: 0 0; }
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; }
+  .g-wide { grid-column: span 2; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 540px) {
+  .hero-meta { grid-template-columns: 1fr 1fr; }
+  .field-row, .field-row-3 { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .trust-strip-inner { gap: 12px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-brand">La&nbsp;Feta<span class="mark">.</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#story">Our Story</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#reserve">Visit</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="tel:12145550137" class="nav-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>(214) 555-0137</span>
+      </a>
+      <a href="#reserve" class="btn btn-primary" style="padding: 10px 18px; font-size: 11px;">Reserve a Table</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-bg"></div>
+  <svg class="hero-flourish" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M20 180 C 60 130, 90 90, 150 30" />
+    <g fill="currentColor" stroke="none">
+      <ellipse cx="55" cy="132" rx="14" ry="7" transform="rotate(-40 55 132)"/>
+      <ellipse cx="80" cy="108" rx="14" ry="7" transform="rotate(-40 80 108)"/>
+      <ellipse cx="105" cy="84" rx="14" ry="7" transform="rotate(-40 105 84)"/>
+      <ellipse cx="130" cy="60" rx="14" ry="7" transform="rotate(-40 130 60)"/>
+      <ellipse cx="70" cy="150" rx="14" ry="7" transform="rotate(40 70 150)"/>
+      <ellipse cx="95" cy="126" rx="14" ry="7" transform="rotate(40 95 126)"/>
+      <ellipse cx="120" cy="102" rx="14" ry="7" transform="rotate(40 120 102)"/>
+      <circle cx="150" cy="30" r="9"/>
+    </g>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-headline reveal">
+      <span class="eyebrow">Family-Run · Est. 2009 · Deep Ellum, Dallas</span>
+      <h1>Mediterranean, made <em>from scratch</em> — the way Yiayia taught us.</h1>
+      <p>Mezze pulled from the wood grill, olive oil pressed in Kalamata, and coffee poured slow. Come hungry, stay a while.</p>
+      <div class="hero-actions">
+        <a href="#reserve" class="btn btn-primary">Reserve a Table <span class="arrow">→</span></a>
+        <a href="#menu" class="btn btn-outline">See the Menu</a>
+      </div>
+    </div>
+
+    <div class="hero-meta reveal">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Google Rating</span>
+        <span class="hero-meta-value hero-rating"><span class="stars">★★★★★</span> 4.9</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Reviews</span>
+        <span class="hero-meta-value">1,200+</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Serving Since</span>
+        <span class="hero-meta-value">2009</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Kitchen</span>
+        <span class="hero-meta-value">Wood-Fired</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- TRUST -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <span><strong>4.9 stars</strong> · 1,200+ Google reviews</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2c-2.8 0-5 2.2-5 5v6c0 1.1.9 2 2 2zM19 15v7"/></svg>
+      <span>Everything made in-house, daily</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span><strong>Family-owned</strong> since 2009</span>
+    </div>
+    <div class="trust-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span><strong>Dine in, take out</strong> &amp; catering</span>
+    </div>
+  </div>
+</div>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="eyebrow">The Menu</span>
+        <h2>Small plates to share, big plates to remember.</h2>
+      </div>
+      <p>A rotating table of mezze, wood-grilled mains, and cold salads built on olive oil, lemon, and herbs. Prices shown are for dine-in; ask about the daily specials on the chalkboard.</p>
+    </div>
+
+    <div class="menu-tabs reveal">
+      <button class="menu-tab active" data-panel="mezze">Mezze &amp; Starters</button>
+      <button class="menu-tab" data-panel="grill">From the Grill</button>
+      <button class="menu-tab" data-panel="salads">Salads &amp; Bowls</button>
+      <button class="menu-tab" data-panel="sweets">Sweets &amp; Coffee</button>
+    </div>
+
+    <div class="menu-content reveal">
+      <!-- MEZZE -->
+      <div class="menu-panel active" id="panel-mezze">
+        <div class="menu-grid">
+          <div class="menu-item">
+            <h4>Whipped Feta <span class="tag veg">Veg</span></h4>
+            <span class="price">$11</span>
+            <p>Barrel-aged feta whipped with olive oil and honey, chili crunch, warm pita.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Spanakopita <span class="tag veg">Veg</span></h4>
+            <span class="price">$12</span>
+            <p>Spinach, dill, and three cheeses folded in hand-buttered phyllo.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Grilled Halloumi</h4>
+            <span class="price">$13</span>
+            <p>Charred halloumi, roasted grape, oregano, a squeeze of lemon.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Dolmades</h4>
+            <span class="price">$10</span>
+            <p>Grape leaves stuffed with rice, pine nut, and herbs. Cool and bright.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Spicy Muhammara <span class="tag hot">Spicy</span></h4>
+            <span class="price">$11</span>
+            <p>Roasted red pepper, walnut, and pomegranate. Bread for dipping.</p>
+          </div>
+          <div class="menu-item">
+            <h4>The Feta Board</h4>
+            <span class="price">$18</span>
+            <p>Hummus, tzatziki, muhammara, olives, feta, and a stack of grilled pita.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRILL -->
+      <div class="menu-panel" id="panel-grill">
+        <div class="menu-grid">
+          <div class="menu-item">
+            <h4>Chicken Souvlaki</h4>
+            <span class="price">$19</span>
+            <p>Lemon-oregano marinated skewers, grilled pita, tzatziki, village salad.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Lamb Gyro Plate</h4>
+            <span class="price">$22</span>
+            <p>Shaved lamb &amp; beef off the vertical spit, fries, tzatziki, warm pita.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Branzino <span class="tag">Whole Fish</span></h4>
+            <span class="price">$28</span>
+            <p>Whole Mediterranean sea bass, wood-grilled, ladolemono, capers.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Pork Belly Skewers <span class="tag hot">Spicy</span></h4>
+            <span class="price">$21</span>
+            <p>Slow-braised then charred, harissa glaze, pickled onion.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Vegetable Moussaka <span class="tag veg">Veg</span></h4>
+            <span class="price">$18</span>
+            <p>Layered eggplant, potato, spiced tomato, béchamel. Baked to order.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Mixed Grill for Two</h4>
+            <span class="price">$46</span>
+            <p>Souvlaki, lamb, kefta, and halloumi with all the sides. Bring an appetite.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SALADS -->
+      <div class="menu-panel" id="panel-salads">
+        <div class="menu-grid">
+          <div class="menu-item">
+            <h4>Village Salad <span class="tag veg">Veg</span></h4>
+            <span class="price">$13</span>
+            <p>Tomato, cucumber, red onion, olives, a full slab of feta, oregano.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Grilled Chicken Bowl</h4>
+            <span class="price">$16</span>
+            <p>Lemon rice, greens, cucumber, tomato, tzatziki, souvlaki chicken.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Falafel Bowl <span class="tag veg">Veg</span></h4>
+            <span class="price">$15</span>
+            <p>Crispy chickpea falafel, hummus, pickles, tahini, warm grains.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Watermelon &amp; Feta <span class="tag veg">Veg</span></h4>
+            <span class="price">$12</span>
+            <p>Summer melon, feta, mint, basil, aged balsamic. Seasonal.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Chickpea &amp; Herb</h4>
+            <span class="price">$14</span>
+            <p>Marinated chickpeas, parsley, mint, lemon, shaved kasseri.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Add a Protein</h4>
+            <span class="price">+$6</span>
+            <p>Souvlaki chicken, gyro, falafel, or grilled halloumi to any bowl.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SWEETS -->
+      <div class="menu-panel" id="panel-sweets">
+        <div class="menu-grid">
+          <div class="menu-item">
+            <h4>Baklava <span class="tag veg">Veg</span></h4>
+            <span class="price">$8</span>
+            <p>Walnut and pistachio phyllo, orange-blossom honey. Made every morning.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Galaktoboureko</h4>
+            <span class="price">$9</span>
+            <p>Warm semolina custard in crisp phyllo, lemon syrup.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Greek Yogurt &amp; Honey</h4>
+            <span class="price">$7</span>
+            <p>Thick strained yogurt, thyme honey, walnuts, a little cherry.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Greek Coffee</h4>
+            <span class="price">$4</span>
+            <p>Ground fine, brewed in the briki, served with a glass of water.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Freddo Espresso</h4>
+            <span class="price">$5</span>
+            <p>Cold-whipped espresso over ice. The Athens summer standard.</p>
+          </div>
+          <div class="menu-item">
+            <h4>Mint Tea</h4>
+            <span class="price">$4</span>
+            <p>Fresh mint steeped whole, a pot for the table.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-note reveal">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span>Gluten-free pita and vegan swaps available on most plates — just ask your server or mention it when you reserve. Every allergy note gets to the kitchen.</span>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section id="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="reveal">
+        <span class="eyebrow">Our Story</span>
+        <h2>One family, one kitchen, since 2009.</h2>
+        <p>La Feta started as a Sunday-dinner habit that got out of hand. Yiayia Sofia's recipes, a tiny storefront in Deep Ellum, and a stubborn belief that good food takes time. Fifteen years later the phyllo is still rolled by hand and the grill still runs on olive wood.</p>
+        <p>We source what we can from small producers — feta and oil from family farms in the Peloponnese, produce from the Dallas Farmers Market. Nothing frozen, nothing rushed.</p>
+        <div class="story-values">
+          <div class="story-value">
+            <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4-6.3-4.6L5.7 21.4 8 14 2 9.4h7.6z"/></svg>Made from scratch</h4>
+            <p>Phyllo, sauces, dressings, and desserts — all in-house, every morning.</p>
+          </div>
+          <div class="story-value">
+            <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg>Family recipes</h4>
+            <p>The same dishes three generations grew up eating in Kalamata.</p>
+          </div>
+          <div class="story-value">
+            <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2c-2.8 0-5 2.2-5 5v6c0 1.1.9 2 2 2zM19 15v7"/></svg>Wood-fired grill</h4>
+            <p>Olive-wood coals for the char you can't fake on a flat-top.</p>
+          </div>
+          <div class="story-value">
+            <h4><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Everyone's welcome</h4>
+            <p>Vegan, vegetarian, and gluten-free eaters always have a full table.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="story-visual reveal">
+        <svg class="plate" width="70%" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">
+          <circle cx="100" cy="100" r="86"/>
+          <circle cx="100" cy="100" r="66"/>
+          <path d="M100 46 L100 20 M108 30 A 12 8 0 0 0 92 30 Z"/>
+          <path d="M60 150 C 70 130, 130 130, 140 150"/>
+        </svg>
+        <div class="story-badge">
+          <span class="n">15</span>
+          <small>Years in Deep Ellum</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <div class="reviews-header reveal">
+      <span class="eyebrow">From Our Regulars</span>
+      <h2>The neighborhood table.</h2>
+      <div class="reviews-rating-large">
+        <span class="num">4.9</span>
+        <span class="stars">★★★★★</span>
+        <small>1,200+ Google reviews</small>
+      </div>
+    </div>
+
+    <div class="reviews-grid reveal">
+      <div class="review-card">
+        <div class="review-top-row">
+          <div class="review-avatar av-1">M</div>
+          <div>
+            <div class="review-name">Marina K.</div>
+            <div class="review-reviewer-info">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/></svg>
+              Local Guide · 84 reviews
+            </div>
+          </div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"The whipped feta alone is worth the drive. Branzino was cooked perfectly and the staff treated us like family. This is our new Friday spot."</p>
+        <div class="review-date">2 weeks ago</div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-top-row">
+          <div class="review-avatar av-2">D</div>
+          <div>
+            <div class="review-name">Devon R.</div>
+            <div class="review-reviewer-info">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/></svg>
+              Google Reviewer
+            </div>
+          </div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Vegetarian-friendly without feeling like an afterthought. The falafel bowl and moussaka were incredible, and they nailed my gluten-free request."</p>
+        <div class="review-date">1 month ago</div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-top-row">
+          <div class="review-avatar av-3">S</div>
+          <div>
+            <div class="review-name">Sophia L.</div>
+            <div class="review-reviewer-info">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/></svg>
+              Local Guide · 210 reviews
+            </div>
+          </div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Reserved for a birthday of 10 and they handled it beautifully. Baklava came out with a candle. Feels like eating at a Greek grandmother's house."</p>
+        <div class="review-date">3 months ago</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <span class="eyebrow">The Room &amp; The Plates</span>
+        <h2>A little taste of the table.</h2>
+      </div>
+      <p>Warm light, tiled floors, and a wood grill you can smell from the sidewalk. Here's a glimpse — the rest is best in person.</p>
+    </div>
+
+    <div class="gallery-grid reveal">
+      <div class="gallery-tile g-tall">
+        <div class="art" style="background: radial-gradient(70% 60% at 40% 35%, #E08B5A, transparent 60%), linear-gradient(150deg, #C4562F, #7a2f18);"></div>
+        <span>Off the wood grill</span>
+      </div>
+      <div class="gallery-tile g-wide">
+        <div class="art" style="background: radial-gradient(80% 70% at 70% 30%, #c9a94f, transparent 60%), linear-gradient(140deg, #2c4436, #16241D);"></div>
+        <span>The mezze spread</span>
+      </div>
+      <div class="gallery-tile">
+        <div class="art" style="background: radial-gradient(70% 70% at 30% 30%, #F3EAD8, transparent 65%), linear-gradient(150deg, #C99A3F, #8a6a22);"></div>
+        <span>Fresh phyllo</span>
+      </div>
+      <div class="gallery-tile">
+        <div class="art" style="background: radial-gradient(70% 70% at 60% 40%, #E08B5A, transparent 60%), linear-gradient(150deg, #20342B, #101a15);"></div>
+        <span>Greek coffee</span>
+      </div>
+      <div class="gallery-tile g-wide">
+        <div class="art" style="background: radial-gradient(80% 60% at 30% 70%, #c9a94f, transparent 60%), linear-gradient(150deg, #C4562F, #20342B);"></div>
+        <span>The dining room</span>
+      </div>
+      <div class="gallery-tile">
+        <div class="art" style="background: radial-gradient(70% 70% at 50% 30%, #F3EAD8, transparent 60%), linear-gradient(150deg, #3f7a3a, #1f3b1c);"></div>
+        <span>Village salad</span>
+      </div>
+      <div class="gallery-tile">
+        <div class="art" style="background: radial-gradient(70% 70% at 40% 60%, #E08B5A, transparent 60%), linear-gradient(150deg, #8A4529, #3a1d10);"></div>
+        <span>Baklava, daily</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESERVE / CONTACT -->
+<section id="reserve">
+  <div class="container">
+    <div class="reserve-grid">
+      <div class="reveal">
+        <span class="eyebrow">Reserve &amp; Visit</span>
+        <h2>Save your table.</h2>
+        <p class="reserve-intro">Walk-ins are always welcome, but weekends fill up fast. Book ahead and we'll have the table ready — mention any allergies, celebrations, or big parties and we'll plan for it.</p>
+
+        <div class="reserve-info">
+          <div class="reserve-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><div class="k">Find Us</div><div class="v">2711 Elm Street, Deep Ellum, Dallas, TX 75226</div></div>
+          </div>
+          <div class="reserve-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <div><div class="k">Call or Text</div><div class="v"><a href="tel:12145550137">(214) 555-0137</a></div></div>
+          </div>
+          <div class="reserve-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div>
+              <div class="k">Hours</div>
+              <div class="v">Tue–Thu 11a–10p · Fri–Sat 11a–11p<br/>Sun 10a–9p (brunch till 2) · Mon closed</div>
+            </div>
+          </div>
+          <div class="reserve-info-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16M4 2h16M6 2v4a6 6 0 0 0 12 0V2M6 22v-4a6 6 0 0 1 12 0v4"/></svg>
+            <div><div class="k">Good to Know</div><div class="v">Patio seating · Full mezze bar · Private events</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="form-card">
+          <div id="reserveForm">
+            <h3>Request a reservation</h3>
+            <p>We'll text you to confirm within the hour during business hours.</p>
+            <form id="bookingForm">
+              <div class="field-row">
+                <div class="field">
+                  <label for="name">Name</label>
+                  <input type="text" id="name" name="name" placeholder="Your name" required />
+                </div>
+                <div class="field">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" name="phone" placeholder="(214) 555-0000" required />
+                </div>
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="you@email.com" required />
+              </div>
+              <div class="field-row-3">
+                <div class="field">
+                  <label for="date">Date</label>
+                  <input type="date" id="date" name="date" required />
+                </div>
+                <div class="field">
+                  <label for="time">Time</label>
+                  <select id="time" name="time" required>
+                    <option value="">Select</option>
+                    <option>11:30 AM</option><option>12:00 PM</option><option>12:30 PM</option>
+                    <option>1:00 PM</option><option>5:00 PM</option><option>5:30 PM</option>
+                    <option>6:00 PM</option><option>6:30 PM</option><option>7:00 PM</option>
+                    <option>7:30 PM</option><option>8:00 PM</option><option>8:30 PM</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="party">Guests</label>
+                  <select id="party" name="party" required>
+                    <option value="">#</option>
+                    <option>1</option><option>2</option><option>3</option><option>4</option>
+                    <option>5</option><option>6</option><option>7</option><option>8</option>
+                    <option>9+ (large party)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="notes">Allergies, celebrations, or requests</label>
+                <textarea id="notes" name="notes" placeholder="Gluten-free, birthday, patio if possible…"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Request Reservation <span class="arrow">→</span></button>
+              <p class="form-note">By requesting, you agree we may text you to confirm. Standard rates apply.</p>
+            </form>
+          </div>
+
+          <div class="form-success" id="formSuccess">
+            <div class="check">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h3>Request received!</h3>
+            <p id="successMsg">Thanks — we've got your request. We'll text you shortly to confirm the table. Kali orexi!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">La Feta<span class="mark">.</span><small>Mediterranean Kitchen · Dallas</small></div>
+        <p class="footer-tagline">A family-run Mediterranean kitchen in Deep Ellum. Mezze, wood-grilled plates, and proper Greek coffee since 2009.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg></a>
+          <a href="#" aria-label="Reviews"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Menu</h5>
+        <ul>
+          <li><a href="#menu">Mezze &amp; Starters</a></li>
+          <li><a href="#menu">From the Grill</a></li>
+          <li><a href="#menu">Salads &amp; Bowls</a></li>
+          <li><a href="#menu">Sweets &amp; Coffee</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Visit</h5>
+        <ul>
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#gallery">Gallery</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#reserve">Reservations</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Find Us</h5>
+        <ul>
+          <li>2711 Elm Street</li>
+          <li>Deep Ellum, Dallas, TX 75226</li>
+          <li><a href="tel:12145550137">(214) 555-0137</a></li>
+          <li><a href="mailto:hello@lafetacafe.com">hello@lafetacafe.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 La Feta Cafe. All rights reserved.</span>
+      <span>Tue–Sun · Closed Mondays</span>
+      <span>Site by Nuvaxis AI</span>
+    </div>
+  </div>
+</footer>
+
+<!-- CHAT WIDGET -->
+<div id="chat-widget">
+  <button id="chat-toggle" aria-label="Chat with Elena, our AI host">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span class="badge">1</span>
+  </button>
+  <div id="chat-panel" role="dialog" aria-label="La Feta Cafe assistant">
+    <div class="chat-header">
+      <div class="chat-avatar">E</div>
+      <div>
+        <div class="chat-title">Elena</div>
+        <div class="chat-status">Online · usually replies instantly</div>
+      </div>
+      <button class="chat-close" id="chat-close" aria-label="Close chat">×</button>
+    </div>
+    <div id="chat-messages"></div>
+    <div class="chat-quick-replies" id="chat-quick-replies">
+      <button data-q="What are your hours?">Hours</button>
+      <button data-q="Do you have vegan and gluten-free options?">Vegan / GF?</button>
+      <button data-q="I'd like to book a table for tonight.">Book a table</button>
+      <button data-q="Do you do catering or private events?">Catering</button>
+    </div>
+    <form id="chat-form">
+      <input id="chat-input" type="text" placeholder="Ask Elena anything…" autocomplete="off" />
+      <button type="submit" aria-label="Send">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </form>
+    <div class="chat-footer-note">
+      Prefer to call? <a href="tel:12145550137">(214) 555-0137</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Nav scroll state ──────────────────────────────
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── Mobile nav ────────────────────────────────────
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => navLinks.classList.toggle('mobile-open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('mobile-open')));
+
+// ── Reveal on scroll ──────────────────────────────
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// ── Menu tabs ─────────────────────────────────────
+document.querySelectorAll('.menu-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+  });
+});
+
+// ── Phone formatting ──────────────────────────────
+const phoneInput = document.getElementById('phone');
+phoneInput.addEventListener('input', (e) => {
+  let v = e.target.value.replace(/\D/g, '').slice(0, 10);
+  if (v.length > 6) v = `(${v.slice(0,3)}) ${v.slice(3,6)}-${v.slice(6)}`;
+  else if (v.length > 3) v = `(${v.slice(0,3)}) ${v.slice(3)}`;
+  else if (v.length > 0) v = `(${v}`;
+  e.target.value = v;
+});
+
+// ── Date field: default & minimum = today ─────────
+(function() {
+  const d = document.getElementById('date');
+  const today = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  const iso = `${today.getFullYear()}-${pad(today.getMonth()+1)}-${pad(today.getDate())}`;
+  d.min = iso; d.value = iso;
+})();
+
+// ── Booking form (demo — no backend) ──────────────
+document.getElementById('bookingForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim().split(' ')[0] || 'friend';
+  const party = document.getElementById('party').value || 'your';
+  const time = document.getElementById('time').value || 'that time';
+  document.getElementById('successMsg').textContent =
+    `Thanks, ${name} — we've got your request for ${party === 'your' ? 'a table' : party + ' at ' + time}. We'll text to confirm shortly. Kali orexi!`;
+  document.getElementById('reserveForm').style.display = 'none';
+  document.getElementById('formSuccess').classList.add('show');
+  document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+// ── Chat widget ───────────────────────────────────
+const widget = document.getElementById('chat-widget');
+const toggle = document.getElementById('chat-toggle');
+const closeBtn = document.getElementById('chat-close');
+const messages = document.getElementById('chat-messages');
+const chatForm = document.getElementById('chat-form');
+const chatInput = document.getElementById('chat-input');
+const quickReplies = document.getElementById('chat-quick-replies');
+let greeted = false;
+
+function openChat() {
+  widget.classList.add('open');
+  toggle.querySelector('.badge').style.display = 'none';
+  if (!greeted) {
+    greeted = true;
+    setTimeout(() => botSay("Yiasou! I'm Elena, your host at La Feta 🌿 Ask me about the menu, hours, or booking a table — or tap a shortcut below."), 400);
+  }
+}
+function closeChat() { widget.classList.remove('open'); }
+toggle.addEventListener('click', () => widget.classList.contains('open') ? closeChat() : openChat());
+closeBtn.addEventListener('click', closeChat);
+
+function addMsg(text, who) {
+  const el = document.createElement('div');
+  el.className = 'msg ' + who;
+  el.textContent = text;
+  messages.appendChild(el);
+  messages.scrollTop = messages.scrollHeight;
+  return el;
+}
+function botSay(text) {
+  const typing = document.createElement('div');
+  typing.className = 'msg bot typing';
+  typing.innerHTML = '<span></span><span></span><span></span>';
+  messages.appendChild(typing);
+  messages.scrollTop = messages.scrollHeight;
+  setTimeout(() => {
+    typing.remove();
+    addMsg(text, 'bot');
+  }, 650 + Math.min(text.length * 12, 900));
+}
+
+// Lightweight intent-matched replies (demo stand-in for the live AI worker)
+function elenaReply(q) {
+  const t = q.toLowerCase();
+  if (/(hour|open|close|today|tonight)/.test(t))
+    return "We're open Tue–Thu 11a–10p, Fri–Sat 11a–11p, and Sun 10a–9p (brunch till 2). Closed Mondays. Kitchen takes last orders 30 min before close.";
+  if (/(vegan|vegetarian|gluten|gf|allerg|dairy|celiac)/.test(t))
+    return "Loads of options! Falafel bowl, moussaka, village salad, and most mezze are vegetarian, and we do vegan + gluten-free swaps on nearly everything. Just note it on your reservation and the kitchen will take care of you.";
+  if (/(book|reserv|table|tonight|party|seat)/.test(t))
+    return "Happy to help you book! Scroll to the Reserve section and pick a date, time, and party size — or tell me the details here and I'll pass them along. Parties of 9+ get a quick call to plan.";
+  if (/(cater|event|private|large|birthday|party of|group)/.test(t))
+    return "Yes — we cater and host private events, from mezze platters to full buyouts of the patio. Email hello@lafetacafe.com or call (214) 555-0137 and we'll build a menu with you.";
+  if (/(menu|eat|food|dish|recommend|popular|best|special)/.test(t))
+    return "Crowd favorites: the whipped feta, chicken souvlaki, and the wood-grilled branzino. Save room for baklava — we make it every morning. Full menu's in the Menu section above.";
+  if (/(where|location|address|park|find|deep ellum|dallas)/.test(t))
+    return "We're at 2711 Elm Street in Deep Ellum, Dallas. Street parking and a lot around the corner. There's a patio out front when the weather's nice.";
+  if (/(price|cost|expensive|cheap|how much)/.test(t))
+    return "Mezze run $10–18, salads and bowls $12–16, and grill mains $18–28. The mixed grill for two ($46) is the move if you're sharing.";
+  if (/(deliver|takeout|take out|pickup|to go|order)/.test(t))
+    return "We do takeout and pickup — call (214) 555-0137 to order, or grab us on the delivery apps. Everything travels well except the branzino, which is best in-house.";
+  if (/(hi|hello|hey|yiasou|yasou)/.test(t))
+    return "Yiasou! Great to see you. What can I help with — menu, hours, or a reservation?";
+  if (/(thank|thanks|efharisto|great|awesome|perfect)/.test(t))
+    return "Parakalo! Anything else I can help with? We'd love to see you at the table. 🌿";
+  return "Good question! I can help with the menu, hours, reservations, catering, and directions. For anything else, give us a call at (214) 555-0137 — someone from the family always picks up.";
+}
+
+function handleUser(text) {
+  addMsg(text, 'user');
+  quickReplies.style.display = 'none';
+  botSay(elenaReply(text));
+}
+chatForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const v = chatInput.value.trim();
+  if (!v) return;
+  chatInput.value = '';
+  handleUser(v);
+});
+quickReplies.querySelectorAll('button').forEach(b => {
+  b.addEventListener('click', () => handleUser(b.dataset.q));
+});
+</script>
+</body>
+</html>
